@@ -21,7 +21,6 @@ function insertQuestion(req, res) {
   try {
     mongoDBRef.collection('questions').save(
       {
-        id: req.body.id, // just for test, will be deleted
         name: req.body.name,
         category: req.body.category,
         dateTime,
