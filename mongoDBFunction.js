@@ -11,33 +11,58 @@ const mongoDBRef = mongojs(url, collections);
 
 console.log('MongoDB is active.');
 
-function insertQuestion(oneQuestion) {
-  mongoDBRef
-    .collection('questions')
-    .save({ id: oneQuestion.id, oneQuestion }, function(err, result) {
-      if (err || !result)
-        console.log('This question failed to save in database.');
-      else
-        console.log(
-          'This question inserted into questions collection in MongoDB.'
-        );
-    });
+function insertQuestion(req, res) {
+  const oneQuestion = req.body;
+  try {
+    mongoDBRef.collection('questions').save(
+      {
+        id: req.body.id, // just for test, will be deleted
+        name: req.body.name,
+        category: req.body.category,
+        oneQuestion
+      },
+      function insertQuestionResult(err, result) {
+        if (err || !result) {
+          res
+            .status(422)
+            .json({ errors: ['The question failed to save in database.'] });
+        } else {
+          res.status(201).json({
+            message: 'Successfully saved question.',
+            question: result
+          });
+        }
+      }
+    );
+  } catch (e) {
+    res.status(422).json({ errors: e.mapped() });
+  }
 }
 
-function findQuestion(questionId, callback) {
-  mongoDBRef
-    .collection('questions')
-    .find({ id: questionId })
-    .toArray(function(err, docs) {
-      if (!err) {
-        console.log('Found the following records');
-        console.log(docs);
-        callback(docs);
-      } else console.log('Question not found.');
-    });
+function findQuestionByName(req, res) {
+  console.log(`try to find: ${req.params.name}`);
+  try {
+    mongoDBRef
+      .collection('questions')
+      .find({ name: req.params.name })
+      .toArray(function insertQuestionResult(err, result) {
+        if (err || !result) {
+          res
+            .status(404)
+            .json({ errors: ['The question failed to find in database.'] });
+        } else {
+          res.status(302).json({
+            message: 'Successfully found question.',
+            question: result
+          });
+        }
+      });
+  } catch (e) {
+    res.status(404).json({ errors: e.mapped() });
+  }
 }
 
 function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
-module.exports.findQuestion = findQuestion;
+module.exports.findQuestionByName = findQuestionByName;
 module.exports.getCollection = getCollection;

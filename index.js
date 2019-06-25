@@ -7,8 +7,9 @@ const mongodb = require('./mongoDBFunction.js');
 
 const app = express();
 const jsonParser = bodyParser.json();
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
-// app.use(bodyParser.urlencoded({ extended: false }));
+//  const urlencodedParser = bodyParser.urlencoded({ extended: false });
+//  app.use(bodyParser.urlencoded({ extended: true }));
+//  app.use(bodyParser.json());
 
 //  not finish
 app.get('/allQuestions', function(req, res) {
@@ -23,58 +24,12 @@ app.get('/allQuestions', function(req, res) {
   res.send(responseObject);
 });
 
-//  example:
-//  http://localhost:3000//findQuestion/abc
-app.get('/findQuestion/:id', function(req, res) {
-  console.log(`try to find: ${req.params.id}`);
-  mongodb.findQuestion(+req.params.id, function(result) {
-    const question = result[0];
-    if (question === undefined) {
-      console.log('Not find.');
-      const jsonResponse = {
-        notification: 'can not find'
-      };
-      res.json(jsonResponse);
-    } else {
-      console.log(`Found: ${req.params.id}`);
-      res.body = JSON.stringify(question.oneQuestion);
-      res.send(res.body);
-    }
-  });
+app.get('/findQuestionByName/:name', function(req, res) {
+  return mongodb.findQuestionByName(req, res);
 });
 
-app.post('/postOneQuestionByJSON', jsonParser, function(req, res) {
-  if (!req.body) return res.sendStatus(400);
-  const oneQuestion = {
-    id: req.body.id,
-    name: req.body.name,
-    category: req.body.category,
-    question: req.body.question
-  };
-  mongodb.insertQuestion(oneQuestion);
-  console.dir(req.body);
-  const jsonResponse = {
-    id: '123',
-    status: 'updated'
-  };
-  res.json(jsonResponse);
-});
-
-app.post('/postOneQuestionByForm', urlencodedParser, function(req, res) {
-  if (!req.body) return res.sendStatus(400);
-  const oneQuestion = {
-    id: req.body.id,
-    name: req.body.name,
-    category: req.body.category,
-    question: req.body.question
-  };
-  mongodb.insertQuestion(oneQuestion);
-  console.dir(req.body);
-  const jsonResponse = {
-    id: '123',
-    status: 'updated'
-  };
-  res.json(jsonResponse);
+app.post('/questions', jsonParser, function(req, res) {
+  return mongodb.insertQuestion(req, res);
 });
 
 app.listen(3000);
