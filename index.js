@@ -5,9 +5,9 @@ const mongodb = require('./mongoDBFunction.js');
 
 const app = express();
 app.use(helmet());
-const jsonParser = bodyParser.json();
+app.use(bodyParser.json());
 
-app.post('/questions', jsonParser, function postQuestion(req, res) {
+app.post('/questions', function postQuestion(req, res) {
   mongodb.insertQuestion(req, res);
 });
 
