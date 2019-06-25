@@ -28,6 +28,10 @@ app.get('/findQuestionByName/:name', function(req, res) {
   return mongodb.findQuestionByName(req, res);
 });
 
+app.get('/findQuestionByCategory/:category', function(req, res) {
+  return mongodb.findQuestionByCategory(req, res);
+});
+
 app.post('/questions', jsonParser, function(req, res) {
   return mongodb.insertQuestion(req, res);
 });
