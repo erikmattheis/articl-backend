@@ -14,26 +14,25 @@ app.use(bodyParser.json());
 //  app.use(bodyParser.urlencoded({ extended: true }));
 //  app.use(bodyParser.json());
 
-//  not finish
-app.get('/allQuestions', function getQuestions(req, res) {
-  const responseObject = [
-    {
-      name: 'haha'
-    },
-    {
-      name: 'yue'
-    }
-  ];
-  res.send(responseObject);
+app.get('/questions', function getQuestions(req, res) {
+  return mongodb.getCollection('questions', res);
 });
 
-app.get('/findQuestionByName/:name', function getQuestion01(req, res) {
-  return mongodb.findQuestionByName(req, res);
-});
+app.get(
+  '/findQuestionByName/:name',
+  sanitize.getQuestion,
+  function getQuestion01(req, res) {
+    return mongodb.findQuestionByName(req, res);
+  }
+);
 
-app.get('/findQuestionByCategory/:category', function getQuestion02(req, res) {
-  return mongodb.findQuestionByCategory(req, res);
-});
+app.get(
+  '/findQuestionByCategory/:category',
+  sanitize.getQuestion,
+  function getQuestion02(req, res) {
+    return mongodb.findQuestionByCategory(req, res);
+  }
+);
 
 app.post('/questions', sanitize.postQuestion, function postQuestion(req, res) {
   return mongodb.insertQuestion(req, res);

@@ -89,8 +89,30 @@ function findQuestionByCategory(req, res) {
   }
 }
 
+function getCollection(collectionName, res) {
+  console.log(`try to find: ${collectionName}`);
+  try {
+    mongoDBRef
+      .collection(collectionName)
+      .find(function getCollectionResult(err, result) {
+        if (err || !result) {
+          res.status(404).json({ errors: ['Failed to find database.'] });
+          return true;
+        }
+        res.status(302).json({
+          message: 'Successfully found database.',
+          question: result
+        });
+        return false;
+      });
+  } catch (e) {
+    res.status(404).json({ errors: e.mapped() });
+  }
+}
+
 // function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
 module.exports.findQuestionByName = findQuestionByName;
 module.exports.findQuestionByCategory = findQuestionByCategory;
+module.exports.getCollection = getCollection;
 // module.exports.getCollection = getCollection;
