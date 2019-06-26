@@ -1,8 +1,9 @@
+<!-- TOC -->
 ## category
-* [feature](#feature)
+[feature](#feature)
+<!-- /TOC -->
 
- ***
-<a name="feature"></a>
+
 ## feature
   - post: /questions
 

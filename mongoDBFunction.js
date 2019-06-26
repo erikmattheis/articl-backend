@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable no-unused-vars */
-/* eslint-disable func-names */
 const mongojs = require('mongojs');
 
 const url = 'mongodb://127.0.0.1:27017/articleDatabase';
@@ -92,8 +89,8 @@ function findQuestionByCategory(req, res) {
   }
 }
 
-function getCollection(collectionName, callback) {}
+// function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
 module.exports.findQuestionByName = findQuestionByName;
 module.exports.findQuestionByCategory = findQuestionByCategory;
-module.exports.getCollection = getCollection;
+// module.exports.getCollection = getCollection;
