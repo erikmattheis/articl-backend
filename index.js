@@ -41,3 +41,11 @@ app.post('/questions', sanitize.postQuestion, function postQuestion(req, res) {
 
 app.listen(3000);
 console.log('listening to port 3000');
+
+app.all('*', function finalClientError(req, res) {
+  res.status(404).json({ errors: ['Resource not found.'] });
+});
+
+app.use(function finalError(req, res) {
+  res.status(500).json({ errors: ['An unknown error occurred.'] });
+});
