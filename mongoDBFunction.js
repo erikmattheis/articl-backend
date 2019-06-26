@@ -15,30 +15,27 @@ function insertQuestion(req, res) {
     1}-${today.getDate()}`;
   const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
   const dateTime = `${date} ${time}`;
-  try {
-    mongoDBRef.collection('questions').save(
-      {
-        name: req.body.name,
-        category: req.body.category,
-        dateTime,
-        oneQuestion
-      },
-      function insertQuestionResult(err, result) {
-        if (err || !result) {
-          res
-            .status(422)
-            .json({ errors: ['The question failed to save in database.'] });
-        } else {
-          res.status(201).json({
-            message: 'Successfully saved question.',
-            question: result
-          });
-        }
+
+  mongoDBRef.collection('questions').save(
+    {
+      name: req.body.name,
+      category: req.body.category,
+      dateTime,
+      oneQuestion
+    },
+    function insertQuestionResult(err, result) {
+      if (err || !result) {
+        res
+          .status(422)
+          .json({ errors: ['The question failed to save in database.'] });
+      } else {
+        res.status(201).json({
+          message: 'Successfully saved question.',
+          question: result
+        });
       }
-    );
-  } catch (e) {
-    res.status(422).json({ errors: e.mapped() });
-  }
+    }
+  );
 }
 
 function findQuestionByName(req, res) {
