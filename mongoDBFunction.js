@@ -8,9 +8,9 @@ const mongoDBRef = mongojs(url, collections);
 
 console.log('MongoDB is active.');
 
-function insertQuestion(req, res) {
+async function insertQuestion(req, res) {
   try {
-    mongoDBRef
+    await mongoDBRef
       .collection('questions')
       .save(
         { name: req.body.name, category: req.body.category },
