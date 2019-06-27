@@ -15,7 +15,6 @@ function insertQuestion(req, res) {
     1}-${today.getDate()}`;
   const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
   const dateTime = `${date} ${time}`;
-
   mongoDBRef.collection('questions').save(
     {
       name: req.body.name,
@@ -41,70 +40,59 @@ function insertQuestion(req, res) {
 function findQuestionByName(req, res) {
   console.log(`try to find: ${req.params.name}`);
   const regName = RegExp(req.params.name, 'i');
-  try {
-    mongoDBRef
-      .collection('questions')
-      .find({ name: { $regex: regName } })
-      .toArray(function findQuestionResult(err, result) {
-        if (err || result[0] === undefined) {
-          res
-            .status(404)
-            .json({ errors: ['The question failed to find by name.'] });
-        } else {
-          res.status(302).json({
-            message: 'Successfully found question.',
-            question: result
-          });
-        }
-      });
-  } catch (e) {
-    res.status(404).json({ errors: e.mapped() });
-  }
+  mongoDBRef
+    .collection('questions')
+    .find({ name: { $regex: regName } })
+    .toArray(function findQuestionResult(err, result) {
+      if (err || result[0] === undefined) {
+        res
+          .status(404)
+          .json({ errors: ['The question failed to find by name.'] });
+      } else {
+        res.status(302).json({
+          message: 'Successfully found question.',
+          question: result
+        });
+      }
+    });
 }
 
 function findQuestionByCategory(req, res) {
   console.log(`try to find: ${req.params.category}`);
   const regCategory = RegExp(req.params.category, 'i');
-  try {
-    mongoDBRef
-      .collection('questions')
-      .find({ category: { $regex: regCategory } })
-      .toArray(function findCategoryResult(err, result) {
-        if (err || result[0] === undefined) {
-          res
-            .status(404)
-            .json({ errors: ['The question failed to find by category.'] });
-        } else {
-          res.status(302).json({
-            message: 'Successfully found question.',
-            question: result
-          });
-        }
-      });
-  } catch (e) {
-    res.status(404).json({ errors: e.mapped() });
-  }
+  mongoDBRef
+    .collection('questions')
+    .find({ category: { $regex: regCategory } })
+    .toArray(function findCategoryResult(err, result) {
+      if (err || result[0] === undefined) {
+        res
+          .status(404)
+          .json({ errors: ['The question failed to find by category.'] });
+      } else {
+        res.status(302).json({
+          message: 'Successfully found question.',
+          question: result
+        });
+      }
+    });
 }
 
 function getCollection(collectionName, res) {
   console.log(`try to find: ${collectionName}`);
-  try {
-    mongoDBRef
-      .collection(collectionName)
-      .find(function getCollectionResult(err, result) {
-        if (err || !result) {
-          res.status(404).json({ errors: ['Failed to find database.'] });
-          return true;
-        }
-        res.status(302).json({
-          message: 'Successfully found database.',
-          question: result
-        });
-        return false;
+
+  mongoDBRef
+    .collection(collectionName)
+    .find(function getCollectionResult(err, result) {
+      if (err || !result) {
+        res.status(404).json({ errors: ['Failed to find database.'] });
+        return true;
+      }
+      res.status(302).json({
+        message: 'Successfully found database.',
+        question: result
       });
-  } catch (e) {
-    res.status(404).json({ errors: e.mapped() });
-  }
+      return false;
+    });
 }
 
 // function getCollection(collectionName, callback) {}

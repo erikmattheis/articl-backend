@@ -1,7 +1,4 @@
-<!-- TOC -->
-## category
-[feature](#feature)
-<!-- /TOC -->
+<!-- TOC -->autoauto- [category](#category)auto- [feature](#feature)autoauto<!-- /TOC -->
 
 
 ## feature
@@ -34,6 +31,7 @@ an example of question to post :
 ```
   - get: /findQuestionByName/:name
   - get: /findQuestionByCategory/:category
+  - get: /questions
 
 **Pay attention:
 About GET: All implemented fuzzy lookups that ignore case, for example, when looking for "xzz", you can finally find the names: "zXzz" and "xzZ92".**
@@ -44,7 +42,6 @@ an example of what can get
     "question": [
         {
             "_id": "5d12af08a701ec20dcac4353",
-            "id": null,
             "name": "321testquestion01",
             "category": "Ablation",
             "dateTime": "2019-6-25 18:32:24",
@@ -53,7 +50,6 @@ an example of what can get
                 "name": "321testquestion01",
                 "category": "Ablation",
                 "question": {
-                    "id": 345,
                     "question": "How many hearts does a typical human have?",
                     "answers": [
                         {

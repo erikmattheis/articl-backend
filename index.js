@@ -2,17 +2,27 @@
 const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
+const rateLimit = require('express-rate-limit');
 const sanitize = require('./sanitize');
 const mongodb = require('./mongoDBFunction');
 // const jsonParser = bodyParser.json();
 const app = express();
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100
+});
 
+app.use(generalLimiter);
 app.use(helmet());
 app.use(bodyParser.json());
+// app.use(function finalError(req, res) {
+//   res.status(500).json({ errors: ['An unknown error occurred.'] });
+// });
+// app.all('*', function finalClientError(req, res) {
+//   res.status(404).json({ errors: ['Resource not found.'] });
+// });
 
-//  const urlencodedParser = bodyParser.urlencoded({ extended: false });
 //  app.use(bodyParser.urlencoded({ extended: true }));
-//  app.use(bodyParser.json());
 
 app.get('/questions', function getQuestions(req, res) {
   return mongodb.getCollection('questions', res);
@@ -40,11 +50,3 @@ app.post('/questions', sanitize.postQuestion, function postQuestion(req, res) {
 
 app.listen(3000);
 console.log('listening to port 3000');
-
-app.all('*', function finalClientError(req, res) {
-  res.status(404).json({ errors: ['Resource not found.'] });
-});
-
-app.use(function finalError(req, res) {
-  res.status(500).json({ errors: ['An unknown error occurred.'] });
-});
