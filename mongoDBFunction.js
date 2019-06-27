@@ -16,19 +16,18 @@ async function insertQuestion(req, res) {
         { name: req.body.name, category: req.body.category },
         function insertQuestionResult(err, result) {
           if (err || !result) {
-            res
+            return res
               .status(422)
               .json({ errors: ['The question failed to save in database.'] });
-          } else {
-            res.status(201).json({
-              message: 'Successfully saved question.',
-              question: result
-            });
           }
+          return res.status(201).json({
+            message: 'Successfully saved question.',
+            question: result
+          });
         }
       );
   } catch (e) {
-    res.status(422).json({ errors: e.mapped() });
+    return res.status(422).json({ errors: e.mapped() });
   }
 }
 

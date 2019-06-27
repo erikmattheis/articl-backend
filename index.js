@@ -13,6 +13,7 @@ app.post(
   '/questions',
   sanitize.postQuestion,
   validate.postQuestion,
+  validate.checkValidationResult,
   function postQuestion(req, res) {
     mongodb.insertQuestion(req, res);
   }
