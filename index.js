@@ -15,12 +15,6 @@ const generalLimiter = rateLimit({
 app.use(generalLimiter);
 app.use(helmet());
 app.use(bodyParser.json());
-// app.use(function finalError(req, res) {
-//   res.status(500).json({ errors: ['An unknown error occurred.'] });
-// });
-// app.all('*', function finalClientError(req, res) {
-//   res.status(404).json({ errors: ['Resource not found.'] });
-// });
 
 //  app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -30,15 +24,16 @@ app.get('/questions', function getQuestions(req, res) {
 
 app.get(
   '/findQuestionByName/:name',
-  sanitize.getQuestion,
+  sanitize.getQuestionByName,
   function getQuestion01(req, res) {
     return mongodb.findQuestionByName(req, res);
   }
 );
 
+// not use sanitize
 app.get(
   '/findQuestionByCategory/:category',
-  sanitize.getQuestion,
+  sanitize.getQuestionByCategory,
   function getQuestion02(req, res) {
     return mongodb.findQuestionByCategory(req, res);
   }
@@ -46,6 +41,13 @@ app.get(
 
 app.post('/questions', sanitize.postQuestion, function postQuestion(req, res) {
   return mongodb.insertQuestion(req, res);
+});
+
+app.all('*', function finalClientError(req, res) {
+  res.status(404).json({ errors: ['Resource not found.'] });
+});
+app.use(function finalError(req, res) {
+  res.status(500).json({ errors: ['An unknown error occurred.'] });
 });
 
 app.listen(3000);
