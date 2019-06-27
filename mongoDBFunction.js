@@ -10,22 +10,25 @@ console.log('MongoDB is active.');
 
 async function insertQuestion(req, res) {
   try {
-    await mongoDBRef
-      .collection('questions')
-      .save(
-        { name: req.body.name, category: req.body.category },
-        function insertQuestionResult(err, result) {
-          if (err || !result) {
-            return res
-              .status(422)
-              .json({ errors: ['The question failed to save in database.'] });
-          }
-          return res.status(201).json({
-            message: 'Successfully saved question.',
-            question: result
-          });
+    await mongoDBRef.collection('questions').save(
+      {
+        name: req.body.name,
+        category: req.body.category,
+        question: req.body.question,
+        created: Date.now()
+      },
+      function insertQuestionResult(err, result) {
+        if (err || !result) {
+          return res
+            .status(422)
+            .json({ errors: ['The question failed to save in database.'] });
         }
-      );
+        return res.status(201).json({
+          message: 'Successfully saved question.',
+          question: result
+        });
+      }
+    );
   } catch (e) {
     return res.status(422).json({ errors: e.mapped() });
   }
