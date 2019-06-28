@@ -95,9 +95,27 @@ function getCollection(collectionName, res) {
     });
 }
 
+function deleteCollection(collectionName, res) {
+  console.log(`try to find: ${collectionName}`);
+
+  mongoDBRef
+    .collection('questions')
+    .remove({}, function removeCollectionResult(err, result) {
+      if (err || !result) {
+        res.status(404).json({ errors: ['Failed to find database.'] });
+        return true;
+      }
+      res.status(302).json({
+        message: 'Successfully delete database.',
+        question: result
+      });
+      return false;
+    });
+}
+
 // function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
 module.exports.findQuestionByName = findQuestionByName;
 module.exports.findQuestionByCategory = findQuestionByCategory;
 module.exports.getCollection = getCollection;
-// module.exports.getCollection = getCollection;
+module.exports.deleteCollection = deleteCollection;

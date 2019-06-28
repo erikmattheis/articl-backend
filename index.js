@@ -38,15 +38,12 @@ app.get(
   }
 );
 
-app.post('/questions', sanitize.postQuestion, function postQuestion(req, res) {
-  return mongodb.insertQuestion(req, res);
+app.get('/delete', function getQuestions(req, res) {
+  return mongodb.deleteCollection('questions', res);
 });
 
-app.all('*', function finalClientError(req, res) {
-  res.status(404).json({ errors: ['Resource not found.'] });
-});
-app.use(function finalError(req, res) {
-  res.status(500).json({ errors: ['An unknown error occurred.'] });
+app.post('/questions', sanitize.postQuestion, function postQuestion(req, res) {
+  return mongodb.insertQuestion(req, res);
 });
 
 app.listen(3000);
@@ -55,7 +52,6 @@ console.log('listening to port 3000');
 app.all('*', function finalClientError(req, res) {
   res.status(404).json({ errors: ['Resource not found.'] });
 });
-
 app.use(function finalError(req, res) {
   res.status(500).json({ errors: ['An unknown error occurred.'] });
 });
