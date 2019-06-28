@@ -38,8 +38,8 @@ function insertQuestion(req, res) {
 }
 
 function findQuestionByName(req, res) {
-  console.log(`try to find: ${req.params.name}`);
-  const regName = RegExp(req.params.name, 'i');
+  console.log(`try to find: ${req.query.name}`);
+  const regName = RegExp(req.query.name, 'i');
   mongoDBRef
     .collection('questions')
     .find({ name: { $regex: regName } })
@@ -58,8 +58,8 @@ function findQuestionByName(req, res) {
 }
 
 function findQuestionByCategory(req, res) {
-  console.log(`try to find: ${req.params.category}`);
-  const regCategory = RegExp(req.params.category, 'i');
+  console.log(`try to find: ${req.query.category}`);
+  const regCategory = RegExp(req.query.category, 'i');
   mongoDBRef
     .collection('questions')
     .find({ category: { $regex: regCategory } })

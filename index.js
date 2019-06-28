@@ -17,26 +17,19 @@ app.use(bodyParser.json());
 
 //  app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/questions', function getQuestions(req, res) {
-  return mongodb.getCollection('questions', res);
-});
-
-app.get(
-  '/findQuestionByName/:name',
-  sanitize.getQuestionByName,
-  function getQuestion01(req, res) {
+// find questions by name
+// find quesions by category
+app.get('/questions', sanitize.getQuestions, function getQuestion02(req, res) {
+  if (req.query.name) {
+    //  console.log(`debug name : ${req.query.name}`);
     return mongodb.findQuestionByName(req, res);
   }
-);
-
-// not use sanitize
-app.get(
-  '/findQuestionByCategory/:category',
-  sanitize.getQuestionByCategory,
-  function getQuestion02(req, res) {
+  if (req.query.category) {
+    //  console.log(`debug category : ${req.query.category}`);
     return mongodb.findQuestionByCategory(req, res);
   }
-);
+  return mongodb.getCollection('questions', res);
+});
 
 app.get('/delete', function getQuestions(req, res) {
   return mongodb.deleteCollection('questions', res);

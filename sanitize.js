@@ -10,23 +10,19 @@ function postQuestion(req, res, next) {
   return next();
 }
 
-function getQuestionByName(req, res, next) {
+function getQuestions(req, res, next) {
   try {
-    req.params.name = sanitizeHtml(req.params.name);
+    if (req.query.name) {
+      req.query.name = sanitizeHtml(req.query.name);
+    }
+    if (req.query.category) {
+      req.query.category = sanitizeHtml(req.query.category);
+    }
   } catch (err) {
     return res.status(422).json({ errors: [err] });
   }
   return next();
 }
 
-function getQuestionByCategory(req, res, next) {
-  try {
-    req.params.category = sanitizeHtml(req.params.category);
-  } catch (err) {
-    return res.status(422).json({ errors: [err] });
-  }
-  return next();
-}
 exports.postQuestion = postQuestion;
-exports.getQuestionByName = getQuestionByName;
-exports.getQuestionByCategory = getQuestionByCategory;
+exports.getQuestions = getQuestions;
