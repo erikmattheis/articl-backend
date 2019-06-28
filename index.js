@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
@@ -52,3 +51,11 @@ app.use(function finalError(req, res) {
 
 app.listen(3000);
 console.log('listening to port 3000');
+
+app.all('*', function finalClientError(req, res) {
+  res.status(404).json({ errors: ['Resource not found.'] });
+});
+
+app.use(function finalError(req, res) {
+  res.status(500).json({ errors: ['An unknown error occurred.'] });
+});
