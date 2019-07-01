@@ -1,8 +1,10 @@
+/* eslint-disable no-console */
 const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const sanitize = require('./sanitize');
+const validate = require('./validate');
 const mongodb = require('./mongoDBFunction');
 // const jsonParser = bodyParser.json();
 const app = express();
@@ -35,8 +37,22 @@ app.get('/delete', function getQuestions(req, res) {
   return mongodb.deleteCollection('questions', res);
 });
 
-app.post('/questions', sanitize.postQuestion, function postQuestion(req, res) {
-  return mongodb.insertQuestion(req, res);
+app.post(
+  '/questions',
+  sanitize.postQuestion,
+  validate.postQuestion,
+  validate.checkValidationResult,
+  function postQuestion(req, res) {
+    mongodb.insertQuestion(req, res);
+  }
+);
+
+app.all('*', function finalClientError(req, res) {
+  res.status(404).json({ errors: ['Resource not found.'] });
+});
+
+app.use(function finalError(req, res) {
+  res.status(500).json({ errors: ['An unknown error occurred.'] });
 });
 
 app.listen(3000);
