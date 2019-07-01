@@ -8,7 +8,7 @@ const mongoDBRef = mongojs(url, collections);
 
 console.log('MongoDB is active.');
 
-function insertQuestion(req, res) {
+async function insertQuestion(req, res) {
   const oneQuestion = req.body;
   const today = new Date();
   const date = `${today.getFullYear()}-${today.getMonth() +
@@ -16,7 +16,7 @@ function insertQuestion(req, res) {
   const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
   const dateTime = `${date} ${time}`;
   try {
-    mongoDBRef.collection('questions').save(
+    await mongoDBRef.collection('questions').save(
       {
         name: req.body.name,
         category: req.body.category,
@@ -41,11 +41,11 @@ function insertQuestion(req, res) {
   }
 }
 
-function findQuestionByName(req, res) {
+async function findQuestionByName(req, res) {
   console.log(`try to find: ${req.params.name}`);
   const regName = RegExp(req.params.name, 'i');
   try {
-    mongoDBRef
+    await mongoDBRef
       .collection('questions')
       .find({ name: { $regex: regName } })
       .toArray(function findQuestionResult(err, result) {
@@ -65,11 +65,11 @@ function findQuestionByName(req, res) {
   }
 }
 
-function findQuestionByCategory(req, res) {
+async function findQuestionByCategory(req, res) {
   console.log(`try to find: ${req.params.category}`);
   const regCategory = RegExp(req.params.category, 'i');
   try {
-    mongoDBRef
+    await mongoDBRef
       .collection('questions')
       .find({ category: { $regex: regCategory } })
       .toArray(function findCategoryResult(err, result) {
@@ -88,6 +88,31 @@ function findQuestionByCategory(req, res) {
     res.status(404).json({ errors: e.mapped() });
   }
 }
+// async function insertQuestion(req, res) {
+//   try {
+//     await mongoDBRef.collection('questions').save(
+//       {
+//         name: req.body.name,
+//         category: req.body.category,
+//         question: req.body.question,
+//         created: Date.now()
+//       },
+//       function insertQuestionResult(err, result) {
+//         if (err || !result) {
+//           return res
+//             .status(422)
+//             .json({ errors: ['The question failed to save in database.'] });
+//         }
+//         return res.status(201).json({
+//           message: 'Successfully saved question.',
+//           question: result
+//         });
+//       }
+//     );
+//   } catch (e) {
+//     return res.status(422).json({ errors: e.mapped() });
+//   }
+// }
 
 // function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
