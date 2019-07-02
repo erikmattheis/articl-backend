@@ -31,7 +31,7 @@ app.get('/questions', sanitize.getQuestions, (req, res) => {
   return mongodb.getCollection('questions', res);
 });
 
-app.get('/delete', (req, res) => mongodb.deleteCollection('questions', res));
+app.delete('/questions', (req, res) => mongodb.deleteQuestion(res));
 
 // app.post(
 //   '/questions',

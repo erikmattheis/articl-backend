@@ -105,16 +105,14 @@ async function findQuestionByName(req, res) {
   console.log(`try to find: ${req.query.name}`);
   const regName = RegExp(req.query.name, 'i');
   try {
-    await mongoDBRef
-      .collection('questions')
-      .find({ name: { $regex: regName } })
-      .toArray((err, result) => {
+    await Question
+      .find({ name: { $regex: regName } }, (err, result) => {
         if (err || result[0] === undefined) {
           res
             .status(404)
             .json({ errors: ['The question failed to find by name.'] });
         } else {
-          res.status(302).json({
+          res.status(200).json({
             message: 'Successfully found question.',
             question: result,
           });
@@ -129,16 +127,14 @@ async function findQuestionByCategory(req, res) {
   console.log(`try to find: ${req.query.category}`);
   const regCategory = RegExp(req.query.category, 'i');
   try {
-    await mongoDBRef
-      .collection('questions')
-      .find({ category: { $regex: regCategory } })
-      .toArray((err, result) => {
+    await Question
+      .find({ category: { $regex: regCategory } }, (err, result) => {
         if (err || result[0] === undefined) {
           res
             .status(404)
             .json({ errors: ['The question failed to find by category.'] });
         } else {
-          res.status(302).json({
+          res.status(200).json({
             message: 'Successfully found question.',
             question: result,
           });
@@ -152,14 +148,13 @@ async function findQuestionByCategory(req, res) {
 async function getCollection(collectionName, res) {
   console.log(`try to find: ${collectionName}`);
   try {
-    await mongoDBRef
-      .collection(collectionName)
+    await Question
       .find((err, result) => {
         if (err || !result) {
           res.status(404).json({ errors: ['Failed to find database.'] });
           return true;
         }
-        res.status(302).json({
+        res.status(200).json({
           message: 'Successfully found database.',
           question: result,
         });
@@ -170,17 +165,16 @@ async function getCollection(collectionName, res) {
   }
 }
 
-async function deleteCollection(collectionName, res) {
-  console.log(`try to find: ${collectionName}`);
+async function deleteQuestion(res) {
+  console.log('try to delete all items in Question');
   try {
-    await mongoDBRef
-      .collection('questions')
+    await Question
       .remove({}, (err, result) => {
         if (err || !result) {
           res.status(404).json({ errors: ['Failed to find database.'] });
           return true;
         }
-        res.status(302).json({
+        res.status(200).json({
           message: 'Successfully delete database.',
           question: result,
         });
@@ -222,4 +216,4 @@ module.exports.insertQuestion = insertQuestion;
 module.exports.findQuestionByName = findQuestionByName;
 module.exports.findQuestionByCategory = findQuestionByCategory;
 module.exports.getCollection = getCollection;
-module.exports.deleteCollection = deleteCollection;
+module.exports.deleteQuestion = deleteQuestion;
