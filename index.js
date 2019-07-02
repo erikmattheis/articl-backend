@@ -33,11 +33,18 @@ app.get('/questions', sanitize.getQuestions, (req, res) => {
 
 app.get('/delete', (req, res) => mongodb.deleteCollection('questions', res));
 
+// app.post(
+//   '/questions',
+//   sanitize.postQuestion,
+//   validate.postQuestion,
+//   validate.checkValidationResult,
+//   (req, res) => {
+//     mongodb.insertQuestion(req, res);
+//   },
+// );
+
 app.post(
   '/questions',
-  sanitize.postQuestion,
-  validate.postQuestion,
-  validate.checkValidationResult,
   (req, res) => {
     mongodb.insertQuestion(req, res);
   },
