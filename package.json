@@ -25,6 +25,7 @@
     "express": "^4.17.1",
     "express-rate-limit": "^5.0.0",
     "express-validator": "^6.0.1",
+    "fs": "0.0.1-security",
     "helmet": "^3.18.0",
     "limiter": "^1.1.4",
     "mongojs": "^2.6.0",

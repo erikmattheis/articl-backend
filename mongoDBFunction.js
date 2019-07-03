@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const mongoose = require('mongoose');
+const fs = require('fs');
 
 const url = 'mongodb://127.0.0.1:27017/myTest';
 mongoose.connect(url, {
@@ -55,20 +56,31 @@ const questionSchema = new mongoose.Schema({
 
 const Question = mongoose.model('Question', questionSchema);
 
-async function insertQuestion(req, res) {
-  const today = new Date();
-  const date = `${today.getFullYear()}-${today.getMonth()
-    + 1}-${today.getDate()}`;
-  const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
-  const dateTime = `${date} ${time}`;
+// insert JSON file
+Category.remove();
+const fileName = '/Users/yueyin/Desktop/category.json';
+console.log(`path：${fileName}`);
+const fileContent = fs.readFileSync(fileName);
+if (fileContent) {
+  console.log(`fileContent .len=${fileContent.length}`);
+  const categories = JSON.parse(fileContent);
+  const allItem = categories.categories;
+  Category.insertMany(allItem, (err) => {
+    if (err) throw err;
+    console.log('success');
+    db.close();
+  });
+}
 
+
+async function insertQuestion(req, res) {
   const newQuestion = new Question({
     author: req.body.author,
     name: req.body.name,
     // //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
     category: req.body.category,
-    updated: dateTime,
-    createTime: dateTime,
+    updated: new Date(),
+    createTime: new Date(),
     question: req.body.question,
   });
   // console.log(`dubug:${newQuestion}`);
