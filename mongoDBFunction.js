@@ -1,17 +1,7 @@
 /* eslint-disable no-console */
-// const mongojs = require('mongojs');
-
-// const url = 'mongodb://127.0.0.1:27017/articleMongoJSDatabase';
-
-// const collections = ['questions'];
-
-// const mongoDBRef = mongojs(url, collections);
-
-// console.log('MongoDB is active.');
-
 const mongoose = require('mongoose');
 
-const url = 'mongodb://127.0.0.1:27017/my01testDatabase';
+const url = 'mongodb://127.0.0.1:27017/myTest';
 mongoose.connect(url, {
   useNewUrlParser: true,
   config: { autoIndex: false },
