@@ -17,6 +17,7 @@ app.use(generalLimiter);
 app.use(helmet());
 app.use(bodyParser.json());
 
+
 //  app.use(bodyParser.urlencoded({ extended: true }));
 
 // find questions by name
@@ -33,24 +34,24 @@ app.get('/questions', sanitize.getQuestions, (req, res) => {
 
 app.delete('/questions', (req, res) => mongodb.deleteQuestion(res));
 
-// app.post(
-//   '/questions',
-//   sanitize.postQuestion,
-//   validate.postQuestion,
-//   validate.checkValidationResult,
-//   (req, res) => {
-//     mongodb.insertQuestion(req, res);
-//   },
-// );
-
 app.post(
   '/questions',
   sanitize.postQuestion,
   validate.postQuestion,
+  validate.checkValidationResult,
   (req, res) => {
     mongodb.insertQuestion(req, res);
   },
 );
+
+// app.post(
+//   '/questions',
+//   sanitize.postQuestion,
+//   validate.postQuestion,
+//   (req, res) => {
+//     mongodb.insertQuestion(req, res);
+//   },
+// );
 
 app.listen(3000);
 console.log('listening to port 3000');
