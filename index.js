@@ -45,6 +45,8 @@ app.delete('/questions', (req, res) => mongodb.deleteQuestion(res));
 
 app.post(
   '/questions',
+  sanitize.postQuestion,
+  validate.postQuestion,
   (req, res) => {
     mongodb.insertQuestion(req, res);
   },

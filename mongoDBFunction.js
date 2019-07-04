@@ -46,7 +46,7 @@ const questionSchema = new mongoose.Schema({
     answers: [
       {
         id: Number,
-        answers: String,
+        answer: String,
         correct: Boolean,
         Explanation: String,
       },
@@ -56,21 +56,21 @@ const questionSchema = new mongoose.Schema({
 
 const Question = mongoose.model('Question', questionSchema);
 
-// insert JSON file
-Category.remove();
-const fileName = '/Users/yueyin/Desktop/category.json';
-console.log(`path：${fileName}`);
-const fileContent = fs.readFileSync(fileName);
-if (fileContent) {
-  console.log(`fileContent .len=${fileContent.length}`);
-  const categories = JSON.parse(fileContent);
-  const allItem = categories.categories;
-  Category.insertMany(allItem, (err) => {
-    if (err) throw err;
-    console.log('success');
-    db.close();
-  });
-}
+//  insert JSON file
+// Category.remove();
+// const fileName = '/Users/yueyin/Desktop/category.json';
+// console.log(`path：${fileName}`);
+// const fileContent = fs.readFileSync(fileName);
+// if (fileContent) {
+//   console.log(`fileContent .len=${fileContent.length}`);
+//   const categories = JSON.parse(fileContent);
+//   const allItem = categories.categories;
+//   Category.insertMany(allItem, (err) => {
+//     if (err) throw err;
+//     console.log('success');
+//     db.close();
+//   });
+// }
 
 
 async function insertQuestion(req, res) {
@@ -86,13 +86,13 @@ async function insertQuestion(req, res) {
   // console.log(`dubug:${newQuestion}`);
   try {
     await newQuestion.save((err, result) => {
-      if (err || !result) {
+      if (err) {
         res
-          .status(404)
-          .json({ errors: ['The question failed to save in database.'] });
+          .status(500)
+          .json({ errors: err.mapped() });
       } else {
         res.status(201).json({
-          message: 'Successfully saved question.',
+          message: 'Successfully insert question.',
           question: result,
         });
       }
