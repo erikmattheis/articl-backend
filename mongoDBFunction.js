@@ -2,7 +2,9 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 
-const url = 'mongodb://127.0.0.1:27017/myTest';
+//  const url = 'mongodb://127.0.0.1:27017/myTest';
+const url = 'mongodb+srv://root:root@cluster0-jl94d.gcp.mongodb.net/articleDatabase?retryWrites=true&w=majority';
+
 mongoose.connect(url, {
   useNewUrlParser: true,
   config: { autoIndex: false },
