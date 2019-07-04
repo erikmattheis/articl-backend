@@ -1,4 +1,4 @@
-const { check, checkBody, validationResult } = require('express-validator');
+const { check, body, validationResult } = require('express-validator');
 
 function checkValidationResult(req, res, next) {
   const errors = validationResult(req);
@@ -29,10 +29,25 @@ exports.postQuestion = [
     .not()
     .isEmpty()
     .withMessage('Your Q&A must have category.'),
-  check('question.question')// won't work
+  check('question.question')
     .not()
     .isEmpty()
     .withMessage('Your Q&A must have question.'),
+  check('question.answers')
+    .custom((value) => {
+      if (value.length < 2) {
+        throw new Error('Your Q&A must have 2 answers.');
+      } return true;
+    })
+    .custom((value) => {
+      let num = 0;
+      value.forEach((item) => {
+        if (item.correct === true) num += 1;
+      });
+      if (num !== 1) {
+        throw new Error(`Your Q&A must have 1 correct answer, but now you have ${num}.`);
+      } return true;
+    }),
 ];
 
 // exports.getQuestions = [

@@ -34,24 +34,25 @@ app.get('/questions', sanitize.getQuestions, (req, res) => {
 
 app.delete('/questions', (req, res) => mongodb.deleteQuestion(res));
 
-app.post(
-  '/questions',
-  sanitize.postQuestion,
-  validate.postQuestion,
-  validate.checkValidationResult,
-  (req, res) => {
-    mongodb.insertQuestion(req, res);
-  },
-);
-
 // app.post(
 //   '/questions',
 //   sanitize.postQuestion,
 //   validate.postQuestion,
+//   validate.checkValidationResult,
 //   (req, res) => {
 //     mongodb.insertQuestion(req, res);
 //   },
 // );
+
+app.post(
+  '/questions',
+  validate.postQuestion,
+  validate.checkValidationResult,
+  sanitize.postQuestion,
+  (req, res) => {
+    mongodb.insertQuestion(req, res);
+  },
+);
 
 app.listen(3000);
 console.log('listening to port 3000');
