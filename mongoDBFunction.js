@@ -50,7 +50,7 @@ const questionSchema = new mongoose.Schema({
         id: Number,
         answer: String,
         correct: Boolean,
-        Explanation: String,
+        explanation: String,
       },
     ],
   },

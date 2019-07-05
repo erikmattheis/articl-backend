@@ -47,6 +47,12 @@ exports.postQuestion = [
       if (num !== 1) {
         throw new Error(`Your Q&A must have 1 correct answer, but now you have ${num}.`);
       } return true;
+    })
+    .custom((value) => {
+      value.forEach((item) => {
+        if (item.explanation === null) throw new Error('Your Q&A must have explanation for each answer.');
+      });
+      return true;
     }),
 ];
 
