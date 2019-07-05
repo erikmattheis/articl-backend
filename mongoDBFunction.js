@@ -169,44 +169,6 @@ async function findQuestionById(req, res) {
   }
 }
 
-async function updateQuestionById(req, res) {
-  const newQuestion = new Question({
-    _id: req.query.id,
-    author: req.body.author,
-    name: req.body.name,
-    // //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
-    category: req.body.category,
-    updated: new Date(),
-    createTime: req.body.createTime,
-    question: req.body.question,
-  });
-  // console.log(`dubug:${newQuestion}`);
-  try {
-    await Question.remove({ _id: req.query.id }, (err) => {
-      if (err) {
-        res
-          .status(500)
-          .json({ errors: err.mapped() });
-      }
-    });
-    await newQuestion.save((err, result) => {
-      if (err) {
-        res
-          .status(500)
-          .json({ errors: err.mapped() });
-      } else {
-        res.status(201).json({
-          message: 'Successfully insert question.',
-          question: result,
-        });
-      }
-    });
-  } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
-  }
-}
-
-
 async function getCollection(collectionName, res) {
   console.log(`try to find: ${collectionName}`);
   try {
@@ -267,31 +229,32 @@ async function deleteQuestionById(req, res) {
   }
 }
 
-// async function insertQuestion(req, res) {
-//   try {
-//     await mongoDBRef.collection('questions').save(
-//       {
-//         name: req.body.name,
-//         category: req.body.category,
-//         question: req.body.question,
-//         created: Date.now()
-//       },
-//       function insertQuestionResult(err, result) {
-//         if (err || !result) {
-//           return res
-//             .status(422)
-//             .json({ errors: ['The question failed to save in database.'] });
-//         }
-//         return res.status(201).json({
-//           message: 'Successfully saved question.',
-//           question: result
-//         });
-//       }
-//     );
-//   } catch (e) {
-//     return res.status(422).json({ errors: e.mapped() });
-//   }
-// }
+async function updateQuestionById(req, res) {
+  try {
+    const updateItems = {
+      author: req.body.author,
+      name: req.body.name,
+      // //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
+      category: req.body.category,
+      updated: new Date(),
+      question: req.body.question,
+    };
+    await Question.updateOne({ _id: req.query.id }, updateItems, (err, result) => {
+      if (err) {
+        res
+          .status(500)
+          .json({ errors: err.mapped() });
+      } else {
+        res.status(201).json({
+          message: 'Successfully insert question.',
+          question: result,
+        });
+      }
+    });
+  } catch (e) {
+    return res.status(422).json({ errors: e.mapped() });
+  }
+}
 
 // function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
