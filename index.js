@@ -22,15 +22,21 @@ app.use(bodyParser.json());
 
 // find questions by name
 // find quesions by category
-app.get('/questions', sanitize.getQuestions, (req, res) => {
-  if (req.query.name) {
-    return mongodb.findQuestionByName(req, res);
-  }
-  if (req.query.category) {
-    return mongodb.findQuestionByCategory(req, res);
-  }
-  return mongodb.getCollection('questions', res);
-});
+app.get('/questions',
+  validate.getQuestions,
+  validate.checkValidationResult,
+  sanitize.getQuestions, (req, res) => {
+    if (req.query.name) {
+      return mongodb.findQuestionByName(req, res);
+    }
+    if (req.query.category) {
+      return mongodb.findQuestionByCategory(req, res);
+    }
+    if (req.query.id) {
+      return mongodb.findQuestionById(req, res);
+    }
+    return mongodb.getCollection('questions', res);
+  });
 
 app.delete('/questions', (req, res) => mongodb.deleteQuestion(res));
 

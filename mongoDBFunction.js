@@ -148,6 +148,26 @@ async function findQuestionByCategory(req, res) {
     return res.status(422).json({ errors: e.mapped() });
   }
 }
+async function findQuestionById(req, res) {
+  console.log(`try to find id : ${req.query.id}`);
+  try {
+    await Question
+      .find({ _id: req.query.id }, (err, result) => {
+        if (err || result[0] === undefined) {
+          res
+            .status(404)
+            .json({ errors: ['The question failed to find by id.'] });
+        } else {
+          res.status(200).json({
+            message: 'Successfully found question.',
+            question: result,
+          });
+        }
+      });
+  } catch (e) {
+    return res.status(422).json({ errors: e.mapped() });
+  }
+}
 
 async function getCollection(collectionName, res) {
   console.log(`try to find: ${collectionName}`);
@@ -219,5 +239,6 @@ async function deleteQuestion(res) {
 module.exports.insertQuestion = insertQuestion;
 module.exports.findQuestionByName = findQuestionByName;
 module.exports.findQuestionByCategory = findQuestionByCategory;
+module.exports.findQuestionById = findQuestionById;
 module.exports.getCollection = getCollection;
 module.exports.deleteQuestion = deleteQuestion;

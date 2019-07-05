@@ -1,4 +1,5 @@
 const { check, validationResult } = require('express-validator');
+//  const {ObjectId} = require('mongoose').Types;
 
 function checkValidationResult(req, res, next) {
   const errors = validationResult(req);
@@ -56,13 +57,12 @@ exports.postQuestion = [
     }),
 ];
 
-// exports.getQuestions = [
-//   check('category')
-//     .not()
-//     .isEmpty()
-//     .isIn()
-//     .withMessage('The category does not exist.'),
-// ];
+exports.getQuestions = [
+  check('id')
+    .optional()
+    .isMongoId()
+    .withMessage('This is not a correct id'),
+];
 
 
 // exports.checkValidationResult = checkValidationResult;
