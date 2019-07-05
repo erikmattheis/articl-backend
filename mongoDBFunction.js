@@ -231,14 +231,8 @@ async function deleteQuestionById(req, res) {
 
 async function updateQuestionById(req, res) {
   try {
-    const updateItems = {
-      author: req.body.author,
-      name: req.body.name,
-      // //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
-      category: req.body.category,
-      updated: new Date(),
-      question: req.body.question,
-    };
+    const updateItems = req.body;
+    updateItems.updated = new Date();
     await Question.updateOne({ _id: req.query.id }, updateItems, (err, result) => {
       if (err) {
         res

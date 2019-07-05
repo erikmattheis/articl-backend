@@ -38,23 +38,14 @@ app.get('/questions',
     return mongodb.getCollection('questions', res);
   });
 
-app.delete('/questions', (req, res) => {
-  if (req.query.id) {
-    return mongodb.deleteQuestionById(req, res);
-  }
-  return mongodb.deleteQuestion(res);
-});
-
-
-// app.post(
-//   '/questions',
-//   sanitize.postQuestion,
-//   validate.postQuestion,
-//   validate.checkValidationResult,
-//   (req, res) => {
-//     mongodb.insertQuestion(req, res);
-//   },
-// );
+app.delete('/questions',
+  validate.deleteQuestions,
+  validate.checkValidationResult, (req, res) => {
+    if (req.query.id) {
+      return mongodb.deleteQuestionById(req, res);
+    }
+    return mongodb.deleteQuestion(res);
+  });
 
 app.post(
   '/questions',
@@ -68,6 +59,8 @@ app.post(
 
 app.put(
   '/questions',
+  validate.putQuestion,
+  validate.checkValidationResult,
   (req, res) => {
     if (req.query.id) {
       return mongodb.updateQuestionById(req, res);

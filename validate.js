@@ -1,4 +1,4 @@
-const { check, validationResult } = require('express-validator');
+const { check, sanitize, validationResult } = require('express-validator');
 //  const {ObjectId} = require('mongoose').Types;
 
 function checkValidationResult(req, res, next) {
@@ -19,21 +19,31 @@ exports.postQuestion = [
   check('author')
     .not()
     .isEmpty()
-    .withMessage('Your Q&A must have a author.'),
+    .withMessage('Your Q&A must have a author.')
+    .isString()
+    .withMessage('Your author name must be a String.'),
   check('name')
     .not()
     .isEmpty()
     .withMessage('Your Q&A must have a name.')
+    .isString()
+    .withMessage('Your question name must be a String.')
     .isLength({ min: 5 })
     .withMessage('Your Q&A must have a name at least five characters long.'),
   check('category')
     .not()
     .isEmpty()
-    .withMessage('Your Q&A must have category.'),
+    .withMessage('Your Q&A must have category.')
+    .isString()
+    .withMessage('Your category must be a String.'),
   check('question.question')
     .not()
     .isEmpty()
-    .withMessage('Your Q&A must have question.'),
+    .withMessage('Your Q&A must have question.')
+    .isString()
+    .withMessage('Your question content must be a String.')
+    .isLength({ min: 5 })
+    .withMessage('Your Q&A must have a question content at least five characters long.'),
   check('question.answers')
     .custom((value) => {
       if (value.length < 2) {
@@ -57,6 +67,30 @@ exports.postQuestion = [
     }),
 ];
 
+exports.putQuestion = [
+  check('id')
+    .optional()
+    .isMongoId()
+    .withMessage('This is not a correct id'),
+  check('author')
+    .optional()
+    .isString()
+    .withMessage('Your author name must be a String.')
+    .unescape(),
+  check('name')
+    .optional()
+    .isString()
+    .withMessage('Your question name must be a String.')
+    .isLength({ min: 5 })
+    .withMessage('Your Q&A must have a name at least five characters long.')
+    .unescape(),
+  check('category')
+    .optional()
+    .isString()
+    .withMessage('Your category must be a String.')
+    .unescape(),
+];
+
 exports.getQuestions = [
   check('id')
     .optional()
@@ -64,5 +98,11 @@ exports.getQuestions = [
     .withMessage('This is not a correct id'),
 ];
 
+exports.deleteQuestions = [
+  check('id')
+    .optional()
+    .isMongoId()
+    .withMessage('This is not a correct id'),
+];
 
 // exports.checkValidationResult = checkValidationResult;
