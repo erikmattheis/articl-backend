@@ -51,6 +51,30 @@ exports.postQuestion = [
       } return true;
     })
     .custom((value) => {
+      value.forEach((item) => {
+        if (item.id === undefined || item.id === null) throw new Error('Your Q&A must have an id for each answer.');
+      });
+      return true;
+    })
+    .custom((value) => {
+      value.forEach((item) => {
+        if (item.answer === undefined || item.answer === null) throw new Error('Your Q&A must have an answer for each answer.');
+      });
+      return true;
+    })
+    .custom((value) => {
+      value.forEach((item) => {
+        if (item.correct === undefined || item.correct === null) throw new Error('Your Q&A must have an correct tag for each answer.');
+      });
+      return true;
+    })
+    .custom((value) => {
+      value.forEach((item) => {
+        if (item.explanation === undefined || item.explanation === null) throw new Error('Your Q&A must have an explanation for each answer.');
+      });
+      return true;
+    })
+    .custom((value) => {
       let num = 0;
       value.forEach((item) => {
         if (item.correct === true) num += 1;
@@ -58,12 +82,6 @@ exports.postQuestion = [
       if (num !== 1) {
         throw new Error(`Your Q&A must have 1 correct answer, but now you have ${num}.`);
       } return true;
-    })
-    .custom((value) => {
-      value.forEach((item) => {
-        if (item.explanation === null) throw new Error('Your Q&A must have explanation for each answer.');
-      });
-      return true;
     }),
 ];
 
