@@ -1,4 +1,4 @@
-const { check, sanitize, validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 //  const {ObjectId} = require('mongoose').Types;
 
 function checkValidationResult(req, res, next) {
@@ -67,29 +67,29 @@ exports.postQuestion = [
     }),
 ];
 
-exports.putQuestion = [
-  check('id')
-    .optional()
-    .isMongoId()
-    .withMessage('This is not a correct id'),
-  check('author')
-    .optional()
-    .isString()
-    .withMessage('Your author name must be a String.')
-    .unescape(),
-  check('name')
-    .optional()
-    .isString()
-    .withMessage('Your question name must be a String.')
-    .isLength({ min: 5 })
-    .withMessage('Your Q&A must have a name at least five characters long.')
-    .unescape(),
-  check('category')
-    .optional()
-    .isString()
-    .withMessage('Your category must be a String.')
-    .unescape(),
-];
+// exports.putQuestion = [
+//   check('id')
+//     .optional()
+//     .isMongoId()
+//     .withMessage('This is not a correct id'),
+//   check('author')
+//     .optional()
+//     .isString()
+//     .withMessage('Your author name must be a String.')
+//     .unescape(),
+//   check('name')
+//     .optional()
+//     .isString()
+//     .withMessage('Your question name must be a String.')
+//     .isLength({ min: 5 })
+//     .withMessage('Your Q&A must have a name at least five characters long.')
+//     .unescape(),
+//   check('category')
+//     .optional()
+//     .isString()
+//     .withMessage('Your category must be a String.')
+//     .unescape(),
+// ];
 
 exports.getQuestions = [
   check('id')

@@ -59,8 +59,9 @@ app.post(
 
 app.put(
   '/questions',
-  validate.putQuestion,
+  validate.postQuestion,
   validate.checkValidationResult,
+  sanitize.postQuestion,
   (req, res) => {
     if (req.query.id) {
       return mongodb.updateQuestionById(req, res);
