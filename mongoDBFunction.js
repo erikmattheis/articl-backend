@@ -9,7 +9,7 @@ mongoose.connect(url, {
   useNewUrlParser: true,
   config: { autoIndex: false },
 });
-
+mongoose.set('useFindAndModify', false);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
@@ -169,6 +169,44 @@ async function findQuestionById(req, res) {
   }
 }
 
+async function updateQuestionById(req, res) {
+  const newQuestion = new Question({
+    _id: req.query.id,
+    author: req.body.author,
+    name: req.body.name,
+    // //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
+    category: req.body.category,
+    updated: new Date(),
+    createTime: req.body.createTime,
+    question: req.body.question,
+  });
+  // console.log(`dubug:${newQuestion}`);
+  try {
+    await Question.remove({ _id: req.query.id }, (err) => {
+      if (err) {
+        res
+          .status(500)
+          .json({ errors: err.mapped() });
+      }
+    });
+    await newQuestion.save((err, result) => {
+      if (err) {
+        res
+          .status(500)
+          .json({ errors: err.mapped() });
+      } else {
+        res.status(201).json({
+          message: 'Successfully insert question.',
+          question: result,
+        });
+      }
+    });
+  } catch (e) {
+    return res.status(422).json({ errors: e.mapped() });
+  }
+}
+
+
 async function getCollection(collectionName, res) {
   console.log(`try to find: ${collectionName}`);
   try {
@@ -196,6 +234,26 @@ async function deleteQuestion(res) {
       .remove({}, (err, result) => {
         if (err || !result) {
           res.status(404).json({ errors: ['Failed to find database.'] });
+          return true;
+        }
+        res.status(200).json({
+          message: 'Successfully delete database.',
+          question: result,
+        });
+        return false;
+      });
+  } catch (e) {
+    return res.status(422).json({ errors: e.mapped() });
+  }
+}
+
+async function deleteQuestionById(req, res) {
+  console.log('try to delete a Question');
+  try {
+    await Question
+      .remove({ _id: req.query.id }, (err, result) => {
+        if (err || !result) {
+          res.status(404).json({ errors: ['Failed to delete this question.'] });
           return true;
         }
         res.status(200).json({
@@ -240,5 +298,7 @@ module.exports.insertQuestion = insertQuestion;
 module.exports.findQuestionByName = findQuestionByName;
 module.exports.findQuestionByCategory = findQuestionByCategory;
 module.exports.findQuestionById = findQuestionById;
+module.exports.updateQuestionById = updateQuestionById;
 module.exports.getCollection = getCollection;
 module.exports.deleteQuestion = deleteQuestion;
+module.exports.deleteQuestionById = deleteQuestionById;

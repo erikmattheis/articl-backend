@@ -38,7 +38,13 @@ app.get('/questions',
     return mongodb.getCollection('questions', res);
   });
 
-app.delete('/questions', (req, res) => mongodb.deleteQuestion(res));
+app.delete('/questions', (req, res) => {
+  if (req.query.id) {
+    return mongodb.deleteQuestionById(req, res);
+  }
+  return mongodb.deleteQuestion(res);
+});
+
 
 // app.post(
 //   '/questions',
@@ -57,6 +63,16 @@ app.post(
   sanitize.postQuestion,
   (req, res) => {
     mongodb.insertQuestion(req, res);
+  },
+);
+
+app.put(
+  '/questions',
+  (req, res) => {
+    if (req.query.id) {
+      return mongodb.updateQuestionById(req, res);
+    }
+    return res.status(422).json({ errors: ['You shoule give a specific conditon to find resources.'] });
   },
 );
 
