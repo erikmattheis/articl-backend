@@ -19,29 +19,21 @@ exports.postQuestion = [
   check('author')
     .not()
     .isEmpty()
-    .withMessage('Your Q&A must have a author.')
-    .isString()
-    .withMessage('Your author name must be a String.'),
+    .withMessage('Your Q&A must have a author.'),
   check('name')
     .not()
     .isEmpty()
     .withMessage('Your Q&A must have a name.')
-    .isString()
-    .withMessage('Your question name must be a String.')
     .isLength({ min: 5 })
     .withMessage('Your Q&A must have a name at least five characters long.'),
   check('category')
     .not()
     .isEmpty()
-    .withMessage('Your Q&A must have category.')
-    .isString()
-    .withMessage('Your category must be a String.'),
+    .withMessage('Your Q&A must have category.'),
   check('question.question')
     .not()
     .isEmpty()
     .withMessage('Your Q&A must have question.')
-    .isString()
-    .withMessage('Your question content must be a String.')
     .isLength({ min: 5 })
     .withMessage('Your Q&A must have a question content at least five characters long.'),
   check('question.answers')
@@ -58,7 +50,7 @@ exports.postQuestion = [
     })
     .custom((value) => {
       value.forEach((item) => {
-        if (item.answer === undefined || item.answer === null) throw new Error('Your Q&A must have an answer for each answer.');
+        if (!item.answer) throw new Error('Your Q&A must have an answer for each answer.');
       });
       return true;
     })
@@ -70,7 +62,7 @@ exports.postQuestion = [
     })
     .custom((value) => {
       value.forEach((item) => {
-        if (item.explanation === undefined || item.explanation === null) throw new Error('Your Q&A must have an explanation for each answer.');
+        if (!item.explanation) throw new Error('Your Q&A must have an explanation for each answer.');
       });
       return true;
     })
