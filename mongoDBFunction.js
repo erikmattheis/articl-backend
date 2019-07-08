@@ -47,7 +47,6 @@ const questionSchema = new mongoose.Schema({
     question: String,
     answers: [
       {
-        id: Number,
         answer: String,
         correct: Boolean,
         explanation: String,

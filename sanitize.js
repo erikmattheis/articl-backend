@@ -7,7 +7,6 @@ function postQuestion(req, res, next) {
     req.body.name = sanitizeHtml(req.body.name);
     req.body.category = sanitizeHtml(req.body.category);
     req.body.question.question = sanitizeHtml(req.body.question.question);
-    req.body.question.answers.id = sanitizeHtml(req.body.question.answers.id);
     req.body.question.answers.answer = sanitizeHtml(req.body.question.answers.answer);
     req.body.question.answers.correct = sanitizeHtml(req.body.question.answers.correct);
     req.body.question.answers.explanation = sanitizeHtml(req.body.question.answers.explanation);

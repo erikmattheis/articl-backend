@@ -36,35 +36,23 @@ exports.postQuestion = [
     .withMessage('Your Q&A must have question.')
     .isLength({ min: 5 })
     .withMessage('Your Q&A must have a question content at least five characters long.'),
+  check('question.answers.*.answer')
+    .not()
+    .isEmpty()
+    .withMessage('Your Q&A must have an answer for each answer.'),
+  check('question.answers.*.correct')
+    .not()
+    .isEmpty()
+    .withMessage('Your Q&A must have an correct tag for each answer.'),
+  check('question.answers.*.explanation')
+    .not()
+    .isEmpty()
+    .withMessage('Your Q&A must have an explanation for each answer.'),
   check('question.answers')
     .custom((value) => {
       if (value.length < 2) {
         throw new Error('Your Q&A must have 2 answers.');
       } return true;
-    })
-    .custom((value) => {
-      value.forEach((item) => {
-        if (item.id === undefined || item.id === null) throw new Error('Your Q&A must have an id for each answer.');
-      });
-      return true;
-    })
-    .custom((value) => {
-      value.forEach((item) => {
-        if (!item.answer) throw new Error('Your Q&A must have an answer for each answer.');
-      });
-      return true;
-    })
-    .custom((value) => {
-      value.forEach((item) => {
-        if (item.correct === undefined || item.correct === null) throw new Error('Your Q&A must have an correct tag for each answer.');
-      });
-      return true;
-    })
-    .custom((value) => {
-      value.forEach((item) => {
-        if (!item.explanation) throw new Error('Your Q&A must have an explanation for each answer.');
-      });
-      return true;
     })
     .custom((value) => {
       let num = 0;
