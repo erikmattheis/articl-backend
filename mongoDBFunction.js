@@ -151,13 +151,17 @@ async function findQuestionById(req, res) {
   try {
     await Question
       .find({ _id: req.params.id }, (err, result) => {
-        res.status(200).json({
-          message: 'success',
-          question: result,
-        });
+        if (err) {
+          res.status(500).json({ err });
+        } else {
+          res.status(200).json({
+            message: 'success',
+            question: result,
+          });
+        }
       });
-  } catch (e) {
-    res.status(500).json({ e });
+  } catch (err) {
+    res.status(500).json({ err });
   }
 }
 

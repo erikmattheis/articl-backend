@@ -31,10 +31,7 @@ app.use(bodyParser.json());
 // find questions by name
 // find quesions by category
 
-app.get('/questions/:id',
-  validate.getQuestions,
-  validate.checkValidationResult,
-  mongodb.findQuestionById);
+app.get('/questions/:id', mongodb.findQuestionById);
 
 app.get('/questions',
   validate.getQuestions,
