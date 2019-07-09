@@ -148,23 +148,16 @@ async function findQuestionByCategory(req, res) {
   }
 }
 async function findQuestionById(req, res) {
-  console.log(`try to find id : ${req.query.id}`);
   try {
     await Question
-      .find({ _id: req.query.id }, (err, result) => {
-        if (err || result[0] === undefined) {
-          res
-            .status(404)
-            .json({ errors: ['The question failed to find by id.'] });
-        } else {
-          res.status(200).json({
-            message: 'Successfully found question.',
-            question: result,
-          });
-        }
+      .find({ _id: req.params.id }, (err, result) => {
+        res.status(200).json({
+          message: 'success',
+          question: result,
+        });
       });
   } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    res.status(500).json({ e });
   }
 }
 
