@@ -3,6 +3,7 @@ const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
+const cors = require('cors');
 const sanitize = require('./sanitize');
 const validate = require('./validate');
 const mongodb = require('./mongoDBFunction');
@@ -13,10 +14,17 @@ const generalLimiter = rateLimit({
   max: 100,
 });
 
-app.use(generalLimiter);
-app.use(helmet());
-app.use(bodyParser.json());
+// app.use(generalLimiter);
+// app.use(helmet());
+const corsOptions = {
+  origin: 'http://localhost:8080',
+  credentials: true,
+  enablePreflight: true,
+};
 
+app.use(cors());
+app.options('*', cors());
+app.use(bodyParser.json());
 
 //  app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -73,9 +81,11 @@ app.put(
 app.listen(3000);
 console.log('listening to port 3000');
 
+/*
 app.all('*', (req, res) => {
   res.status(404).json({ errors: ['Resource not found.'] });
 });
 app.use((req, res) => {
   res.status(500).json({ errors: ['An unknown error occurred.'] });
 });
+*/
