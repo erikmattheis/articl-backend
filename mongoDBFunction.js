@@ -2,8 +2,11 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 
-//  const url = 'mongodb://127.0.0.1:27017/myTest';
-const url = 'mongodb+srv://root:root@cluster0-jl94d.gcp.mongodb.net/articleDatabase?retryWrites=true&w=majority';
+//  local
+const url = 'mongodb://127.0.0.1:27017/myTest';
+
+//  remote
+//  const url = 'mongodb+srv://root:root@cluster0-jl94d.gcp.mongodb.net/articleDatabase?retryWrites=true&w=majority';
 
 mongoose.connect(url, {
   useNewUrlParser: true,
@@ -150,7 +153,7 @@ async function findQuestionByCategory(req, res) {
 async function findQuestionById(req, res) {
   try {
     await Question
-      .find({ _id: req.params.id }, (err, result) => {
+      .find({ _id: req.query.id }, (err, result) => {
         if (err) {
           res.status(500).json({ err });
         } else {
