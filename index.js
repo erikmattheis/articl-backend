@@ -7,7 +7,7 @@ const cors = require('cors');
 const sanitize = require('./sanitize');
 const validate = require('./validate');
 const mongodb = require('./mongoDBFunction');
-const { categories } = require('./categoriesHelper');
+// const { categories } = require('./categoriesHelper');
 
 // const jsonParser = bodyParser.json();
 const app = express();
@@ -35,12 +35,7 @@ app.use(bodyParser.json());
 
 //  app.get('/questions/:id', mongodb.findQuestionById);
 
-app.get('/categories', (req, res) => {
-  res.status(200).json({
-    message: 'Successfully get categories.',
-    categories,
-  });
-});
+app.get('/categories', (req, res) => mongodb.getCategories(res));
 
 app.get('/questions',
   validate.getQuestions,

@@ -1,13 +1,3 @@
-// const fs = require('fs');
-
-
-// let data = fs.readFileSync('./category.json', 'utf8');
-// data = JSON.parse(data);
-// const { categories } = data;
-// console.log('do open');
-
-// module.exports.categories = categories;
-
 const { Category } = require('./mongoDBFunction');
 
 async function getCategories(res) {
@@ -29,4 +19,3 @@ async function getCategories(res) {
     return res.status(422).json({ errors: e.mapped() });
   }
 }
-module.exports.getCategories = getCategories;

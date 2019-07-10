@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 
 //  local
-const url = 'mongodb://127.0.0.1:27017/myTest';
+//  const url = 'mongodb://127.0.0.1:27017/myTest';
 
 //  remote
-//  const url = 'mongodb+srv://root:root@cluster0-jl94d.gcp.mongodb.net/articleDatabase?retryWrites=true&w=majority';
+const url = 'mongodb+srv://root:root@cluster0-jl94d.gcp.mongodb.net/articleDatabase?retryWrites=true&w=majority';
 
 mongoose.connect(url, {
   useNewUrlParser: true,
@@ -28,15 +28,8 @@ const categorySchema = new mongoose.Schema({
   parent: Number,
   html_title: String,
   category_image: String,
-}, {
-  toJSON: { virtuals: true },
 });
-categorySchema.virtual('questions', {
-  ref: 'Question',
-  localField: '_id',
-  foreignField: 'category',
-  justOne: false,
-});
+
 const Category = mongoose.model('Category', categorySchema);
 
 const questionSchema = new mongoose.Schema({
@@ -60,7 +53,7 @@ const questionSchema = new mongoose.Schema({
 
 const Question = mongoose.model('Question', questionSchema);
 
-//  insert JSON file
+// //  insert JSON file
 // Category.remove();
 // const fileName = '/Users/yueyin/Desktop/category.json';
 // console.log(`path：${fileName}`);
@@ -249,6 +242,26 @@ async function updateQuestionById(req, res) {
   }
 }
 
+async function getCategories(res) {
+  console.log('try to find all categories');
+  try {
+    await Category
+      .find((err, result) => {
+        if (err || !result) {
+          res.status(404).json({ errors: ['Failed to find database.'] });
+          return true;
+        }
+        res.status(200).json({
+          message: 'Successfully found database.',
+          question: result,
+        });
+        return false;
+      });
+  } catch (e) {
+    return res.status(422).json({ errors: e.mapped() });
+  }
+}
+
 // function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
 module.exports.findQuestionByName = findQuestionByName;
@@ -258,3 +271,4 @@ module.exports.updateQuestionById = updateQuestionById;
 module.exports.getCollection = getCollection;
 module.exports.deleteQuestion = deleteQuestion;
 module.exports.deleteQuestionById = deleteQuestionById;
+module.exports.getCategories = getCategories;
