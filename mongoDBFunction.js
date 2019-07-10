@@ -262,6 +262,27 @@ async function getCategories(res) {
   }
 }
 
+async function getCategoriesNames(callback) {
+  console.log('try to find all categories');
+  try {
+    await Category
+      .find((err, result) => {
+        if (err || !result) {
+          return false;
+        }
+        const nameArray = new Array();
+        result.forEach((category) => {
+          nameArray.push(category.name);
+        });
+        console.log(`categories name is : ${nameArray[1]}`);
+        callback(nameArray);
+        return true;
+      });
+  } catch (e) {
+    return res.status(422).json({ errors: e.mapped() });
+  }
+}
+
 // function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
 module.exports.findQuestionByName = findQuestionByName;
@@ -272,3 +293,4 @@ module.exports.getCollection = getCollection;
 module.exports.deleteQuestion = deleteQuestion;
 module.exports.deleteQuestionById = deleteQuestionById;
 module.exports.getCategories = getCategories;
+module.exports.getCategoriesNames = getCategoriesNames;

@@ -1,6 +1,6 @@
 const { check, validationResult } = require('express-validator');
-// const { categories } = require('./categoriesHelper');
-//  const {ObjectId} = require('mongoose').Types;
+const { getCategoriesNames } = require('./mongoDBFunction');
+
 
 function checkValidationResult(req, res, next) {
   const errors = validationResult(req);
@@ -37,15 +37,17 @@ exports.postQuestion = [
     .not()
     .isEmpty()
     .withMessage('Your Q&A must have category.')
-    // .custom((value) => {
-    //   let num = 0;
-    //   categories.forEach((category) => {
-    //     if (category.name === value) num += 1;
-    //   });
-    //   if (num < 1) {
-    //     throw new Error(`Your category ${value} is wrong，`);
-    //   } return true;
-    // })
+    .custom((value) => {
+      let num = 0;
+      getCategoriesNames((result) => {
+        result.forEach((category) => {
+          if (category.name === value) num += 1;
+        });
+        if (num < 1) {
+          throw new Error(`Your category ${value} is wrong，`);
+        } return true;
+      });
+    })
     .isAlpha()
     .withMessage('Your Q&A must be letters only.')
     .escape(),
