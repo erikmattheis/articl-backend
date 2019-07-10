@@ -7,6 +7,8 @@ const cors = require('cors');
 const sanitize = require('./sanitize');
 const validate = require('./validate');
 const mongodb = require('./mongoDBFunction');
+const { categories } = require('./categoriesHelper');
+
 // const jsonParser = bodyParser.json();
 const app = express();
 const generalLimiter = rateLimit({
@@ -33,31 +35,12 @@ app.use(bodyParser.json());
 
 //  app.get('/questions/:id', mongodb.findQuestionById);
 
-
-// when we do: http://localhost:3000/questions/id?id=5d250873b5a98f4511a616b8
-// we can get
-// 1
-// 111
-app.get('/questions/:id', (req, res) => {
-  console.log(1);
-  if (req.query.id) {
-    console.log(111);
-    mongodb.findQuestionById(req, res);
-  }
+app.get('/categories', (req, res) => {
+  res.status(200).json({
+    message: 'Successfully get categories.',
+    categories,
+  });
 });
-
-// when we do http://localhost:3000/questions/category?category=test
-// below function can not be used
-// only get console.log(1);
-app.get('/questions/:category', (req, res) => {
-  console.log(2);
-  if (req.query.category) {
-    console.log(222);
-    mongodb.findQuestionByCategory(req, res);
-  }
-});
-
-app.get('/questions/:name', mongodb.findQuestionByName);
 
 app.get('/questions',
   validate.getQuestions,
@@ -69,9 +52,9 @@ app.get('/questions',
     if (req.query.category) {
       return mongodb.findQuestionByCategory(req, res);
     }
-    // if (req.query.id) {
-    //   return mongodb.findQuestionById(req, res);
-    // }
+    if (req.query.id) {
+      return mongodb.findQuestionById(req, res);
+    }
     return mongodb.getCollection('questions', res);
   });
 

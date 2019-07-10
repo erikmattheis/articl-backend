@@ -1,4 +1,5 @@
 const { check, validationResult } = require('express-validator');
+const { categories } = require('./categoriesHelper');
 //  const {ObjectId} = require('mongoose').Types;
 
 function checkValidationResult(req, res, next) {
@@ -29,7 +30,16 @@ exports.postQuestion = [
   check('category')
     .not()
     .isEmpty()
-    .withMessage('Your Q&A must have category.'),
+    .withMessage('Your Q&A must have category.')
+    .custom((value) => {
+      let num = 0;
+      categories.forEach((category) => {
+        if (category.name === value) num += 1;
+      });
+      if (num < 1) {
+        throw new Error(`Your category ${value} is wrong，`);
+      } return true;
+    }),
   check('question.question')
     .not()
     .isEmpty()
