@@ -20,13 +20,19 @@ exports.postQuestion = [
   check('author')
     .not()
     .isEmpty()
-    .withMessage('Your Q&A must have a author.'),
+    .withMessage('Your Q&A must have a author.')
+    .isAlpha()
+    .withMessage('Your Q&A must be letters only.')
+    .escape(),
   check('name')
     .not()
     .isEmpty()
     .withMessage('Your Q&A must have a name.')
     .isLength({ min: 5 })
-    .withMessage('Your Q&A must have a name at least five characters long.'),
+    .withMessage('Your Q&A must have a name at least five characters long.')
+    .isAlpha()
+    .withMessage('Your Q&A must be letters only.')
+    .escape(),
   check('category')
     .not()
     .isEmpty()
@@ -39,7 +45,10 @@ exports.postQuestion = [
       if (num < 1) {
         throw new Error(`Your category ${value} is wrong，`);
       } return true;
-    }),
+    })
+    .isAlpha()
+    .withMessage('Your Q&A must be letters only.')
+    .escape(),
   check('question.question')
     .not()
     .isEmpty()
@@ -53,7 +62,9 @@ exports.postQuestion = [
   check('question.answers.*.correct')
     .not()
     .isEmpty()
-    .withMessage('Your Q&A must have an correct tag for each answer.'),
+    .withMessage('Your Q&A must have an correct tag for each answer.')
+    .isBoolean()
+    .withMessage('Your Q&A must be true or false.'),
   check('question.answers.*.explanation')
     .not()
     .isEmpty()
@@ -67,7 +78,7 @@ exports.postQuestion = [
     .custom((value) => {
       let num = 0;
       value.forEach((item) => {
-        if (item.correct === true) num += 1;
+        if (item.correct === true || item.correct === 1) num += 1;
       });
       if (num !== 1) {
         throw new Error(`Your Q&A must have 1 correct answer, but now you have ${num}.`);
@@ -92,11 +103,11 @@ exports.postQuestion = [
 //     .isLength({ min: 5 })
 //     .withMessage('Your Q&A must have a name at least five characters long.')
 //     .unescape(),
-//   check('category')
-//     .optional()
-//     .isString()
-//     .withMessage('Your category must be a String.')
-//     .unescape(),
+// check('category')
+//   .optional()
+//   .isString()
+//   .withMessage('Your category must be a String.')
+//   .unescape(),
 // ];
 
 exports.getQuestions = [
@@ -104,6 +115,16 @@ exports.getQuestions = [
     .optional()
     .isMongoId()
     .withMessage('This is not a correct id'),
+  check('name')
+    .optional()
+    .isAlpha()
+    .withMessage('Your Q&A must be letters only.')
+    .escape(),
+  check('category')
+    .optional()
+    .isAlpha()
+    .withMessage('Your Q&A must be letters only.')
+    .escape(),
 ];
 
 exports.deleteQuestions = [

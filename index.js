@@ -45,7 +45,7 @@ app.get('/categories', (req, res) => {
 app.get('/questions',
   validate.getQuestions,
   validate.checkValidationResult,
-  sanitize.getQuestions, (req, res) => {
+  (req, res) => {
     if (req.query.name) {
       return mongodb.findQuestionByName(req, res);
     }

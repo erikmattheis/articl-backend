@@ -31,6 +31,7 @@
     "limiter": "^1.1.4",
     "mongojs": "^2.6.0",
     "mongoose": "^5.6.2",
-    "sanitize-html": "^1.20.1"
+    "sanitize-html": "^1.20.1",
+    "xss": "^1.0.6"
   }
 }
