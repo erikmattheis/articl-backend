@@ -283,6 +283,23 @@ async function getCategoriesNames(callback) {
   }
 }
 
+async function getAllCategories() {
+  console.log('try to find all categories');
+  try {
+    const categories = await Category
+      .find((err, result) => {
+        if (err || !result) {
+          return false;
+        }
+        return result;
+      });
+    return categories;
+  } catch (e) {
+    return res.status(422).json({ errors: e.mapped() });
+  }
+}
+
+
 // function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
 module.exports.findQuestionByName = findQuestionByName;
@@ -294,3 +311,4 @@ module.exports.deleteQuestion = deleteQuestion;
 module.exports.deleteQuestionById = deleteQuestionById;
 module.exports.getCategories = getCategories;
 module.exports.getCategoriesNames = getCategoriesNames;
+module.exports.getAllCategories = getAllCategories;
