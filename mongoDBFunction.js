@@ -299,7 +299,6 @@ async function getAllCategories() {
   }
 }
 
-
 // function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
 module.exports.findQuestionByName = findQuestionByName;
