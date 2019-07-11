@@ -5,11 +5,15 @@ const xss = require('xss');
 function postQuestion(req, res, next) {
   try {
     req.body.question.question = sanitizeHtml(req.body.question.question);
-    req.body.question.answers.answer = sanitizeHtml(req.body.question.answers.answer);
-    req.body.question.answers.explanation = sanitizeHtml(req.body.question.answers.explanation);
+    req.body.question.answers.forEach((answer, i) => {
+      req.body.question.answers[i].answer = sanitizeHtml(answer.answer);
+      req.body.question.answers[i].explanation = sanitizeHtml(answer.explanation);
+    });
     req.body.question.question = xss(req.body.question.question);
-    req.body.question.answers.answer = xss(req.body.question.answers.answer);
-    req.body.question.answers.explanation = xss(req.body.question.answers.explanation);
+    req.body.question.answers.forEach((answer, i) => {
+      req.body.question.answers[i].answer = xss(answer.answer);
+      req.body.question.answers[i].explanation = xss(answer.explanation);
+    });
   } catch (err) {
     return res.status(422).json({ errors: [err] });
   }

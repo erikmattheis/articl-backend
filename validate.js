@@ -90,6 +90,7 @@ exports.validateJSON = [check().isJSON(), checkValidationResult];
 //   }
 // };
 
+
 module.exports.postQuestion = [
   check('author')
     .not()
@@ -126,31 +127,37 @@ module.exports.postQuestion = [
     .withMessage('Your Q&A must have question.')
     .isLength({ min: 5 })
     .withMessage('Your Q&A must have a question content at least five characters long.'),
+  check('question.answers.*.answer')
+    .not()
+    .isEmpty()
+    .withMessage('Your Q&A must have an answer for each answer.'),
+  check('question.answers.*.correct')
+    .not()
+    .isEmpty()
+    .withMessage('Your Q&A must have an correct tag for each answer.')
+    .isBoolean()
+    .withMessage('Your Q&A must be true or false.'),
+  check('question.answers.*.explanation')
+    .not()
+    .isEmpty()
+    .withMessage('Your Q&A must have an explanation for each answer.'),
+  check('question.answers')
+    .custom((value) => {
+      if (value.length < 2) {
+        throw new Error('Your Q&A must have 2 answers.');
+      } return true;
+    })
+    .custom((value) => {
+      let num = 0;
+      value.forEach((item) => {
+        if (item.correct === true || item.correct === 1) num += 1;
+      });
+      if (num !== 1) {
+        throw new Error(`Your Q&A must have 1 correct answer, but now you have ${num}.`);
+      } return true;
+    }),
 ];
 
-// exports.putQuestion = [
-//   check('id')
-//     .optional()
-//     .isMongoId()
-//     .withMessage('This is not a correct id'),
-//   check('author')
-//     .optional()
-//     .isString()
-//     .withMessage('Your author name must be a String.')
-//     .unescape(),
-//   check('name')
-//     .optional()
-//     .isString()
-//     .withMessage('Your question name must be a String.')
-//     .isLength({ min: 5 })
-//     .withMessage('Your Q&A must have a name at least five characters long.')
-//     .unescape(),
-// check('category')
-//   .optional()
-//   .isString()
-//   .withMessage('Your category must be a String.')
-//   .unescape(),
-// ];
 
 exports.getQuestions = [
   check('id')
