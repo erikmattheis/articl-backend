@@ -35,18 +35,16 @@ module.exports.postQuestion = async function postQuestion(req, res, next) {
     .not()
     .isEmpty()
     .withMessage('Your Q&A must have category.')
-    // .custom(async (value) => {
-    //   let num = 0;
-    //   const result = await getAllCategories();
-    //   console.log(`before, 0 : ${result[0]}`);
-    //   console.log(`before, 1 : ${result[1]}`);
-    //   result.forEach((category) => {
-    //     if (category.name === value) num += 1;
-    //   });
-    //   if (num < 1) {
-    //     throw new Error(`Your category ${value} is wrong，`);
-    //   } return true;
-    // })
+    .custom(async (value) => {
+      let num = 0;
+      const result = await getAllCategories();
+      result.forEach((category) => {
+        if (category.name === value) num += 1;
+      });
+      if (num < 1) {
+        throw new Error(`Your category ${value} is wrong，`);
+      } return true;
+    })
     .isAlpha()
     .withMessage('Your Q&A must be letters only.')
     .escape()
