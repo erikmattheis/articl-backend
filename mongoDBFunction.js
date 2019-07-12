@@ -161,13 +161,16 @@ async function findQuestionById(req, res) {
   }
 }
 
-//  http://localhost:3000/questions?page=1&limit=2
+//  http://localhost:3000/questions?page=1&limit=2&sort=name
 
 async function getQuestions(req, res) {
-  console.log('try to find all questions.');
+  console.log('try to find all questions, sort by:', req.query.sort);
   try {
     const [results, itemCount] = await Promise.all([
-      Question.find({}).limit(req.query.limit).skip(req.skip).lean()
+      //  sort: req.query.order === '1' ? -1 : 1
+
+      Question.find({}).limit(req.query.limit).skip(req.skip).sort(req.query.sort)
+        .lean()
         .exec(),
       Question.count({}),
     ]);
