@@ -9,16 +9,17 @@ const { getAllCategories } = require('./mongoDBFunction');
 
 async function categories() {
   const result = await getAllCategories();
-  await cacache.put(cachePath, key, result).then(() => {
+  await cacache.put(cachePath, key, result.toString()).then(() => {
     console.log(`Saved content to ${cachePath}.`);
   });
 //   cacache.get.stream(
 //     cachePath, 'my-categories',
 //   ).on('data', (data) => {
-//     console.log('get content, [1] is', data.toString());
-//   });
+//     let mycategories = data.toString();
+//     mycategories = JSON.parse(mycategories);
+//     console.log('get content, [1] is', mycategories);
+//   }
 }
-categories();
 // let data = fs.readFileSync('./category.json', 'utf8');
 // data = JSON.parse(data);
 // const { categories } = data;

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const mongoose = require('mongoose');
-const fs = require('fs');
+const paginate = require('express-paginate');
 
 //  local
 //  const url = 'mongodb://127.0.0.1:27017/myTest';
@@ -161,21 +161,26 @@ async function findQuestionById(req, res) {
   }
 }
 
-async function getCollection(collectionName, res) {
-  console.log(`try to find: ${collectionName}`);
+//  http://localhost:3000/questions?page=1&limit=2
+
+async function getQuestions(req, res) {
+  console.log('try to find all questions.');
   try {
-    await Question
-      .find((err, result) => {
-        if (err || !result) {
-          res.status(404).json({ errors: ['Failed to find database.'] });
-          return true;
-        }
-        res.status(200).json({
-          message: 'Successfully found database.',
-          question: result,
-        });
-        return false;
+    const [results, itemCount] = await Promise.all([
+      Question.find({}).limit(req.query.limit).skip(req.skip).lean()
+        .exec(),
+      Question.count({}),
+    ]);
+
+    const pageCount = Math.ceil(itemCount / req.query.limit);
+    if (req.accepts('json')) {
+      // inspired by Stripe's API response for list objects
+      res.status(200).json({
+        message: 'Successfully found database.',
+        has_more: paginate.hasNextPages(req)(pageCount),
+        question: results,
       });
+    }
   } catch (e) {
     return res.status(422).json({ errors: e.mapped() });
   }
@@ -305,7 +310,7 @@ module.exports.findQuestionByName = findQuestionByName;
 module.exports.findQuestionByCategory = findQuestionByCategory;
 module.exports.findQuestionById = findQuestionById;
 module.exports.updateQuestionById = updateQuestionById;
-module.exports.getCollection = getCollection;
+module.exports.getQuestions = getQuestions;
 module.exports.deleteQuestion = deleteQuestion;
 module.exports.deleteQuestionById = deleteQuestionById;
 module.exports.getCategories = getCategories;
