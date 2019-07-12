@@ -162,12 +162,13 @@ async function findQuestionById(req, res) {
 }
 
 //  http://localhost:3000/questions?page=1&limit=2&sort=name
+//  http://localhost:3000/questions?page=1&limit=2&sort=createTime&order=1
 
 async function getQuestions(req, res) {
   console.log('try to find all questions, sort by:', req.query.sort);
   try {
     const [results, itemCount] = await Promise.all([
-      //  sort: req.query.order === '1' ? -1 : 1
+      //  Question.find({}).limit(req.query.limit).skip(req.skip).sort({ updated: req.query.order })
       Question.find({}).limit(req.query.limit).skip(req.skip).sort(req.query.sort)
         .lean()
         .exec(),
@@ -193,9 +194,9 @@ async function deleteQuestion(res) {
     await Question
       .remove({}, (err, result) => {
         if (err || !result) {
-          res.
-          status(500)
-          .json({ errors: err.mapped() });
+          res
+            .status(500)
+            .json({ errors: err.mapped() });
         }
         res.status(200).json({
           message: 'Successfully delete database.',
@@ -304,7 +305,6 @@ async function getAllCategories() {
   } catch (e) {
     // need change
     console.log('something wrong in getAllCategories');
-  }
   }
 }
 
