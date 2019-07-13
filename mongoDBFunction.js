@@ -262,42 +262,29 @@ async function getCategories(res) {
   }
 }
 
-async function getCategoriesNames(callback) {
-  console.log('try to find all categories');
+async function getCategoryNames() {
+  console.log('try to find all categories names');
   try {
-    await Category
-      .find((err, result) => {
-        if (err || !result) {
-          return false;
-        }
-        const nameArray = new Array();
-        result.forEach((category) => {
-          nameArray.push(category.name);
-        });
-        console.log(`categories name is : ${nameArray[1]}`);
-        callback(nameArray);
-        return true;
-      });
-  } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    const categoryNames = Category
+      .find()
+      .select('name -_id');
+    return categoryNames;
+  } catch (err) {
+    throw new Error(err);
   }
 }
+exports.getCategoryNames = getCategoryNames;
 
 async function getAllCategories() {
   console.log('try to find all categories');
   try {
-    const categories = await Category
-      .find((err, result) => {
-        if (err || !result) {
-          return false;
-        }
-        return result;
-      });
-    return categories;
+    return Category
+      .find({});
   } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    throw new Error(e);
   }
 }
+
 
 // function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
@@ -309,5 +296,5 @@ module.exports.getCollection = getCollection;
 module.exports.deleteQuestion = deleteQuestion;
 module.exports.deleteQuestionById = deleteQuestionById;
 module.exports.getCategories = getCategories;
-module.exports.getCategoriesNames = getCategoriesNames;
+module.exports.getCategoryNames = getCategoryNames;
 module.exports.getAllCategories = getAllCategories;

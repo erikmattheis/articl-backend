@@ -7,7 +7,8 @@ const cors = require('cors');
 const sanitize = require('./sanitize');
 const validate = require('./validate');
 const mongodb = require('./mongoDBFunction');
-const { categories } = require('./categoriesHelper');
+const categories = require('./categoriesHelper');
+const { asyncFunction } = require('./asyncFunction');
 
 // const jsonParser = bodyParser.json();
 const app = express();
@@ -16,8 +17,8 @@ const generalLimiter = rateLimit({
   max: 100,
 });
 
-// app.use(generalLimiter);
-// app.use(helmet());
+app.use(generalLimiter);
+app.use(helmet());
 const corsOptions = {
   origin: 'http://localhost:8080',
   credentials: true,
@@ -42,7 +43,8 @@ app.use(bodyParser.json());
 //   });
 // });
 
-app.get('/categories', (req, res) => mongodb.getCategories(res));
+
+app.get('/categories', asyncFunction(async (req, res) => categories.getCategoryNames(req, res)));
 
 app.get('/questions',
   validate.getQuestions,
