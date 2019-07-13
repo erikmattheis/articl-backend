@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const mongoose = require('mongoose');
-const fs = require('fs');
+const paginate = require('express-paginate');
 
 //  local
 //  const url = 'mongodb://127.0.0.1:27017/myTest';
@@ -108,8 +108,8 @@ async function findQuestionByName(req, res) {
       .find({ name: { $regex: regName } }, (err, result) => {
         if (err || result[0] === undefined) {
           res
-            .status(404)
-            .json({ errors: ['The question failed to find by name.'] });
+            .status(500)
+            .json({ errors: err.mapped() });
         } else {
           res.status(200).json({
             message: 'Successfully found question.',
@@ -130,8 +130,8 @@ async function findQuestionByCategory(req, res) {
       .find({ category: { $regex: regCategory } }, (err, result) => {
         if (err || result[0] === undefined) {
           res
-            .status(404)
-            .json({ errors: ['The question failed to find by category.'] });
+            .status(500)
+            .json({ errors: err.mapped() });
         } else {
           res.status(200).json({
             message: 'Successfully found question.',
@@ -156,28 +156,35 @@ async function findQuestionById(req, res) {
           });
         }
       });
-  } catch (err) {
-    res.status(500).json({ err });
+  } catch (e) {
+    res.status(500).json({ e });
   }
 }
 
-async function getCollection(collectionName, res) {
-  console.log(`try to find: ${collectionName}`);
+//  http://localhost:3000/questions?page=1&limit=2&sort=name
+//  http://localhost:3000/questions?page=1&limit=2&sort=createTime&order=1
+
+async function getQuestions(req, res) {
+  console.log('try to find all questions, sort by:', req.query.sort);
   try {
-    await Question
-      .find((err, result) => {
-        if (err || !result) {
-          res.status(404).json({ errors: ['Failed to find database.'] });
-          return true;
-        }
-        res.status(200).json({
-          message: 'Successfully found database.',
-          question: result,
-        });
-        return false;
+    const [results, itemCount] = await Promise.all([
+      //  Question.find({}).limit(req.query.limit).skip(req.skip).sort({ updated: req.query.order })
+      Question.find({}).limit(req.query.limit).skip(req.skip).sort(req.query.sort)
+        .lean()
+        .exec(),
+      Question.count({}),
+    ]);
+
+    const pageCount = Math.ceil(itemCount / req.query.limit);
+    if (req.accepts('json')) {
+      res.status(200).json({
+        message: 'Successfully found database.',
+        has_more: paginate.hasNextPages(req)(pageCount),
+        question: results,
       });
+    }
   } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    res.status(500).json({ e });
   }
 }
 
@@ -187,17 +194,17 @@ async function deleteQuestion(res) {
     await Question
       .remove({}, (err, result) => {
         if (err || !result) {
-          res.status(404).json({ errors: ['Failed to find database.'] });
-          return true;
+          res
+            .status(500)
+            .json({ errors: err.mapped() });
         }
         res.status(200).json({
           message: 'Successfully delete database.',
           question: result,
         });
-        return false;
       });
   } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    res.status(500).json({ e });
   }
 }
 
@@ -207,7 +214,7 @@ async function deleteQuestionById(req, res) {
     await Question
       .remove({ _id: req.query.id }, (err, result) => {
         if (err || !result) {
-          res.status(404).json({ errors: ['Failed to delete this question.'] });
+          res.status(500).json({ errors: ['Failed to delete this question.'] });
           return true;
         }
         res.status(200).json({
@@ -217,7 +224,7 @@ async function deleteQuestionById(req, res) {
         return false;
       });
   } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    res.status(500).json({ e });
   }
 }
 
@@ -238,7 +245,7 @@ async function updateQuestionById(req, res) {
       }
     });
   } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    res.status(500).json({ e });
   }
 }
 
@@ -258,7 +265,7 @@ async function getCategories(res) {
         return false;
       });
   } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    res.status(500).json({ e });
   }
 }
 
@@ -292,7 +299,7 @@ module.exports.findQuestionByName = findQuestionByName;
 module.exports.findQuestionByCategory = findQuestionByCategory;
 module.exports.findQuestionById = findQuestionById;
 module.exports.updateQuestionById = updateQuestionById;
-module.exports.getCollection = getCollection;
+module.exports.getQuestions = getQuestions;
 module.exports.deleteQuestion = deleteQuestion;
 module.exports.deleteQuestionById = deleteQuestionById;
 module.exports.getCategories = getCategories;
