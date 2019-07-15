@@ -98,22 +98,16 @@ async function insertQuestion(req, res) {
 }
 
 
-async function findQuestionByName(req, res) {
-  console.log(`try to find: ${req.query.name}`);
-  const regName = RegExp(req.query.name, 'i');
+async function findQuestionByAuthor(req, res) {
+  console.log(`try to find: ${req.query.author}`);
+  const regAuthor = RegExp(req.query.author, 'i');
   try {
     await Question
-      .find({ name: { $regex: regName } }, (err, result) => {
-        if (err || result[0] === undefined) {
-          res
-            .status(500)
-            .json({ errors: err.mapped() });
-        } else {
-          res.status(200).json({
-            message: 'Successfully found question.',
-            question: result,
-          });
-        }
+      .find({ author: { $regex: regAuthor } }, (err, result) => {
+        res.status(200).json({
+          message: 'Successfully found question.',
+          question: result,
+        });
       });
   } catch (e) {
     return res.status(422).json({ errors: e.mapped() });
@@ -263,7 +257,7 @@ async function getAllCategories() {
 
 // function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
-module.exports.findQuestionByName = findQuestionByName;
+module.exports.findQuestionByAuthor = findQuestionByAuthor;
 module.exports.findQuestionByCategory = findQuestionByCategory;
 module.exports.findQuestionById = findQuestionById;
 module.exports.updateQuestionById = updateQuestionById;

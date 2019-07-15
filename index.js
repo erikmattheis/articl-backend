@@ -10,6 +10,7 @@ const validate = require('./validate');
 const mongodb = require('./mongoDBFunction');
 const categories = require('./categoriesHelper');
 const { asyncFunction } = require('./asyncFunction');
+const questionsController = require('./questionsController');
 
 // const jsonParser = bodyParser.json();
 const app = express();
@@ -51,15 +52,7 @@ app.get('/categories', asyncFunction(async (req, res) => categories.getCategoryN
 app.get('/questions',
   validate.getQuestions,
   validate.checkValidationResult,
-  (req, res) => {
-    if (req.query.name) {
-      return mongodb.findQuestionByName(req, res);
-    }
-    if (req.query.category) {
-      return mongodb.findQuestionByCategory(req, res);
-    }
-    return mongodb.getQuestions(req, res);
-  });
+  (req, res) => questionsController.getQuestions(req, res));
 
 app.get('/questions/:id',
   validate.getQuestions,
