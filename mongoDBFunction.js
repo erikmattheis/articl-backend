@@ -34,7 +34,6 @@ const Category = mongoose.model('Category', categorySchema);
 
 const questionSchema = new mongoose.Schema({
   author: String,
-  name: String,
   //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
   category: String,
   updated: String,
@@ -73,7 +72,6 @@ const Question = mongoose.model('Question', questionSchema);
 async function insertQuestion(req, res) {
   const newQuestion = new Question({
     author: req.body.author,
-    name: req.body.name,
     // //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
     category: req.body.category,
     updated: new Date(),

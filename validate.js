@@ -97,13 +97,6 @@ module.exports.postQuestion = [
     .isEmpty()
     .withMessage('Your Q&A must have a author.')
     .escape(),
-  check('name')
-    .not()
-    .isEmpty()
-    .withMessage('Your Q&A must have a name.')
-    .isLength({ min: 5 })
-    .withMessage('Your Q&A must have a name at least five characters long.')
-    .escape(),
   check('category')
     .not()
     .isEmpty()
