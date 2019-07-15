@@ -122,37 +122,27 @@ async function findQuestionByName(req, res) {
 
 async function findQuestionByCategory(req, res) {
   console.log(`try to find: ${req.query.category}`);
-  const regCategory = RegExp(req.query.category, 'i');
   try {
     await Question
-      .find({ category: { $regex: regCategory } }, (err, result) => {
-        if (err || result[0] === undefined) {
-          res
-            .status(500)
-            .json({ errors: err.mapped() });
-        } else {
-          res.status(200).json({
-            message: 'Successfully found question.',
-            question: result,
-          });
-        }
+      .find({ category: req.query.category }, (err, result) => {
+        res.status(200).json({
+          message: 'Successfully found question.',
+          question: result,
+        });
       });
   } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    res.status(422).json({ errors: e.mapped() });
   }
 }
+
 async function findQuestionById(req, res) {
   try {
     await Question
-      .find({ _id: req.query.id }, (err, result) => {
-        if (err) {
-          res.status(500).json({ err });
-        } else {
-          res.status(200).json({
-            message: 'success',
-            question: result,
-          });
-        }
+      .find({ _id: req.params.id }, (err, result) => {
+        res.status(200).json({
+          message: 'success',
+          question: result,
+        });
       });
   } catch (e) {
     res.status(500).json({ e });
@@ -191,11 +181,6 @@ async function deleteQuestion(res) {
   try {
     await Question
       .remove({}, (err, result) => {
-        if (err || !result) {
-          res
-            .status(500)
-            .json({ errors: err.mapped() });
-        }
         res.status(200).json({
           message: 'Successfully delete database.',
           question: result,
@@ -211,15 +196,10 @@ async function deleteQuestionById(req, res) {
   try {
     await Question
       .remove({ _id: req.query.id }, (err, result) => {
-        if (err || !result) {
-          res.status(500).json({ errors: ['Failed to delete this question.'] });
-          return true;
-        }
         res.status(200).json({
           message: 'Successfully delete database.',
           question: result,
         });
-        return false;
       });
   } catch (e) {
     res.status(500).json({ e });
@@ -231,16 +211,10 @@ async function updateQuestionById(req, res) {
     const updateItems = req.body;
     updateItems.updated = new Date();
     await Question.updateOne({ _id: req.query.id }, updateItems, (err, result) => {
-      if (err) {
-        res
-          .status(500)
-          .json({ errors: err.mapped() });
-      } else {
-        res.status(201).json({
-          message: 'Successfully insert question.',
-          question: result,
-        });
-      }
+      res.status(201).json({
+        message: 'Successfully insert question.',
+        question: result,
+      });
     });
   } catch (e) {
     res.status(500).json({ e });
@@ -252,10 +226,6 @@ async function getCategories(res) {
   try {
     await Category
       .find((err, result) => {
-        if (err || !result) {
-          res.status(404).json({ errors: ['Failed to find database.'] });
-          return true;
-        }
         res.status(200).json({
           message: 'Successfully found database.',
           question: result,
@@ -270,7 +240,7 @@ async function getCategories(res) {
 async function getCategoryNames() {
   console.log('try to find all categories names');
   try {
-    const categoryNames = Category
+    const categoryNames = await Category
       .find()
       .select('name -_id');
     return categoryNames;

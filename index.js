@@ -58,11 +58,13 @@ app.get('/questions',
     if (req.query.category) {
       return mongodb.findQuestionByCategory(req, res);
     }
-    if (req.query.id) {
-      return mongodb.findQuestionById(req, res);
-    }
     return mongodb.getQuestions(req, res);
   });
+
+app.get('/questions/:id',
+  validate.getQuestions,
+  validate.checkValidationResult,
+  (req, res) => mongodb.findQuestionById(req, res));
 
 app.delete('/questions',
   validate.deleteQuestions,
