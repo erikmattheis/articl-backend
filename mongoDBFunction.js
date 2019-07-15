@@ -84,7 +84,7 @@ async function insertQuestion(req, res) {
       if (err) {
         res
           .status(500)
-          .json({ errors: err.mapped() });
+          .json({ errors: err });
       } else {
         res.status(201).json({
           message: 'Successfully insert question.',
@@ -93,7 +93,7 @@ async function insertQuestion(req, res) {
       }
     });
   } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    return res.status(422).json({ errors: e });
   }
 }
 
@@ -110,7 +110,7 @@ async function findQuestionByAuthor(req, res) {
         });
       });
   } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    return res.status(422).json({ errors: e });
   }
 }
 
@@ -125,7 +125,7 @@ async function findQuestionByCategory(req, res) {
         });
       });
   } catch (e) {
-    res.status(422).json({ errors: e.mapped() });
+    res.status(422).json({ errors: e });
   }
 }
 
