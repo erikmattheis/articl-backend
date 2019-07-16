@@ -90,7 +90,7 @@ app.post(
       .withMessage('Your Q&A must have a question content at least five characters long.')
       .run(req);
 
-    const result = await validationResult(req);
+    const result = validationResult(req);
     if (!result.isEmpty()) {
       res.status(422).json({ errors: result.array() });
     }
