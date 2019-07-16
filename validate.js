@@ -15,6 +15,18 @@ exports.checkValidationResult = checkValidationResult;
 exports.validateJSON = [check().isJSON(), checkValidationResult];
 */
 
+async function checkResult(req, res, next) {
+  const errors = await validationResult(req);
+  console.log(errors);
+  if (!errors.isEmpty()) {
+    res.status(422).json({ errors: errors.array() });
+  } else {
+    next();
+  }
+}
+
+exports.checkResult = checkResult;
+
 
 // module.exports.postQuestion = async function postQuestion(req, res, next) {
 //   await check('author')
@@ -92,11 +104,17 @@ exports.validateJSON = [check().isJSON(), checkValidationResult];
 
 
 module.exports.postQuestionTest = async function postQuestion(req, res, next) {
-  console.log('test sataty');
+  console.log('test start');
+
   await check('author')
     .not()
     .isEmpty()
+    .isLength({ min: 20 })
+    .withMessage('Your Q&A must have a question content at least five characters long.')
     .run(req);
+
+  await checkResult(req, res, next);
+  console.log('test finish');
 };
 
 module.exports.postQuestion = [

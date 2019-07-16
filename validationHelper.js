@@ -27,7 +27,7 @@ module.exports.postQuestion = async function postQuestion(req, res, next) {
 
 module.exports.checkValidationResult = async function checkValidationResult(req, res, next) {
   try {
-    validate.checkValidationResult(req, res, next);
+    validate.checkResult(req, res, next);
   } catch (error) {
     next(error);
   }

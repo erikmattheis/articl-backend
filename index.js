@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const paginate = require('express-paginate');
+const { check, validationResult } = require('express-validator');
 const sanitize = require('./sanitize');
 const validate = require('./validate');
 const mongodb = require('./mongoDBFunction');
@@ -81,19 +82,26 @@ app.delete('/questions',
 
 app.post(
   '/questions',
-  validationHelper.postQuestion,
-  validationHelper.checkValidationResult,
-  sanitize.postQuestion,
-  (req, res) => {
+  async (req, res) => {
+    await check('category')
+      .not()
+      .isEmpty()
+      .isLength({ min: 20 })
+      .withMessage('Your Q&A must have a question content at least five characters long.')
+      .run(req);
+
+    const result = await validationResult(req);
+    if (!result.isEmpty()) {
+      res.status(422).json({ errors: result.array() });
+    }
     mongodb.insertQuestion(req, res);
+    // user can be created now!
   },
 );
 
 app.put(
   '/questions',
-  validationHelper.asyncMiddleware(async (req, res, next) => {
-    await validate.postQuestionTest(req, res, next);
-  }),
+  validate.postQuestion,
   validate.checkValidationResult,
   sanitize.postQuestion,
   (req, res) => {
