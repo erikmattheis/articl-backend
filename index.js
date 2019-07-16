@@ -48,27 +48,36 @@ app.use(paginate.middleware(10, 50));
 //   });
 // });
 
+app.get(
+  '/categories',
+  asyncFunction(async (req, res) => categories.getCategoryNames(req, res)),
+);
 
-app.get('/categories', asyncFunction(async (req, res) => categories.getCategoryNames(req, res)));
-
-app.get('/questions',
+app.get(
+  '/questions',
   validate.getQuestions,
   validate.checkValidationResult,
-  (req, res) => questionsController.getQuestions(req, res));
+  (req, res) => questionsController.getQuestions(req, res),
+);
 
-app.get('/questions/:id',
+app.get(
+  '/questions/:id',
   validate.getQuestions,
   validate.checkValidationResult,
-  (req, res) => mongodb.findQuestionById(req, res));
+  (req, res) => mongodb.findQuestionById(req, res),
+);
 
-app.delete('/questions',
+app.delete(
+  '/questions',
   validate.deleteQuestions,
-  validate.checkValidationResult, (req, res) => {
+  validate.checkValidationResult,
+  (req, res) => {
     if (req.query.id) {
       return mongodb.deleteQuestionById(req, res);
     }
     return mongodb.deleteQuestion(res);
-  });
+  },
+);
 
 // app.post(
 //   '/questions',
@@ -80,24 +89,23 @@ app.delete('/questions',
 //   },
 // );
 
-app.post(
-  '/questions',
-  async (req, res) => {
-    await check('category')
-      .not()
-      .isEmpty()
-      .isLength({ min: 20 })
-      .withMessage('Your Q&A must have a question content at least five characters long.')
-      .run(req);
+app.post('/questions', async (req, res) => {
+  await check('category')
+    .not()
+    .isEmpty()
+    .isLength({ min: 20 })
+    .withMessage(
+      'Your Q&A must have a question content at least five characters long.',
+    )
+    .run(req);
 
-    const result = await validationResult(req);
-    if (!result.isEmpty()) {
-      res.status(422).json({ errors: result.array() });
-    }
-    mongodb.insertQuestion(req, res);
-    // user can be created now!
-  },
-);
+  const result = await validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(422).json({ errors: result.array() });
+  }
+  return mongodb.insertQuestion(req, res);
+  // user can be created now!
+});
 
 app.put(
   '/questions',
@@ -108,7 +116,11 @@ app.put(
     if (req.query.id) {
       return mongodb.updateQuestionById(req, res);
     }
-    return res.status(422).json({ errors: ['You shoule give a specific conditon to find resources.'] });
+    return res
+      .status(422)
+      .json({
+        errors: ['You shoule give a specific conditon to find resources.'],
+      });
   },
 );
 
