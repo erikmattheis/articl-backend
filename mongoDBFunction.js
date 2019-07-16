@@ -34,7 +34,6 @@ const Category = mongoose.model('Category', categorySchema);
 
 const questionSchema = new mongoose.Schema({
   author: String,
-  //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
   category: String,
   updated: String,
   createTime: String,
@@ -72,19 +71,17 @@ const Question = mongoose.model('Question', questionSchema);
 async function insertQuestion(req, res) {
   const newQuestion = new Question({
     author: req.body.author,
-    // //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
     category: req.body.category,
     updated: new Date(),
     createTime: new Date(),
     question: req.body.question,
   });
-  // console.log(`dubug:${newQuestion}`);
   try {
     await newQuestion.save((err, result) => {
       if (err) {
         res
           .status(500)
-          .json({ errors: err.mapped() });
+          .json({ errors: err });
       } else {
         res.status(201).json({
           message: 'Successfully insert question.',
@@ -93,7 +90,7 @@ async function insertQuestion(req, res) {
       }
     });
   } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    return res.status(500).json({ errors: e });
   }
 }
 
@@ -110,7 +107,7 @@ async function findQuestionByAuthor(req, res) {
         });
       });
   } catch (e) {
-    return res.status(422).json({ errors: e.mapped() });
+    return res.status(500).json({ errors: e });
   }
 }
 
@@ -125,7 +122,7 @@ async function findQuestionByCategory(req, res) {
         });
       });
   } catch (e) {
-    res.status(422).json({ errors: e.mapped() });
+    res.status(500).json({ errors: e });
   }
 }
 
