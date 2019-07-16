@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
@@ -12,17 +11,9 @@ const {
 const sanitize = require('./sanitize');
 const validate = require('./validate');
 const mongodb = require('./mongoDBFunction');
-const categories = require('./categoriesHelper');
-const { asyncFunction } = require('./asyncFunction');
+const asyncFunction = require('./asyncFunction').asyncFunction;
 
-// const jsonParser = bodyParser.json();
 const app = express();
-const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,
-});
-
-app.use(generalLimiter);
 app.use(helmet());
 const corsOptions = {
   origin: 'http://localhost:8080',
@@ -30,8 +21,8 @@ const corsOptions = {
   enablePreflight: true,
 };
 
-app.use(cors());
-app.options('*', cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(bodyParser.json());
 app.use(paginate.middleware(10, 50));
 
@@ -94,16 +85,7 @@ app.delete('/questions',
 */
 app.post(
   '/questions',
-  validate.postQuestion,
-  validate.checkValidationResult,
   sanitize.postQuestion,
-  (req, res) => {
-    mongodb.insertQuestion(req, res);
-  },
-);
-
-app.put(
-  '/questions',
   validate.postQuestion,
   validate.checkValidationResult,
   sanitize.postQuestion,
@@ -115,29 +97,13 @@ app.put(
   },
 );
 
-app.listen(3000);
-console.log('listening to port 3000');
-
-/*
-app.all('*', (req, res) => {
+app.all('*', function finalClientError(req, res) {
   res.status(404).json({ errors: ['Resource not found.'] });
 });
-app.use((req, res) => {
+
+app.use(function finalError(req, res) {
   res.status(500).json({ errors: ['An unknown error occurred.'] });
 });
-*/
-app.use((err, req, res, next) => {
-  process.on('unhandledRejection', (reason, p) => {
-    // I just caught an unhandled promise rejection, since we already have fallback handler for unhandled errors (see below), let throw and let him handle that
-    res.status(500).json({ errors: reason });
-  });
-  process.on('uncaughtException', (error) => {
-    console.log('process', error);
-    res.status(500).json({ errors: error });
-    // I just received an error that was never handled, time to handle it and then decide whether a restart is needed
-    /*
-    errorManagement.handler.handleError(error);
-    if (!errorManagement.handler.isTrustedError(error)) {process.exit(1);}
-    */
-  });
-});
+
+app.listen(3000);
+console.log('listening to port 3000');
