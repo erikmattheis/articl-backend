@@ -91,6 +91,14 @@ exports.validateJSON = [check().isJSON(), checkValidationResult];
 // };
 
 
+module.exports.postQuestionTest = async function postQuestion(req, res, next) {
+  console.log('test sataty');
+  await check('author')
+    .not()
+    .isEmpty()
+    .run(req);
+};
+
 module.exports.postQuestion = [
   check('author')
     .not()

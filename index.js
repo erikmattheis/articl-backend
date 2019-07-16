@@ -11,6 +11,7 @@ const mongodb = require('./mongoDBFunction');
 const categories = require('./categoriesHelper');
 const { asyncFunction } = require('./asyncFunction');
 const questionsController = require('./questionsController');
+const validationHelper = require('./validationHelper');
 
 // const jsonParser = bodyParser.json();
 const app = express();
@@ -68,10 +69,20 @@ app.delete('/questions',
     return mongodb.deleteQuestion(res);
   });
 
+// app.post(
+//   '/questions',
+//   validate.postQuestion,
+//   validate.checkValidationResult,
+//   sanitize.postQuestion,
+//   (req, res) => {
+//     mongodb.insertQuestion(req, res);
+//   },
+// );
+
 app.post(
   '/questions',
-  validate.postQuestion,
-  validate.checkValidationResult,
+  validationHelper.postQuestion,
+  validationHelper.checkValidationResult,
   sanitize.postQuestion,
   (req, res) => {
     mongodb.insertQuestion(req, res);
@@ -80,7 +91,9 @@ app.post(
 
 app.put(
   '/questions',
-  validate.postQuestion,
+  validationHelper.asyncMiddleware(async (req, res, next) => {
+    await validate.postQuestionTest(req, res, next);
+  }),
   validate.checkValidationResult,
   sanitize.postQuestion,
   (req, res) => {
