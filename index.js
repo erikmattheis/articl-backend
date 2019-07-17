@@ -82,7 +82,7 @@ app.delete(
 //   // user can be created now!
 // });
 
-app.post('/questions', validate.postQuestionTest, mongodb.insertQuestion);
+app.post('/questions', validate.postQuestion, mongodb.insertQuestion);
 
 app.put(
   '/questions',
