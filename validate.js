@@ -13,7 +13,6 @@ async function checkValidationResult(req, res, next) {
 exports.checkValidationResult = checkValidationResult;
 
 module.exports.postQuestion = async function postQuestion(req, res, next) {
-  console.log('validation start');
   await check('author')
     .not()
     .isEmpty()
@@ -34,7 +33,7 @@ module.exports.postQuestion = async function postQuestion(req, res, next) {
     //     throw new Error(`Your category ${value} is wrong，`);
     //   } return true;
     // })
-    .withMessage('Your Q&A must be letters only.')
+    // .withMessage('Your Q&A must be letters only.')
     .escape()
     .run(req);
   await check('question.question')
@@ -78,26 +77,47 @@ module.exports.postQuestion = async function postQuestion(req, res, next) {
     })
     .run(req);
 
-
   await checkValidationResult(req, res, next);
-
-  console.log('validation finish');
 };
 
-exports.getQuestions = [
-  check('id')
-    .optional()
-    .isMongoId()
-    .withMessage('This is not a correct id'),
-  check('category')
-    .escape(),
-];
 
-exports.deleteQuestions = [
-  check('id')
+module.exports.getQuestions = async function getQuestions(req, res, next) {
+  await check('id')
     .optional()
     .isMongoId()
-    .withMessage('This is not a correct id'),
-];
+    .withMessage('This is not a correct id')
+    .run(req);
+  check('category')
+    .escape()
+    .run(req);
+
+  await checkValidationResult(req, res, next);
+};
+
+// exports.getQuestions = [
+//   check('id')
+//     .optional()
+//     .isMongoId()
+//     .withMessage('This is not a correct id'),
+//   check('category')
+//     .escape(),
+// ];
+
+module.exports.deleteQuestions = async function deleteQuestions(req, res, next) {
+  await check('id')
+    .optional()
+    .isMongoId()
+    .withMessage('This is not a correct id')
+    .run(req);
+
+  await checkValidationResult(req, res, next);
+};
+
+// exports.deleteQuestions = [
+//   check('id')
+//     .optional()
+//     .isMongoId()
+//     .withMessage('This is not a correct id'),
+// ];
 
 // exports.checkValidationResult = checkValidationResult;
