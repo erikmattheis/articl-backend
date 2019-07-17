@@ -12,7 +12,9 @@ const {
 const sanitize = require('./sanitize');
 const validate = require('./validate');
 const mongodb = require('./mongoDBFunction');
-const {asyncFunction} = require('./asyncFunction');
+const { asyncFunction } = require('./asyncFunction');
+const questionsController = require('./questionsController');
+const categories = require('./categoriesHelper');
 
 // const jsonParser = bodyParser.json();
 const app = express();
@@ -91,6 +93,7 @@ app.delete('/questions',
     return mongodb.deleteQuestion(res);
   });
 */
+
 app.post(
   '/questions',
   validate.getQuestions,
@@ -110,6 +113,11 @@ app.get(
   validate.checkValidationResult,
   (req, res) => mongodb.findQuestionById(req, res),
 );
+
+app.get('/questions',
+  validate.getQuestions,
+  validate.checkValidationResult,
+  (req, res) => questionsController.getQuestions(req, res));
 
 app.delete(
   '/questions',
