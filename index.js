@@ -5,14 +5,14 @@ const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const paginate = require('express-paginate');
-const { check, validationResult } = require('express-validator');
+const {
+  check,
+  validationResult,
+} = require('express-validator');
 const sanitize = require('./sanitize');
 const validate = require('./validate');
 const mongodb = require('./mongoDBFunction');
-const categories = require('./categoriesHelper');
-const { asyncFunction } = require('./asyncFunction');
-const questionsController = require('./questionsController');
-const validationHelper = require('./validationHelper');
+const {asyncFunction} = require('./asyncFunction');
 
 // const jsonParser = bodyParser.json();
 const app = express();
@@ -29,8 +29,8 @@ const corsOptions = {
   enablePreflight: true,
 };
 
-app.use(cors());
-app.options('*', cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(bodyParser.json());
 app.use(paginate.middleware(10, 50));
 
@@ -48,16 +48,60 @@ app.use(paginate.middleware(10, 50));
 //   });
 // });
 
-app.get(
-  '/categories',
-  asyncFunction(async (req, res) => categories.getCategoryNames(req, res)),
-);
 
-app.get(
+app.get('/categories', asyncFunction(async (req, res, next) => categories.getCategoryNames(req, res, next)));
+/*
+app.post('/questions', async (req, res, next) => {
+  console.log('here');
+  await check('category')
+    .isLength({ min: 5 })
+    .withMessage('Category must be at least five characters long.')
+    .run(req);
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(422).json({ errors: result.array() });
+  }
+  return mongodb.insertQuestion(req, res);
+});
+*/
+
+/*
+app.get('/questions',
+  validate.getQuestions,
+  validate.checkValidationResult,
+  (req, res) => {
+    if (req.query.name) {
+      return mongodb.findQuestionByName(req, res);
+    }
+    if (req.query.category) {
+      return mongodb.findQuestionByCategory(req, res);
+    }
+    if (req.query.id) {
+      return mongodb.findQuestionById(req, res);
+    }
+    return mongodb.getQuestions(req, res);
+  });
+
+app.delete('/questions',
+  validate.deleteQuestions,
+  validate.checkValidationResult, (req, res) => {
+    if (req.query.id) {
+      return mongodb.deleteQuestionById(req, res);
+    }
+    return mongodb.deleteQuestion(res);
+  });
+*/
+app.post(
   '/questions',
   validate.getQuestions,
   validate.checkValidationResult,
-  (req, res) => questionsController.getQuestions(req, res),
+  sanitize.postQuestion,
+  (req, res) => {
+    if (req.query.id) {
+      return mongodb.updateQuestionById(req, res);
+    }
+    return res.status(422).json({ errors: ['You should give a specific condition to find resources.'] });
+  },
 );
 
 app.get(

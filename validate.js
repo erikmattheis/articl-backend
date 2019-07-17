@@ -15,18 +15,6 @@ exports.checkValidationResult = checkValidationResult;
 exports.validateJSON = [check().isJSON(), checkValidationResult];
 */
 
-async function checkResult(req, res, next) {
-  const errors = await validationResult(req);
-  console.log(errors);
-  if (!errors.isEmpty()) {
-    res.status(422).json({ errors: errors.array() });
-  } else {
-    next();
-  }
-}
-
-exports.checkResult = checkResult;
-
 
 // module.exports.postQuestion = async function postQuestion(req, res, next) {
 //   await check('author')
@@ -103,20 +91,6 @@ exports.checkResult = checkResult;
 // };
 
 
-module.exports.postQuestionTest = async function postQuestion(req, res, next) {
-  console.log('test start');
-
-  await check('author')
-    .not()
-    .isEmpty()
-    .isLength({ min: 20 })
-    .withMessage('Your Q&A must have a question content at least five characters long.')
-    .run(req);
-
-  await checkResult(req, res, next);
-  console.log('test finish');
-};
-
 module.exports.postQuestion = [
   check('author')
     .not()
@@ -134,36 +108,34 @@ module.exports.postQuestion = [
         if (category.name === value) num += 1;
       });
       if (num < 1) {
-        throw new Error(`Your category ${value} is wrong，`);
+        throw new Error(`Your category ${value} is not a valid category.`);
       } return true;
     })
-    .isAlpha()
-    .withMessage('Your Q&A must be letters only.')
     .escape(),
-  check('question.question')
+  check('question')
     .not()
     .isEmpty()
-    .withMessage('Your Q&A must have question.')
+    .withMessage('Your Q&A must have a question.')
     .isLength({ min: 5 })
     .withMessage('Your Q&A must have a question content at least five characters long.'),
-  check('question.answers.*.answer')
+  check('answers.*.answer')
     .not()
     .isEmpty()
-    .withMessage('Your Q&A must have an answer for each answer.'),
-  check('question.answers.*.correct')
+    .withMessage('Your Q&A must have an answer for each question.'),
+  check('answers.*.correct')
     .not()
     .isEmpty()
-    .withMessage('Your Q&A must have an correct tag for each answer.')
+    .withMessage('Your Q&A must have an value indicating if it is correct or not for each answer.')
     .isBoolean()
-    .withMessage('Your Q&A must be true or false.'),
-  check('question.answers.*.explanation')
+    .withMessage('Your Q&A must correct value must bebe true or false.'),
+  check('answers.*.explanation')
     .not()
     .isEmpty()
     .withMessage('Your Q&A must have an explanation for each answer.'),
   check('question.answers')
     .custom((value) => {
-      if (value.length < 2) {
-        throw new Error('Your Q&A must have 2 answers.');
+      if (value.length < 2 || value.length > 5) {
+        throw new Error('Your Q&A must have 2–5 answers.');
       } return true;
     })
     .custom((value) => {
@@ -172,7 +144,7 @@ module.exports.postQuestion = [
         if (item.correct === true || item.correct === 1) num += 1;
       });
       if (num !== 1) {
-        throw new Error(`Your Q&A must have 1 correct answer, but now you have ${num}.`);
+        throw new Error('Your Q&A must have only 1 correct answer.');
       } return true;
     }),
 ];
@@ -183,15 +155,7 @@ exports.getQuestions = [
     .optional()
     .isMongoId()
     .withMessage('This is not a correct id'),
-  check('name')
-    .optional()
-    .isAlpha()
-    .withMessage('Your Q&A must be letters only.')
-    .escape(),
   check('category')
-    .optional()
-    .isAlpha()
-    .withMessage('Your Q&A must be letters only.')
     .escape(),
 ];
 
