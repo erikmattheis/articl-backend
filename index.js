@@ -38,74 +38,7 @@ app.use(paginate.middleware(10, 50));
 
 //  app.use(bodyParser.urlencoded({ extended: true }));
 
-// find questions by name
-// find quesions by category
-
-//  app.get('/questions/:id', mongodb.findQuestionById);
-
-// app.get('/categories', (req, res) => {
-//   res.status(200).json({
-//     message: 'Successfully get categories.',
-//     categories,
-//   });
-// });
-
-
 app.get('/categories', asyncFunction(async (req, res, next) => categories.getCategoryNames(req, res, next)));
-/*
-app.post('/questions', async (req, res, next) => {
-  console.log('here');
-  await check('category')
-    .isLength({ min: 5 })
-    .withMessage('Category must be at least five characters long.')
-    .run(req);
-  const result = validationResult(req);
-  if (!result.isEmpty()) {
-    return res.status(422).json({ errors: result.array() });
-  }
-  return mongodb.insertQuestion(req, res);
-});
-*/
-
-/*
-app.get('/questions',
-  validate.getQuestions,
-  validate.checkValidationResult,
-  (req, res) => {
-    if (req.query.name) {
-      return mongodb.findQuestionByName(req, res);
-    }
-    if (req.query.category) {
-      return mongodb.findQuestionByCategory(req, res);
-    }
-    if (req.query.id) {
-      return mongodb.findQuestionById(req, res);
-    }
-    return mongodb.getQuestions(req, res);
-  });
-
-app.delete('/questions',
-  validate.deleteQuestions,
-  validate.checkValidationResult, (req, res) => {
-    if (req.query.id) {
-      return mongodb.deleteQuestionById(req, res);
-    }
-    return mongodb.deleteQuestion(res);
-  });
-*/
-
-app.post(
-  '/questions',
-  validate.getQuestions,
-  validate.checkValidationResult,
-  sanitize.postQuestion,
-  (req, res) => {
-    if (req.query.id) {
-      return mongodb.updateQuestionById(req, res);
-    }
-    return res.status(422).json({ errors: ['You should give a specific condition to find resources.'] });
-  },
-);
 
 app.get(
   '/questions/:id',
@@ -131,33 +64,25 @@ app.delete(
   },
 );
 
-// app.post(
-//   '/questions',
-//   validate.postQuestion,
-//   validate.checkValidationResult,
-//   sanitize.postQuestion,
-//   (req, res) => {
-//     mongodb.insertQuestion(req, res);
-//   },
-// );
+// app.post('/questions', async (req, res) => {
+//   await check('category')
+//     .not()
+//     .isEmpty()
+//     .isLength({ min: 20 })
+//     .withMessage(
+//       'Your Q&A must have a question content at least five characters long.',
+//     )
+//     .run(req);
 
-app.post('/questions', async (req, res) => {
-  await check('category')
-    .not()
-    .isEmpty()
-    .isLength({ min: 20 })
-    .withMessage(
-      'Your Q&A must have a question content at least five characters long.',
-    )
-    .run(req);
+//   const result = await validationResult(req);
+//   if (!result.isEmpty()) {
+//     return res.status(422).json({ errors: result.array() });
+//   }
+//   return mongodb.insertQuestion(req, res);
+//   // user can be created now!
+// });
 
-  const result = await validationResult(req);
-  if (!result.isEmpty()) {
-    return res.status(422).json({ errors: result.array() });
-  }
-  return mongodb.insertQuestion(req, res);
-  // user can be created now!
-});
+app.post('/questions', validate.postQuestionTest, mongodb.insertQuestion);
 
 app.put(
   '/questions',
