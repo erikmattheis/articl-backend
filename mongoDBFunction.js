@@ -144,7 +144,7 @@ async function findQuestionByCategory(req, res) {
 async function findQuestionById(req, res) {
   try {
     await Question
-      .find({ _id: req.query.id }, (err, result) => {
+      .find({ _id: req.params.id }, (err, result) => {
         if (err) {
           res.status(500).json({ err });
         } else {
@@ -210,7 +210,7 @@ async function deleteQuestionById(req, res) {
   console.log('try to delete a Question');
   try {
     await Question
-      .remove({ _id: req.query.id }, (err, result) => {
+      .remove({ _id: req.params.id }, (err, result) => {
         if (err || !result) {
           res.status(500).json({ errors: ['Failed to delete this question.'] });
           return true;

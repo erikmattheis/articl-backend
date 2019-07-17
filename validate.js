@@ -87,7 +87,7 @@ module.exports.getQuestions = async function getQuestions(req, res, next) {
     .isMongoId()
     .withMessage('This is not a correct id')
     .run(req);
-  check('category')
+  await check('category')
     .escape()
     .run(req);
 

@@ -43,19 +43,16 @@ app.get('/categories', asyncFunction(async (req, res, next) => categories.getCat
 app.get(
   '/questions/:id',
   validate.getQuestions,
-  validate.checkValidationResult,
   (req, res) => mongodb.findQuestionById(req, res),
 );
 
 app.get('/questions',
   validate.getQuestions,
-  validate.checkValidationResult,
   (req, res) => questionsController.getQuestions(req, res));
 
 app.delete(
   '/questions',
   validate.deleteQuestions,
-  validate.checkValidationResult,
   (req, res) => {
     if (req.query.id) {
       return mongodb.deleteQuestionById(req, res);
@@ -82,12 +79,11 @@ app.delete(
 //   // user can be created now!
 // });
 
-app.post('/questions', validate.postQuestion, mongodb.insertQuestion);
+app.post('/questions', validate.postQuestion, sanitize.postQuestion, mongodb.insertQuestion);
 
 app.put(
   '/questions',
   validate.postQuestion,
-  validate.checkValidationResult,
   sanitize.postQuestion,
   (req, res) => {
     if (req.query.id) {

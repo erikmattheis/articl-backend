@@ -2,7 +2,7 @@
 const sanitizeHtml = require('sanitize-html');
 const xss = require('xss');
 
-function postQuestion(req, res, next) {
+async function postQuestion(req, res, next) {
   try {
     req.body.question.question = sanitizeHtml(req.body.question.question);
     req.body.question.answers.forEach((answer, i) => {
