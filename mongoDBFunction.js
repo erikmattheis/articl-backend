@@ -34,6 +34,7 @@ const Category = mongoose.model('Category', categorySchema);
 
 const questionSchema = new mongoose.Schema({
   author: String,
+  name: String,
   //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
   category: String,
   updated: String,
@@ -72,6 +73,7 @@ const Question = mongoose.model('Question', questionSchema);
 async function insertQuestion(req, res) {
   const newQuestion = new Question({
     author: req.body.author,
+    name: req.body.name,
     // //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
     category: req.body.category,
     updated: new Date(),
@@ -98,12 +100,12 @@ async function insertQuestion(req, res) {
 }
 
 
-async function findQuestionByAuthor(req, res) {
-  console.log(`try to find: ${req.query.author}`);
-  const regAuthor = RegExp(req.query.author, 'i');
+async function findQuestionByName(req, res) {
+  console.log(`try to find: ${req.query.name}`);
+  const regName = RegExp(req.query.name, 'i');
   try {
     await Question
-      .find({ name: { $regex: regAuthor } }, (err, result) => {
+      .find({ name: { $regex: regName } }, (err, result) => {
         if (err || result[0] === undefined) {
           res
             .status(500)
@@ -144,7 +146,7 @@ async function findQuestionByCategory(req, res) {
 async function findQuestionById(req, res) {
   try {
     await Question
-      .find({ _id: req.params.id }, (err, result) => {
+      .find({ _id: req.query.id }, (err, result) => {
         if (err) {
           res.status(500).json({ err });
         } else {
@@ -210,7 +212,7 @@ async function deleteQuestionById(req, res) {
   console.log('try to delete a Question');
   try {
     await Question
-      .remove({ _id: req.params.id }, (err, result) => {
+      .remove({ _id: req.query.id }, (err, result) => {
         if (err || !result) {
           res.status(500).json({ errors: ['Failed to delete this question.'] });
           return true;
@@ -312,7 +314,7 @@ async function getAllCategories() {
 
 // function getCollection(collectionName, callback) {}
 module.exports.insertQuestion = insertQuestion;
-module.exports.findQuestionByAuthor = findQuestionByAuthor;
+module.exports.findQuestionByName = findQuestionByName;
 module.exports.findQuestionByCategory = findQuestionByCategory;
 module.exports.findQuestionById = findQuestionById;
 module.exports.updateQuestionById = updateQuestionById;

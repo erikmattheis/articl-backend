@@ -112,6 +112,7 @@ exports.getCategories = getCategories;
     console.log('get content, [1] is', data.toString());
   });
   */
+
 // categories();
 // let data = fs.readFileSync('./category.json', 'utf8');
 // data = JSON.parse(data);
