@@ -132,7 +132,7 @@ module.exports.postQuestion = [
     .not()
     .isEmpty()
     .withMessage('Your Q&A must have an explanation for each answer.'),
-  check('question.answers')
+  check('answers')
     .custom((value) => {
       if (value.length < 2 || value.length > 5) {
         throw new Error('Your Q&A must have 2–5 answers.');
