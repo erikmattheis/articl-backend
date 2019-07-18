@@ -5,16 +5,13 @@ const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const paginate = require('express-paginate');
-const {
-  check,
-  validationResult,
-} = require('express-validator');
+const { MongoError } = require('mongodb');
 const sanitize = require('./sanitize');
 const validate = require('./validate');
 const mongodb = require('./mongoDBFunction');
-const { asyncFunction } = require('./asyncFunction');
 const questionsController = require('./questionsController');
 const categories = require('./categoriesHelper');
+
 
 // const jsonParser = bodyParser.json();
 const app = express();
@@ -36,9 +33,34 @@ app.options('*', cors(corsOptions));
 app.use(bodyParser.json());
 app.use(paginate.middleware(10, 50));
 
-//  app.use(bodyParser.urlencoded({ extended: true }));
+app.get('/categories', categories.getCategoryNames);
 
-app.get('/categories', asyncFunction(async (req, res, next) => categories.getCategoryNames(req, res, next)));
+app.post('/questions',
+
+  async (req, res, next) => {
+    let validationResult;
+    let insertionResult;
+
+    try {
+      validationResult = await validate.postQuestion(req, res, next);
+      if (validationResult instanceof Error) {
+        console.log('validationResult Error in router', validationResult);
+        next(validationResult);
+      }
+      // const sanitizationPassed = await sanitize.postQuestion(req, res);
+
+      insertionResult = await mongodb.insertQuestion(req, res, next);
+      if (insertionResult instanceof Error) {
+        console.log('insertionResult Error in router', insertionResult);
+        next(insertionResult);
+      } else {
+        res.status(201).json({ success: 'success', result: insertionResult });
+      }
+    } catch (error) {
+      next(error);
+    }
+  });
+
 
 app.get(
   '/questions/:id',
@@ -79,7 +101,6 @@ app.delete(
 //   // user can be created now!
 // });
 
-app.post('/questions', validate.postQuestion, sanitize.postQuestion, mongodb.insertQuestion);
 
 app.put(
   '/questions',
@@ -96,6 +117,30 @@ app.put(
       });
   },
 );
+
+app.use((req, res) => {
+  console.log('everything worked!', res);
+  res.status(200).send({ res });
+});
+
+app.use((error, req, res, next) => {
+  if (error instanceof MongoError) {
+    return res.status(503).json({
+      type: 'MongoError',
+      message: error.message,
+    });
+  }
+  next(error);
+});
+
+app.use((err, req, res, next) => {
+  console.log(err.message);
+  const error = err;
+  if (!error.statusCode) {
+    error.statusCode = 500;
+  }
+  res.status(err.statusCode).send({ errors: error });
+});
 
 app.listen(3000);
 console.log('listening to port 3000');

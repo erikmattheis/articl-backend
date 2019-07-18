@@ -6,7 +6,7 @@ const paginate = require('express-paginate');
 //  const url = 'mongodb://127.0.0.1:27017/myTest';
 
 //  remote
-const url = 'mongodb+srv://root:root@cluster0-jl94d.gcp.mongodb.net/articleDatabase?retryWrites=true&w=majority';
+const url = 'mongodb+srv://root:zuY78tsOS6fOvVZY@cluster0-jl94d.gcp.mongodb.net/articleDatabase?retryWrites=true&w=majority';
 
 mongoose.connect(url, {
   useNewUrlParser: true,
@@ -38,16 +38,14 @@ const questionSchema = new mongoose.Schema({
   category: String,
   updated: String,
   createTime: String,
-  question: {
-    question: String,
-    answers: [
-      {
-        answer: String,
-        correct: Boolean,
-        explanation: String,
-      },
-    ],
-  },
+  question: String,
+  answers: [
+    {
+      answer: String,
+      correct: Boolean,
+      explanation: String,
+    },
+  ],
 });
 
 const Question = mongoose.model('Question', questionSchema);
@@ -68,32 +66,21 @@ const Question = mongoose.model('Question', questionSchema);
 //   });
 // }
 
-
-async function insertQuestion(req, res) {
-  const newQuestion = new Question({
-    author: req.body.author,
-    // //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
-    category: req.body.category,
-    updated: new Date(),
-    createTime: new Date(),
-    question: req.body.question,
-  });
-  // console.log(`dubug:${newQuestion}`);
+async function insertQuestion(req, res, next) {
   try {
-    await newQuestion.save((err, result) => {
-      if (err) {
-        res
-          .status(500)
-          .json({ errors: err.mapped() });
-      } else {
-        res.status(201).json({
-          message: 'Successfully insert question.',
-          question: result,
-        });
-      }
+    const newQuestion = new Question({
+      author: req.body.author,
+      category: req.body.category,
+      updated: new Date(),
+      createTime: new Date(),
+      question: req.body.question,
+      answers: req.body.answers,
     });
-  } catch (e) {
-    res.status(422).json({ errors: e.mapped() });
+    const result = await newQuestion.save();
+    console.log('insertQuestion', result);
+    return result;
+  } catch (error) {
+    next(error);
   }
 }
 
