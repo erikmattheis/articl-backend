@@ -43,21 +43,22 @@ app.post('/questions',
 
     try {
       validationResult = await validate.postQuestion(req, res, next);
+      // console.log('validationResult', validationResult);
       if (validationResult instanceof Error) {
         console.log('validationResult Error in router', validationResult);
-        next(validationResult);
+        return next(validationResult);
       }
       // const sanitizationPassed = await sanitize.postQuestion(req, res);
 
       insertionResult = await mongodb.insertQuestion(req, res, next);
       if (insertionResult instanceof Error) {
         console.log('insertionResult Error in router', insertionResult);
-        next(insertionResult);
-      } else {
-        res.status(201).json({ success: 'success', result: insertionResult });
+        return next(insertionResult);
       }
+      return res.status(201).json({ success: 'success', result: insertionResult });
     } catch (error) {
-      next(error);
+      console.log('catch in router', error);
+      return next(error);
     }
   });
 
