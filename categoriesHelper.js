@@ -44,11 +44,12 @@ async function saveCategoryNames(req, res, next, categoryNames) {
   try {
     console.log(`Saving content to ${cachePath}`);
     console.log('categoryNames', categoryNames);
-    cacache.put(cachePath, categoryNamesKey, categoryNames)
-      .then((result) => {
+    cacache
+      .put(cachePath, categoryNamesKey, categoryNames)
+      .then(result => {
         console.log('saveCategoryNames result', result);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('saveCategoryNames error:', error);
       });
   } catch (error) {
@@ -58,15 +59,19 @@ async function saveCategoryNames(req, res, next, categoryNames) {
 
 async function noCacheHandler(req, res, next) {
   try {
-    mongodb.getCategoryNames(req, res, next)
-      .then(async (result) => {
+    const categoryNames = mongodb.getCategoryNames();
+    console.log('now here', categoryNames);
+    res.status(200).json({ categoryNames });
+    /*
+      .then(async result => {
         console.log('getCategoryNames result', result);
         await saveCategoryNames(req, res, next, result);
         res.status(200).json({ categoryNames });
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('getCategoryNames error', error);
       });
+      */
   } catch (error) {
     console.log('noCacheHandler', error);
   }
@@ -77,6 +82,8 @@ function getCachedCategoryNames() {
 }
 
 async function getCategoryNames(req, res, next) {
+  noCacheHandler(req, res, next);
+  /*
   try {
     cacache.get.info(cachePath, categoryNamesKey);
     const categoryNames = await getCachedCategoryNames();
@@ -89,6 +96,7 @@ async function getCategoryNames(req, res, next) {
       next(error);
     }
   }
+  */
 }
 
 exports.getCategoryNames = getCategoryNames;

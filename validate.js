@@ -5,6 +5,7 @@ const { getCategoriesNames, getAllCategories } = require('./mongoDBFunction');
 function errorFormatter(error) {
   this.message = errror.msg;
   this.field = error.param;
+  /*
   { value:
     [ { answer: 'ddddd',
         somethingWeDontWant: 'SOMETHIHG POTENTIALLY BAD FROM A BAD PERSON!',
@@ -17,8 +18,10 @@ function errorFormatter(error) {
    msg: 'Your Q&A must have 1 correct answer, but now you have 2.',
    param: 'answers',
    location: 'body' }
-   
-   
+
+   */
+
+
   console.log('unformatted', error);
 }
 
