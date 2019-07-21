@@ -1,16 +1,14 @@
+const express = require('express');
 const { MongoError } = require('mongodb');
-const sanitize = require('./sanitize');
-const validate = require('./validate');
+const { categories } = require('../controllers');
 
-const mongodb = require('./mongoDBFunction');
-const questionsController = require('./questionsController');
-const categories = require('./categoriesHelper');
+const router = express.Router();
 
-const app = require('./server/expressApp.js');
+module.exports = router;
 
-app.get('/categories', mongodb.getCategoryNames);
+router.get('/categories', categories.getCategories);
 
-app.post(
+router.post(
   '/questions',
 
   async (req, res, next) => {
@@ -38,13 +36,13 @@ app.post(
     }
   }
 );
-
-app.use((req, res) => {
-  console.log('everything worked!', res);
+/*
+router.use((req, res) => {
+  console.log('everything worked!', res.body);
   res.status(200).send({ res });
 });
 
-app.use((error, req, res, next) => {
+router.use((error, req, res, next) => {
   if (error instanceof MongoError) {
     res.status(503).json({
       type: 'MongoError',
@@ -54,8 +52,8 @@ app.use((error, req, res, next) => {
   next(error);
 });
 
-app.use((err, req, res, next) => {
-  console.log(err.message);
+router.use((err, req, res, next) => {
+  console.log('`MESSAGE: ', err.message);
   const error = err;
   if (!error.statusCode) {
     error.statusCode = 500;
@@ -63,10 +61,7 @@ app.use((err, req, res, next) => {
   res.status(err.statusCode).send({ errors: error });
   next();
 });
-
-app.listen(3000);
-console.log('listening to port 3000');
-
+*/
 /*
 app.all('*', (req, res) => {
   res.status(404).json({ errors: ['Resource not found.'] });
@@ -74,4 +69,5 @@ app.all('*', (req, res) => {
 app.use((req, res) => {
   res.status(500).json({ errors: ['An unknown error occurred.'] });
 });
+
 */

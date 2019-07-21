@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const paginate = require('express-paginate');
+const routes = require('./routes');
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.options('*', cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(paginate.middleware(10, 50));
+
+app.use('/api/v1', routes);
 
 app.listen(3000);
 console.log('listening to port 3000');

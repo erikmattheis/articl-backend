@@ -1,8 +1,44 @@
 const cacache = require('cacache/en');
-const mongodb = require('./mongoDBFunction');
 
-const categoryNamesKey = 'categoryNames';
 const cachePath = './cache/';
+const cache = {};
+
+exports.getValue = async key => {
+  try {
+    return cache[key];
+    /*
+    // await cacache.clearMemoized();
+    // await cacache.rm.all(cachePath);
+    const exists = await cacache.get.info(cachePath, key);
+    if (exists) {
+      const result = await cacache.get(cachePath, key);
+      console.log('from cache', result.data.toString());
+      return result.data.toString();
+    }
+    
+    return false;
+    */
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.setValue = async (key, value) => {
+  try {
+    cache[key] = value;
+    return;
+    /*
+    await cacache.clearMemoized();
+    await cacache.rm.all(cachePath);
+    const opts = { memoize: true };
+    const result = await cacache.put(cachePath, key, 'erik mattheis', opts);
+    return result;
+    */
+  } catch (error) {
+    console.log('error setting value in cache module ', error);
+    return error;
+  }
+};
 
 /*
 mongodb.getCategoryNames()
@@ -81,7 +117,7 @@ function getCachedCategoryNames() {
   return cacache.get(cachePath, categoryNamesKey);
 }
 
-async function getCategoryNames(req, res, next) {
+async function getCategoryNames() {
   noCacheHandler(req, res, next);
   /*
   try {

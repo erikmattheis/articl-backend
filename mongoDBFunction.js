@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const paginate = require('express-paginate');
 const config = require('./config.js');
+const cachedResults = require('./cachedResults');
+const timer = require('./utils/timer');
 
 mongoose.Promise = Promise;
 mongoose.set('debug', true);
@@ -65,6 +67,31 @@ const categorySchema = new mongoose.Schema({
 });
 
 const Category = mongoose.model('Category', categorySchema);
+
+async function getCategoryNames() {
+  try {
+    timer.start('cachedResults');
+    const cached = await cachedResults.getValue('getCategoryNames');
+    timer.stop('cachedResults');
+    if (cached) {
+      console.log('returning', cached);
+      return cached;
+    }
+
+    console.info(timer);
+    timer.start('CategoryDistinct');
+    const result = await Category.distinct('title').exec();
+    timer.stop('CategoryDistinct');
+    if (result.length) {
+      await cachedResults.setValue('getCategoryNames', result);
+      return result;
+    }
+    return Error('No categories were found.');
+  } catch (error) {
+    console.log('getCategoryNames error', error);
+    return error;
+  }
+}
 
 async function insertQuestion(req, res) {
   // console.log(`dubug:${newQuestion}`);
@@ -281,21 +308,6 @@ async function getAllCategories() {
   } catch (e) {
     // need change
     console.log('something wrong in getAllCategories');
-  }
-}
-
-async function getCategoryNames() {
-  console.log('getCategoryNames');
-  try {
-    const result = await Category.find()
-      // .select('title')
-      .sort('title')
-      .exec();
-    console.log('result', result);
-    return result;
-  } catch (error) {
-    console.log('getCategoryNames error', error);
-    return Error(error);
   }
 }
 
