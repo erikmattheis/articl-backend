@@ -1,9 +1,8 @@
 const { check, validationResult } = require('express-validator');
 const { getCategoriesNames, getAllCategories } = require('./mongoDBFunction');
 
-
 function errorFormatter(error) {
-  this.message = errror.msg;
+  this.message = error.msg;
   this.field = error.param;
   /*
   { value:
@@ -21,13 +20,14 @@ function errorFormatter(error) {
 
    */
 
-
   console.log('unformatted', error);
+  return error;
 }
 
 async function checkValidationResult(req, res, next) {
   try {
     const errors = await validationResult(req);
+    console.log('ERRORS', errors);
     if (!errors.isEmpty()) {
       // console.log('validation errors are', errors.array());
       return new Error(errors.formatWith(errorFormatter).array());
@@ -41,80 +41,94 @@ async function checkValidationResult(req, res, next) {
 
 module.exports.postQuestion = async function postQuestion(req, res, next) {
   try {
-    const validationChains = await Promise.all([check('author')
-      .not()
-      .isEmpty()
-      .withMessage('Your Q&A must have a author.')
-      .escape()
-      .run(req),
-    await check('category')
-      .not()
-      .isEmpty()
-      .withMessage('Your Q&A must have category.')
-      // .custom(async (value) => {
-      //   let num = 0;
-      //   const result = await getAllCategories();
-      //   result.forEach((category) => {
-      //     if (category.name === value) num += 1;
-      //   });
-      //   if (num < 1) {
-      //     throw new Error(`Your category ${value} is wrong，`);
-      //   } return true;
-      // })
-      // .withMessage('Your Q&A must be letters only.')
-      .escape()
-      .run(req),
-    await check('question')
-      .not()
-      .isEmpty()
-      .withMessage('Your Q&A must have question.')
-      .isLength({ min: 5 })
-      .withMessage('Your Q&A must have a question content at least five characters long.')
-      .run(req),
-    await check('answers.*.answer')
-      .not()
-      .isEmpty()
-      .withMessage('Your Q&A must have an answer for each answer.')
-      .run(req),
-    await check('answers.*.correct')
-      .not()
-      .isEmpty()
-      .withMessage('Your Q&A must have an correct tag for each answer.')
-      .isBoolean()
-      .withMessage('Your Q&A must be true or false.')
-      .run(req),
-    await check('answers.*.explanation')
-      .not()
-      .isEmpty()
-      .withMessage('Your Q&A must have an explanation for each answer.')
-      .run(req),
-    await check('answers')
-      .custom((value) => {
-        if (value.length < 2) {
-          throw new Error('Your Q&A must have 2 answers.');
-        } return true;
+    const validationChains = await Promise.all([
+      check('author')
+        .not()
+        .isEmpty()
+        .withMessage('Your Q&A must have a author.')
+        .escape()
+        .run(req),
+      await check('category')
+        .not()
+        .isEmpty()
+        .withMessage('Your Q&A must have category.')
+        // .custom(async (value) => {
+        //   let num = 0;
+        //   const result = await getAllCategories();
+        //   result.forEach((category) => {
+        //     if (category.name === value) num += 1;
+        //   });
+        //   if (num < 1) {
+        //     return Error(`Your category ${value} is wrong，`);
+        //   } return true;
+        // })
+        // .withMessage('Your Q&A must be letters only.')
+        .escape()
+        .run(req),
+      await check('question')
+        .not()
+        .isEmpty()
+        .withMessage('Your Q&A must have question.')
+        .isLength({ min: 5 })
+        .withMessage('Your Q&A must have a question content at least five characters long.')
+        .run(req),
+      await check('answers.*.answer')
+        .not()
+        .isEmpty()
+        .withMessage('Your Q&A must have an answer for each answer.')
+        .run(req),
+      await check('answers.*.correct')
+        .not()
+        .isEmpty()
+        .withMessage('Your Q&A must have an correct tag for each answer.')
+        .isBoolean()
+        .withMessage('Your Q&A must be true or false.')
+        .run(req),
+      await check('answers.*.explanation')
+        .not()
+        .isEmpty()
+        .withMessage('Your Q&A must have an explanation for each answer.')
+        .run(req),
+      await check('answers')
+        .custom(value => {
+          if (value.length < 2) {
+            return new Error('Your Q&A must have 2 answers.');
+          }
+          return true;
+        })
+        .custom(value => {
+          let num = 0;
+          value.forEach(item => {
+            if (item.correct === true || item.correct === 1) num += 1;
+          });
+          if (num !== 1) {
+            return new Error(`Your Q&A must have 1 correct answer, but now you have ${num}.`);
+          }
+          return true;
+        })
+        .run(req)
+    ]); /*
+      .then(function tF(result) {
+        console.log('RESULT!', result);
       })
-      .custom((value) => {
-        let num = 0;
-        value.forEach((item) => {
-          if (item.correct === true || item.correct === 1) num += 1;
-        });
-        if (num !== 1) {
-          throw new Error(`Your Q&A must have 1 correct answer, but now you have ${num}.`);
-        } return true;
-      })
-      .run(req)]);
+      .catch(function eF(error) {
+        console.log('ERROR!', error);
+      }); */
     // c
     // console.log('validationChains', validationChains);
-    const result = await validationResult(req).throw();
-    // console.log('validationResult result', result);
-    return result;
+    const result = await validationResult(req);
+    if (result.isEmpty()) {
+      return true;
+    }
+    console.log('validation noification ejm', result);
+    const error = Error(result.array());
+    error.name = 'ValidationError';
+    error.status = 422;
+    return error;
   } catch (error) {
-    // console.log('validate catch', error);
-    return error.formatWith(errorFormatter).array();
+    return error;
   }
 };
-
 
 module.exports.getQuestions = async function getQuestions(req, res, next) {
   await check('id')

@@ -3,9 +3,10 @@ const paginate = require('express-paginate');
 const config = require('./config.js');
 const cachedResults = require('./cachedResults');
 const timer = require('./utils/timer');
+const memory = require('./utils/memory');
 
 mongoose.Promise = Promise;
-mongoose.set('debug', true);
+// mongoose.set('debug', true);
 
 //  local
 //  const url = 'mongodb://127.0.0.1:27017/myTest';
@@ -36,8 +37,8 @@ const questionSchema = new mongoose.Schema({
       category_image: String
     }
   ],
-  updated: String,
-  createTime: String,
+  updated: Date,
+  createTime: Date,
   question: String,
   answers: [
     {
@@ -74,7 +75,6 @@ async function getCategoryNames() {
     const cached = await cachedResults.getValue('getCategoryNames');
     timer.stop('cachedResults');
     if (cached) {
-      console.log('returning', cached);
       return cached;
     }
 
@@ -83,7 +83,12 @@ async function getCategoryNames() {
     const result = await Category.distinct('title').exec();
     timer.stop('CategoryDistinct');
     if (result.length) {
-      await cachedResults.setValue('getCategoryNames', result);
+      console.log('result', result);
+      console.log('result.length', result.length);
+      console.log(memory.sizeof(result, 'result'));
+      memory.start('cachedResults.setValue');
+      await cachedResults.setValue('getCategoryNames', dResults);
+      memory.stop('cachedResults.setValue');
       return result;
     }
     return Error('No categories were found.');
@@ -93,31 +98,27 @@ async function getCategoryNames() {
   }
 }
 
-async function insertQuestion(req, res) {
-  // console.log(`dubug:${newQuestion}`);
+async function insertQuestion(req, res, next) {
   try {
-    const category = await Category.find({ title: req.body.category });
     const newQuestion = new Question({
       author: req.body.author,
-      // //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
-      category,
+      category: {
+        term_id: 1,
+        description: 'desc',
+        parent: 0,
+        title: 'My Title',
+        category_image: ''
+      },
       updated: new Date(),
       createTime: new Date(),
       question: req.body.question,
       answers: req.body.answers
     });
-    await newQuestion.save((err, result) => {
-      if (err) {
-        res.status(500).json({ errors: err.mapped() });
-      } else {
-        res.status(201).json({
-          message: 'Successfully insert question.',
-          question: result
-        });
-      }
-    });
-  } catch (e) {
-    res.status(422).json({ errors: e.mapped() });
+    const result = await newQuestion.save();
+    console.log('insertQuestion', result);
+    return result;
+  } catch (error) {
+    return error;
   }
 }
 
@@ -310,18 +311,6 @@ async function getAllCategories() {
     console.log('something wrong in getAllCategories');
   }
 }
-
-/*
-async function getAllCategories() {
-  console.log('try to find all categories');
-  try {
-    return Category
-      .find({});
-  } catch (e) {
-    throw new Error(e);
-  }
-}
-*/
 
 async function findQuestionAllMeeting(req, res) {
   console.log(`try to find: ${req.query.find}`);

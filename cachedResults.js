@@ -19,7 +19,7 @@ exports.getValue = async key => {
     return false;
     */
   } catch (error) {
-    throw error;
+    return error;
   }
 };
 
@@ -89,7 +89,7 @@ async function saveCategoryNames(req, res, next, categoryNames) {
         console.log('saveCategoryNames error:', error);
       });
   } catch (error) {
-    throw new Error(error);
+    return error;
   }
 }
 

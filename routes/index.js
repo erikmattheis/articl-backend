@@ -1,6 +1,6 @@
 const express = require('express');
 const { MongoError } = require('mongodb');
-const { categories } = require('../controllers');
+const { categories, questions } = require('../controllers');
 
 const router = express.Router();
 
@@ -8,34 +8,8 @@ module.exports = router;
 
 router.get('/categories', categories.getCategories);
 
-router.post(
-  '/questions',
+router.post('/questions', questions.postQuestion);
 
-  async (req, res, next) => {
-    let validationResult;
-    let insertionResult;
-
-    try {
-      validationResult = await validate.postQuestion(req, res, next);
-      // console.log('validationResult', validationResult);
-      if (validationResult instanceof Error) {
-        console.log('validationResult Error in router', validationResult);
-        return next(validationResult);
-      }
-      // const sanitizationPassed = await sanitize.postQuestion(req, res);
-
-      insertionResult = await mongodb.insertQuestion(req, res, next);
-      if (insertionResult instanceof Error) {
-        console.log('insertionResult Error in router', insertionResult);
-        return next(insertionResult);
-      }
-      return res.status(201).json({ success: 'success', result: insertionResult });
-    } catch (error) {
-      console.log('catch in router', error);
-      return next(error);
-    }
-  }
-);
 /*
 router.use((req, res) => {
   console.log('everything worked!', res.body);
