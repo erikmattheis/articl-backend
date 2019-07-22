@@ -1,14 +1,13 @@
 const express = require('express');
-const { MongoError } = require('mongodb');
-const { categories, questions } = require('../controllers');
+const { categoriesController, questionsController } = require('../controllers');
 
 const router = express.Router();
 
 module.exports = router;
 
-router.get('/categories', categories.getCategories);
+router.get('/categories', categoriesController.getCategories);
 
-router.post('/questions', questions.postQuestion);
+router.post('/questions', questionsController.postQuestion);
 
 /*
 router.use((req, res) => {
@@ -36,12 +35,11 @@ router.use((err, req, res, next) => {
   next();
 });
 */
-/*
-app.all('*', (req, res) => {
+
+router.all('*', (req, res) => {
   res.status(404).json({ errors: ['Resource not found.'] });
 });
-app.use((req, res) => {
+
+router.use((req, res) => {
   res.status(500).json({ errors: ['An unknown error occurred.'] });
 });
-
-*/

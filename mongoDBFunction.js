@@ -1,126 +1,4 @@
-const mongoose = require('mongoose');
-const paginate = require('express-paginate');
-const config = require('./config.js');
-const cachedResults = require('./cachedResults');
-const timer = require('./utils/timer');
-const memory = require('./utils/memory');
-
-mongoose.Promise = Promise;
-// mongoose.set('debug', true);
-
-//  local
-//  const url = 'mongodb://127.0.0.1:27017/myTest';
-
-const {
-  db: { host, name, account, password, other }
-} = config;
-const url = `mongodb+srv://${account}:${password}@${host}/${name}?${other}`;
-
-mongoose.connect(url, {
-  useNewUrlParser: true,
-  config: { autoIndex: true }
-});
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-
-const questionSchema = new mongoose.Schema({
-  author: String,
-  //  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
-  category: [
-    {
-      term_id: Number,
-      description: String,
-      parent: Number,
-      title: { type: String, index: true },
-      category_image: String
-    }
-  ],
-  updated: Date,
-  createTime: Date,
-  question: String,
-  answers: [
-    {
-      answer: String,
-      correct: Boolean,
-      explanation: String
-    }
-  ]
-});
-// questionSchema.index({ '$**': 'text' });
-
-questionSchema.index({
-  category: 'text',
-  question: 'text',
-  'answers.answer': 'text',
-  'answers.explanation': 'text'
-});
-
-const Question = mongoose.model('Question', questionSchema);
-
-const categorySchema = new mongoose.Schema({
-  term_id: Number,
-  description: String,
-  parent: Number,
-  title: { type: String, index: true },
-  category_image: String
-});
-
-const Category = mongoose.model('Category', categorySchema);
-
-async function getCategoryNames() {
-  try {
-    timer.start('cachedResults');
-    const cached = await cachedResults.getValue('getCategoryNames');
-    timer.stop('cachedResults');
-    if (cached) {
-      return cached;
-    }
-
-    console.info(timer);
-    timer.start('CategoryDistinct');
-    const result = await Category.distinct('title').exec();
-    timer.stop('CategoryDistinct');
-    if (result.length) {
-      console.log('result', result);
-      console.log('result.length', result.length);
-      console.log(memory.sizeof(result, 'result'));
-      memory.start('cachedResults.setValue');
-      await cachedResults.setValue('getCategoryNames', dResults);
-      memory.stop('cachedResults.setValue');
-      return result;
-    }
-    return Error('No categories were found.');
-  } catch (error) {
-    console.log('getCategoryNames error', error);
-    return error;
-  }
-}
-
-async function insertQuestion(req, res, next) {
-  try {
-    const newQuestion = new Question({
-      author: req.body.author,
-      category: {
-        term_id: 1,
-        description: 'desc',
-        parent: 0,
-        title: 'My Title',
-        category_image: ''
-      },
-      updated: new Date(),
-      createTime: new Date(),
-      question: req.body.question,
-      answers: req.body.answers
-    });
-    const result = await newQuestion.save();
-    console.log('insertQuestion', result);
-    return result;
-  } catch (error) {
-    return error;
-  }
-}
+/*
 
 async function findQuestionByAuthor(req, res) {
   console.log(`try to find: ${req.query.author}`);
@@ -182,8 +60,8 @@ async function findAnswersById(req, res) {
     console.log(results[0].question.answers);
     if (req.accepts('json')) {
       res.status(200).json({
-        message: 'Successfully found answers by ID.',
-        answers: results[0].question.answers
+        answers: results[0].question.answers,
+        message: 'Successfully found answers by ID.'
       });
     }
   } catch (e) {
@@ -211,8 +89,8 @@ async function getQuestions(req, res) {
     const pageCount = Math.ceil(itemCount / req.query.limit);
     if (req.accepts('json')) {
       res.status(200).json({
-        message: 'Successfully found database.',
         has_more: paginate.hasNextPages(req)(pageCount),
+        message: 'Successfully found database.',
         question: results
       });
     }
@@ -351,3 +229,4 @@ module.exports.getCategoryNames = getCategoryNames;
 module.exports.getAllCategories = getAllCategories;
 module.exports.findAnswersById = findAnswersById;
 module.exports.findQuestionAllMeeting = findQuestionAllMeeting;
+*/

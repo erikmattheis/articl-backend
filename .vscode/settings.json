@@ -1,6 +1,14 @@
 {
-  "prettier.eslintIntegration": true,
-  "prettier.printWidth": 120,
-  "prettier.requireConfig": true,
-  "prettier.singleQuote": true
+  "files.exclude": {
+    "**/.map": true,
+    "**/.min/.css": true,
+    "**/.min/.js": true,
+    "**/node_modules": true
+  },
+  "search.exclude": {
+    "**/*.map": true,
+    "**/*.min.css": true,
+    "**/*.min.js": true,
+    "**/node_modules": true
+  }
 }

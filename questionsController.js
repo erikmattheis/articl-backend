@@ -1,4 +1,4 @@
-const mongodb = require('./mongoDBFunction');
+const mongodb = require('./data/questionsData');
 
 function getQuestions(req, res) {
   if (req.query.category) {

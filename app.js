@@ -9,17 +9,17 @@ const routes = require('./routes');
 const app = express();
 
 const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100
+  max: 100, // 15 minutes
+  windowMs: 15 * 60 * 1000
 });
 app.use(generalLimiter);
 
 app.use(helmet());
 
 const corsOptions = {
-  origin: 'http://localhost:8080',
   credentials: true,
-  enablePreflight: true
+  enablePreflight: true,
+  origin: 'http://localhost:8080'
 };
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));

@@ -1,2 +1,2 @@
-exports.categories = require('./categories');
-exports.questions = require('./questions');
+exports.categoriesController = require('./categoriesController');
+exports.questionsController = require('./questionsController');
