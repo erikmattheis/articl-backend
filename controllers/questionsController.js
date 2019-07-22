@@ -18,13 +18,12 @@ async function postQuestion(req, res) {
 }
 exports.postQuestion = postQuestion;
 
-async function getQuestions(req, res, next) {
+async function getQuestions(req, res) {
   try {
+    console.log('req.params.id', req.params.id);
     const questions = await questionsData.getQuestions(req);
-    console.log('question', questions);
     res.status(200).json({ questions });
   } catch (error) {
-    console.log('getQuestion error', error);
     res.status(500).json({ error });
   }
 }

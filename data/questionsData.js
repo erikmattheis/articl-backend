@@ -151,9 +151,11 @@ async function findAnswersById(req, res) {
 async function getQuestions(req, res) {
   console.log('try to find all questions, sort by:', req.query.sort);
   try {
+    const opts = req.params.id ? { _id: req.params.id } : {};
+    console.log(opts);
     const [results, itemCount] = await Promise.all([
       //  Question.find({}).limit(req.query.limit).skip(req.skip).sort({ updated: req.query.order })
-      Question.find({})
+      Question.find(opts)
         .limit(req.query.limit)
         .skip(req.skip)
         .sort(req.query.sort)

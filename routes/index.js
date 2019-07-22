@@ -9,6 +9,8 @@ router.get('/categories', categoriesController.getCategories);
 
 router.get('/questions', questionsController.getQuestions);
 
+router.get('/questions/:id', questionsController.getQuestions);
+
 router.post('/questions', questionsController.postQuestion);
 
 /*
