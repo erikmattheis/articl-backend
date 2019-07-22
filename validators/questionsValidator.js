@@ -1,9 +1,11 @@
 const { check, validationResult } = require('express-validator');
-const { getCategoriesNames } = require('../data/categoriesData');
+const { getCategoryNames } = require('../data/categoriesData');
 const { ValidationError } = require('./validationError');
 
-module.exports.postQuestion = async function postQuestion(req) {
+async function postQuestion(req) {
   try {
+    const categoryNames = await getCategoryNames();
+    console.log('categoryNames.length', categoryNames.length);
     Promise.all([
       await check('author')
         .not()
@@ -15,16 +17,11 @@ module.exports.postQuestion = async function postQuestion(req) {
         .not()
         .isEmpty()
         .withMessage('Your Q&A must have category.')
-        .custom(async value => {
-          try {
-            const result = await getCategoriesNames();
-            if (result.indexOf(value) === -1) {
-              throw new Error(`Your category ${value} is not a valid category，`);
-            }
-            return true;
-          } catch (error) {
-            throw error;
+        .custom(value => {
+          if (categoryNames.indexOf(value) === -1) {
+            throw new Error(`Your category ${value} is not a valid category，`);
           }
+          return true;
         })
         .withMessage('Your Q&A must be letters only.')
         .escape()
@@ -71,28 +68,30 @@ module.exports.postQuestion = async function postQuestion(req) {
         })
         .run(req)
     ])
-      .then(async () => {
+      .then(result => {
         try {
-          console.log('postQuestion rues have run');
+          console.log('postQuestion rules have run');
           const errors = validationResult(req);
           if (!errors.isEmpty()) {
-            console.log('there are errors');
-            throw ValidationError(errors.array());
+            console.log('Returning validation errors');
+            throw new ValidationError(errors.array());
           }
-          return true;
         } catch (error) {
-          throw error;
+          return error;
         }
+
+        return result;
       })
       .catch(error => {
-        console.log('was error', error);
+        console.log('error in 2', error);
         throw error;
       });
   } catch (error) {
     console.log('postQuestion validator error', JSON.stringify(error));
     throw error;
   }
-};
+}
+exports.postQuestion = postQuestion;
 
 module.exports.getQuestions = async function getQuestions(req) {
   await check('id')

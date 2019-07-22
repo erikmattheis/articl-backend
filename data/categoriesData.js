@@ -1,31 +1,67 @@
-const { Category } = require('./categoriesSchema');
+const { mongoose } = require('./mongoDB');
+
+const categorySchema = new mongoose.Schema({
+  category_image: String,
+  description: String,
+  parent: { index: true, type: Number },
+  term_id: Number,
+  title: { index: true, type: String }
+});
+
+const Category = mongoose.model('Category', categorySchema);
 const cachedResults = require('../cachedResults');
 const timer = require('../utils/timer');
 const memory = require('../utils/memory');
 
+// timer.start('cachedResults');
+
+async function getCachedResult(key) {
+  try {
+    return await cachedResults.getValue(key);
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getCategoryNames() {
   try {
-    timer.start('cachedResults');
-    const cached = await cachedResults.getValue('getCategoryNames');
-    timer.stop('cachedResults');
-    if (cached) {
-      return cached;
-    }
+    return Category.distinct('title').exec();
+    // console.log('result', result);
 
-    console.info(timer);
-    timer.start('CategoryDistinct');
-    const result = await Category.distinct('title').exec();
-    timer.stop('CategoryDistinct');
-    if (result.length) {
-      console.log('result', result);
-      console.log('result.length', result.length);
-      console.log(memory.sizeof(result, 'result'));
-      return result;
+    /*
+    result
+      .then(resolved => {
+        console.log('now result.length is', resolved.length);
+        return resolved;
+      })
+      .catch(error => {
+        console.log('error of', error);
+        throw error;
+      });
+
+      */
+    /*
+    const cachedResult = getCachedResult('getCategoryNames');
+    if (cachedResult.length) {
+      return cachedResult;
     }
-    return Error('No categories were found.');
+    console.log('waiting for mongoose');
+    const result = Category.distinct('title');
+    console.log('done waiting for mongoose', result);
+    result
+      .then(function(err, result) {
+        console.log('then err', err);
+        console.log('then result', result);
+        return result;
+      })
+      .catch(function(error) {
+        console.log('catch error', error);
+        return error;
+      });
+      */
   } catch (error) {
-    console.log('getCategoryNames error', error);
-    return error;
+    console.log('getCategoryNames error here', error);
+    throw error;
   }
 }
 module.exports.getCategoryNames = getCategoryNames;

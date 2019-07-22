@@ -1,5 +1,4 @@
 const paginate = require('express-paginate');
-// const mongoose = require('mongoose');
 const { Question } = require('./questionsSchema');
 
 // mongoose.Promise = Promise;
@@ -162,19 +161,15 @@ async function getQuestions(req, res) {
         .exec(),
       Question.count({})
     ]);
-    console.log(results);
     const pageCount = Math.ceil(itemCount / req.query.limit);
     if (req.accepts('json')) {
-      res.status(200).json({
+      return {
         has_more: paginate.hasNextPages(req)(pageCount),
-        message: 'Successfully found database.',
-        question: results
-      });
+        questions: results
+      };
     }
-  } catch (e) {
-    res.status(500).json({
-      e
-    });
+  } catch (error) {
+    throw error;
   }
 }
 

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+mongoose.promise = Promise;
+
 const categorySchema = new mongoose.Schema({
   category_image: String,
   description: String,

@@ -5,7 +5,7 @@ const cache = {};
 
 exports.getValue = async key => {
   try {
-    return cache[key];
+    return await cache[key];
     /*
     // await cacache.clearMemoized();
     // await cacache.rm.all(cachePath);
@@ -19,7 +19,7 @@ exports.getValue = async key => {
     return false;
     */
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 

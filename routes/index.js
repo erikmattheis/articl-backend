@@ -7,6 +7,8 @@ module.exports = router;
 
 router.get('/categories', categoriesController.getCategories);
 
+router.get('/questions', questionsController.getQuestions);
+
 router.post('/questions', questionsController.postQuestion);
 
 /*
