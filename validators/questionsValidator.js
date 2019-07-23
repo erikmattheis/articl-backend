@@ -6,8 +6,7 @@ const { ValidationError } = require('./validationError');
 async function postQuestion(req) {
   try {
     const categoryNames = await getCategoryNames();
-    console.log('categoryNames.length', categoryNames.length);
-    const result = Promise.all([
+    Promise.all([
       await check('author')
         .not()
         .isEmpty()
@@ -71,14 +70,12 @@ async function postQuestion(req) {
     ]);
 
     const invalid = validationResult(req);
-    console.log('result is', invalid.isEmpty());
     if (!invalid.isEmpty()) {
       const validationErrorPromise = new ValidationError(invalid.array());
       return Promise.reject(validationErrorPromise);
     }
     return true;
   } catch (error) {
-    console.log('postQuestion validator error', JSON.stringify(error));
     throw error;
   }
 }
@@ -97,15 +94,6 @@ module.exports.getQuestions = async function getQuestions(req) {
   const errors = await validationResult(req);
   return errors;
 };
-
-// exports.getQuestions = [
-//   check('id')
-//     .optional()
-//     .isMongoId()
-//     .withMessage('This is not a correct id'),
-//   check('category')
-//     .escape(),
-// ];
 
 module.exports.deleteQuestions = async function deleteQuestions(req) {
   await check('id')

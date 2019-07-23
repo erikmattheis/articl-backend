@@ -1,8 +1,6 @@
 const paginate = require('express-paginate');
 const { Question } = require('./questionsSchema');
 
-// mongoose.Promise = Promise;
-
 async function postQuestion(req) {
   const question = new Question({
     answers: req.body.answers,
@@ -20,30 +18,69 @@ async function postQuestion(req) {
   });
 
   try {
-    const success = await question.save(/* (err, result) => {
-      if (err) {
-        console.log('OMG, an error! ', err);
-      } else {
-        console.log('success!', result);
-      }
-    } */);
-    /*
-      .then(result => {
-        console.log('insertQuestion', result);
-        return result;
-      })
-      .catch(error => {
-        console.log('save error', error);
-        throw error;
-      });
-      */
-    console.log('s', success);
+    const result = await question.save();
+    return result;
   } catch (error) {
-    console.log('an error in data postQuestion', error);
     throw error;
   }
 }
+exports.postQuestion = postQuestion;
 
+async function getQuestions(req) {
+  req.query.sort = req.query.sort ? req.query.sort : 'updated';
+  try {
+    const opts = req.params.id ? { _id: req.params.id } : {};
+    const [results, itemCount] = await Promise.all([
+      Question.find(opts)
+        .limit(req.query.limit)
+        .skip(req.skip)
+        .sort(req.query.sort)
+        .lean()
+        .exec(),
+      Question.count({})
+    ]);
+    const pageCount = Math.ceil(itemCount / req.query.limit);
+
+    return {
+      has_more: paginate.hasNextPages(req)(pageCount),
+      questions: results
+    };
+  } catch (error) {
+    throw error;
+  }
+}
+exports.getQuestions = getQuestions;
+
+async function deleteQuestions() {
+  try {
+    if (process.env.NODE_ENV !== 'development') {
+      const error = await new Error(
+        'deleteQuestion may only be used in development! To start the app in development mode, run gulp.'
+      );
+      return error;
+    }
+    return 'Successfully deleted questions!';
+    /*
+
+    await Question.remove({}, (err, result) => {
+      if (err || !result) {
+        res.status(500).json({
+          errors: err.mapped()
+        });
+      }
+      res.status(200).json({
+        message: 'Successfully delete database.',
+        question: result
+      });
+    });
+    */
+  } catch (error) {
+    throw error;
+  }
+}
+exports.deleteQuestions = deleteQuestions;
+
+/*
 async function findQuestionByAuthor(req, res) {
   console.log(`try to find: ${req.query.author}`);
   const regAuthor = RegExp(req.query.author, 'i');
@@ -73,7 +110,9 @@ async function findQuestionByAuthor(req, res) {
     });
   }
 }
+*/
 
+/*
 async function findQuestionByCategory(req, res) {
   console.log(`try to find: ${req.query.category}`);
   const regCategory = RegExp(req.query.category, 'i');
@@ -103,32 +142,8 @@ async function findQuestionByCategory(req, res) {
     });
   }
 }
-async function findQuestionById(req, res) {
-  try {
-    await Question.find(
-      {
-        _id: req.params.id
-      },
-      (err, result) => {
-        if (err) {
-          res.status(500).json({
-            err
-          });
-        } else {
-          res.status(200).json({
-            message: 'success',
-            question: result
-          });
-        }
-      }
-    );
-  } catch (e) {
-    res.status(500).json({
-      e
-    });
-  }
-}
-
+*/
+/*
 async function findAnswersById(req, res) {
   try {
     const results = await Question.find({
@@ -147,55 +162,9 @@ async function findAnswersById(req, res) {
     });
   }
 }
+*/
 
-async function getQuestions(req, res) {
-  console.log('try to find all questions, sort by:', req.query.sort);
-  try {
-    const opts = req.params.id ? { _id: req.params.id } : {};
-    console.log(opts);
-    const [results, itemCount] = await Promise.all([
-      //  Question.find({}).limit(req.query.limit).skip(req.skip).sort({ updated: req.query.order })
-      Question.find(opts)
-        .limit(req.query.limit)
-        .skip(req.skip)
-        .sort(req.query.sort)
-        .lean()
-        .exec(),
-      Question.count({})
-    ]);
-    const pageCount = Math.ceil(itemCount / req.query.limit);
-    if (req.accepts('json')) {
-      return {
-        has_more: paginate.hasNextPages(req)(pageCount),
-        questions: results
-      };
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function deleteQuestion(res) {
-  console.log('try to delete all items in Question');
-  try {
-    await Question.remove({}, (err, result) => {
-      if (err || !result) {
-        res.status(500).json({
-          errors: err.mapped()
-        });
-      }
-      res.status(200).json({
-        message: 'Successfully delete database.',
-        question: result
-      });
-    });
-  } catch (e) {
-    res.status(500).json({
-      e
-    });
-  }
-}
-
+/*
 async function deleteQuestionById(req, res) {
   console.log('try to delete a Question');
   try {
@@ -223,7 +192,9 @@ async function deleteQuestionById(req, res) {
     });
   }
 }
+*/
 
+/*
 async function updateQuestionById(req, res) {
   try {
     const updateItems = req.body;
@@ -252,7 +223,9 @@ async function updateQuestionById(req, res) {
     });
   }
 }
+*/
 
+/*
 async function findQuestionAllMeeting(req, res) {
   console.log(`try to find: ${req.query.find}`);
   // const regFind = RegExp(req.query.find, 'i');
@@ -281,14 +254,14 @@ async function findQuestionAllMeeting(req, res) {
     });
   }
 }
+*/
 
-// function getCollection(collectionName, callback) {}
-module.exports.postQuestion = postQuestion;
+/*
 module.exports.findQuestionByAuthor = findQuestionByAuthor;
 module.exports.findQuestionById = findQuestionById;
 module.exports.updateQuestionById = updateQuestionById;
-module.exports.getQuestions = getQuestions;
 module.exports.deleteQuestion = deleteQuestion;
 module.exports.deleteQuestionById = deleteQuestionById;
 module.exports.findAnswersById = findAnswersById;
 module.exports.findQuestionAllMeeting = findQuestionAllMeeting;
+*/

@@ -60,18 +60,17 @@ async function getCategoryNames() {
       });
       */
   } catch (error) {
-    console.log('getCategoryNames error here', error);
     throw error;
   }
 }
 module.exports.getCategoryNames = getCategoryNames;
 
-async function getCategories(res) {
+async function getCategories() {
   try {
     const category = await Category.find();
     return category;
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 exports.getCategories = getCategories;
@@ -81,7 +80,7 @@ async function getAllCategories() {
     const categories = await Category.find();
     return categories;
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 module.exports.getAllCategories = getAllCategories;

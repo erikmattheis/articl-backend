@@ -13,6 +13,8 @@ router.get('/questions/:id', questionsController.getQuestions);
 
 router.post('/questions', questionsController.postQuestion);
 
+router.delete('/questions', questionsController.deleteQuestions);
+
 /*
 router.use((req, res) => {
   console.log('everything worked!', res.body);

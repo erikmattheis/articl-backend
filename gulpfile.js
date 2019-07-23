@@ -1,14 +1,23 @@
 const gulp = require('gulp');
 const nodemon = require('gulp-nodemon');
+const env = require('gulp-env');
 
-gulp.task('start', done => {
-  nodemon({
-    script: 'app.js',
-    done
+gulp.task('set-env', async () => {
+  return env({
+    vars: {
+      NODE_ENV: 'development'
+    }
   });
 });
 
-gulp.task('default', gulp.series('start'));
+gulp.task('start', done => {
+  nodemon({
+    done,
+    script: 'app.js'
+  });
+});
+
+gulp.task('default', gulp.series('set-env', 'start'));
 
 /*
 
