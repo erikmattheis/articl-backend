@@ -1,12 +1,13 @@
 const { check, validationResult } = require('express-validator');
 const { getCategoryNames } = require('../data/categoriesData');
+
 const { ValidationError } = require('./validationError');
 
 async function postQuestion(req) {
   try {
     const categoryNames = await getCategoryNames();
     console.log('categoryNames.length', categoryNames.length);
-    Promise.all([
+    const result = Promise.all([
       await check('author')
         .not()
         .isEmpty()
@@ -67,25 +68,15 @@ async function postQuestion(req) {
           return true;
         })
         .run(req)
-    ])
-      .then(result => {
-        try {
-          console.log('postQuestion rules have run');
-          const errors = validationResult(req);
-          if (!errors.isEmpty()) {
-            console.log('Returning validation errors');
-            throw new ValidationError(errors.array());
-          }
-        } catch (error) {
-          return error;
-        }
+    ]);
 
-        return result;
-      })
-      .catch(error => {
-        console.log('error in 2', error);
-        throw error;
-      });
+    const invalid = validationResult(req);
+    console.log('result is', invalid.isEmpty());
+    if (!invalid.isEmpty()) {
+      const validationErrorPromise = new ValidationError(invalid.array());
+      return Promise.reject(validationErrorPromise);
+    }
+    return true;
   } catch (error) {
     console.log('postQuestion validator error', JSON.stringify(error));
     throw error;
@@ -104,6 +95,7 @@ module.exports.getQuestions = async function getQuestions(req) {
     .run(req);
 
   const errors = await validationResult(req);
+  return errors;
 };
 
 // exports.getQuestions = [
