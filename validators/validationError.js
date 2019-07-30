@@ -1,3 +1,26 @@
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'ValidationError';
+    this.status = 422;
+    this.message = message;
+  }
+
+  toJSON() {
+    return {
+      error: {
+        message: this.message,
+        name: this.name,
+        stacktrace: this.stack,
+        status: this.status
+      }
+    };
+  }
+}
+
+module.exports.ValidationError = ValidationError;
+
+/*
 function ValidationError(message) {
   this.name = 'ValidationError';
   this.message = message;
@@ -25,3 +48,4 @@ ValidationError.create = options => {
 ValidationError.prototype = new Error();
 
 module.exports.ValidationError = ValidationError;
+*/
