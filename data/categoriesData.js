@@ -10,8 +10,8 @@ const categorySchema = new mongoose.Schema({
 
 const Category = mongoose.model('Category', categorySchema);
 const cache = require('../cache');
-const timer = require('../utils/timer');
-const memory = require('../utils/memory');
+// const timer = require('../utils/timer');
+// const memory = require('../utils/memory');
 
 async function getCategoryNames() {
   try {
