@@ -6,9 +6,13 @@
 image: node:10.15.3
 
 pipelines:
-  branches:
-    yue:
+  default:
     - step:
-        name: Deploy to production
         script:
-          - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD
+          - echo "This script runs on all branches that don't have any specific pipeline assigned in 'branches'."
+  branches:
+       yue:
+       - step:
+          script:
+            - echo "This script runs only on commit to the master branch."
+            - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD
