@@ -9,60 +9,20 @@ const categorySchema = new mongoose.Schema({
 });
 
 const Category = mongoose.model('Category', categorySchema);
-const { cache } = require('../cache');
+const cache = require('../cache');
 const timer = require('../utils/timer');
 const memory = require('../utils/memory');
 
-async function getCachedResult(key) {
-  try {
-    return await cache.getValue(key);
-  } catch (error) {
-    throw error;
-  }
-}
-
 async function getCategoryNames() {
   try {
-    const categoryNames = await getCachedResult('categoryNames');
+    let categoryNames = await cache.getValue('categoryNames');
     if (categoryNames) {
       return Promise.resolve(categoryNames);
     }
-    return Category.distinct('title').exec();
-    // console.log('result', result);
-
-    /*
-    result
-      .then(resolved => {
-        console.log('now result.length is', resolved.length);
-        return resolved;
-      })
-      .catch(error => {
-        console.log('error of', error);
-        throw error;
-      });
-
-      */
-    /*
-    const cachedResult = getCachedResult('getCategoryNames');
-    if (cachedResult.length) {
-      return cachedResult;
-    }
-    console.log('waiting for mongoose');
-    const result = Category.distinct('title');
-    console.log('done waiting for mongoose', result);
-    result
-      .then(function(err, result) {
-        console.log('then err', err);
-        console.log('then result', result);
-        return result;
-      })
-      .catch(function(error) {
-        console.log('catch error', error);
-        return error;
-      });
-      */
+    categoryNames = await Category.distinct('title').exec();
+    cache.setValue('categoryNames', categoryNames);
+    return Promise.resolve(categoryNames);
   } catch (error) {
-    console.log('error in categoriesData', error);
     throw error;
   }
 }
