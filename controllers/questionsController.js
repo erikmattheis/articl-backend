@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const questionsValidator = require('../validators/questionsValidator');
-const { ValidationError } = require('../validators/validationError');
+const { ValidationError } = require('../errors/errors');
 const questionsData = require('../data/questionsData');
 
 mongoose.Promise = Promise;
 
-async function postQuestion(req, res) {
+async function postQuestion(req, res, next) {
   try {
     await questionsValidator.postQuestion(req);
 
@@ -15,7 +15,8 @@ async function postQuestion(req, res) {
     if (error instanceof ValidationError) {
       res.status(422).json({ error });
     }
-    res.status(500).json({ error });
+    // res.status(500).json({ error });
+    next(error);
   }
 }
 exports.postQuestion = postQuestion;

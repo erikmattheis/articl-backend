@@ -1,5 +1,6 @@
 const express = require('express');
 const { categoriesController, questionsController } = require('../controllers');
+const { FileNotFoundError, DatabaseError } = require('../errors/errors.js');
 
 const router = express.Router();
 
@@ -42,10 +43,17 @@ router.use((err, req, res, next) => {
 });
 */
 
-router.all('*', (req, res) => {
-  res.status(404).json({ errors: ['Resource not found.'] });
+router.use((error, req, res, next) => {
+  console.log('caught last');
+  let result = error;
+  if (error.name === 'MongoError') {
+    result = new DatabaseError(error.errmsg);
+  }
+  res.status(500).json({ result });
 });
 
-router.use((req, res) => {
-  res.status(500).json({ errors: ['An unknown error occurred.'] });
+router.use((req, res, next) => {
+  console.log('404 caught here');
+  const error = new FileNotFoundError();
+  res.status(404).json({ error });
 });

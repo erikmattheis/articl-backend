@@ -1,7 +1,7 @@
 const { check, validationResult } = require('express-validator');
 const { getCategoryNames } = require('../data/categoriesData');
 
-const { ValidationError } = require('./validationError');
+const { ValidationError } = require('../errors/errors.js');
 
 async function postQuestion(req) {
   try {
