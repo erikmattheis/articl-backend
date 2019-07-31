@@ -9,15 +9,13 @@ const categorySchema = new mongoose.Schema({
 });
 
 const Category = mongoose.model('Category', categorySchema);
-const cachedResults = require('../cachedResults');
+const { cache } = require('../cache');
 const timer = require('../utils/timer');
 const memory = require('../utils/memory');
 
-// timer.start('cachedResults');
-
 async function getCachedResult(key) {
   try {
-    return await cachedResults.getValue(key);
+    return await cache.getValue(key);
   } catch (error) {
     throw error;
   }
@@ -25,6 +23,10 @@ async function getCachedResult(key) {
 
 async function getCategoryNames() {
   try {
+    const categoryNames = await getCachedResult('categoryNames');
+    if (categoryNames) {
+      return Promise.resolve(categoryNames);
+    }
     return Category.distinct('title').exec();
     // console.log('result', result);
 
@@ -60,6 +62,7 @@ async function getCategoryNames() {
       });
       */
   } catch (error) {
+    console.log('error in categoriesData', error);
     throw error;
   }
 }
