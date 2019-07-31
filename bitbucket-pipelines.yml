@@ -14,7 +14,7 @@ pipelines:
       - step:
           script:
             - echo "This script runs only on commit to the master branch."
-    yue:
+    yue/*:
       - step:
           script:
             - echo "This script runs only on commit to the yue branch."
