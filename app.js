@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const paginate = require('express-paginate');
+const mongoDB = require('./data/mongoDB');
 const routes = require('./routes');
 
 const app = express();
@@ -29,12 +30,14 @@ app.use(paginate.middleware(10, 50));
 
 app.use('/api/v1', routes);
 
-try {
-await mongoose.connect();
-app.listen(3000);
-console.log('listening to port 3000');
-}
-
-
+(async () => {
+  try {
+    await mongoDB.connect();
+    app.listen(3000);
+    console.log('listening to port 3000');
+  } catch (error) {
+    console.log('error occurred:', error);
+  }
+})();
 
 module.exports = app;
