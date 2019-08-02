@@ -13,7 +13,8 @@ async function connect() {
     const {
       db: { host, name, account, password, other }
     } = config;
-    const url = `mongodb+srv://${account}:${password}@${host}/${name}?${other}`;
+    const pass = process.env.NODE_ENV !== 'development' ? process.env.PASSWORD : password;
+    const url = `mongodb+srv://${account}:${pass}@${host}/${name}?${other}`;
     const options = {
       config: {
         autoIndex: true
@@ -30,7 +31,6 @@ async function connect() {
     throw error;
   }
 }
-
-connect();
+module.exports.connect = connect;
 
 module.exports.mongoose = mongoose;

@@ -19,7 +19,7 @@ app.use(helmet());
 const corsOptions = {
   credentials: true,
   enablePreflight: true,
-  origin: 'http://localhost:8080'
+  origin: ['http://localhost:8080', 'https://api.articl.net']
 };
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
@@ -29,7 +29,12 @@ app.use(paginate.middleware(10, 50));
 
 app.use('/api/v1', routes);
 
+try {
+await mongoose.connect();
 app.listen(3000);
 console.log('listening to port 3000');
+}
+
+
 
 module.exports = app;
