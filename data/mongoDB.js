@@ -9,6 +9,7 @@ mongoose.Promise = Promise;
 //  const url = 'mongodb://127.0.0.1:27017/myTest';
 
 async function connect() {
+  console.log('process.env.NODE_ENV', process.env.NODE_ENV);
   try {
     const {
       db: { host, name, account, password, other }

@@ -30,11 +30,13 @@ app.use(paginate.middleware(10, 50));
 
 app.use('/api/v1', routes);
 
+app.use('/', express.static('html/public'));
+
 (async () => {
   try {
     await mongoDB.connect();
-    app.listen(3000);
-    console.log('listening to port 3000');
+    const port = process.env.NODE_ENV !== 'development' ? 443 : 8080;
+    app.listen(port);
   } catch (error) {
     console.log('error occurred:', error);
   }
