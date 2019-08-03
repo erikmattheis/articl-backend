@@ -19,7 +19,8 @@ async function connect() {
     mongoose.set('useFindAndModify', false);
     mongoose.set('useCreateIndex', true);
     mongoose.connection.on('error', error => {
-      console.log('error thrown');
+      throw error;
+      console.log('error thrown', error);
     });
     await mongoose.connect(url, options);
   } catch (error) {
