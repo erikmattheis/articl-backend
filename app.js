@@ -1,3 +1,4 @@
+const dotenv = require('dotenv');
 const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
@@ -7,6 +8,7 @@ const paginate = require('express-paginate');
 const mongoDB = require('./data/mongoDB');
 const routes = require('./routes');
 
+dotenv.config();
 const app = express();
 
 const generalLimiter = rateLimit({
@@ -35,7 +37,7 @@ app.use('/', express.static('html/public'));
 (async () => {
   try {
     await mongoDB.connect();
-    const port = process.env.NODE_ENV !== 'development' ? 443 : 8080;
+    const port = process.env.PORT;
     app.listen(port);
   } catch (error) {
     console.log('error occurred:', error);

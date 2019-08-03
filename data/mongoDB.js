@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const config = require('../config.js');
 
 // mongoose.set('debug', true);
 mongoose.Promise = Promise;
@@ -9,13 +8,8 @@ mongoose.Promise = Promise;
 //  const url = 'mongodb://127.0.0.1:27017/myTest';
 
 async function connect() {
-  console.log('process.env.NODE_ENV', process.env.NODE_ENV);
   try {
-    const {
-      db: { host, name, account, password, other }
-    } = config;
-    const pass = process.env.NODE_ENV !== 'development' ? process.env.PASSWORD : password;
-    const url = `mongodb+srv://${account}:${pass}@${host}/${name}?${other}`;
+    const url = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/${process.env.MONGODB_NAME}?${process.env.MONGODB_OTHER}`;
     const options = {
       config: {
         autoIndex: true
