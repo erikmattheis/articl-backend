@@ -1,6 +1,6 @@
 {
-  "name": "myapp",
-  "version": "1.0.0",
+  "name": "ArticlRESTFulfulAPI",
+  "version": "0.1.0",
   "description": "server for article",
   "main": "app.js",
   "scripts": {

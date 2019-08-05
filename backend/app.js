@@ -7,6 +7,7 @@ const cors = require('cors');
 const paginate = require('express-paginate');
 const mongoDB = require('./data/mongoDB');
 const routes = require('./routes');
+const package = require('./package.json');
 
 dotenv.config();
 const app = express();
@@ -32,13 +33,14 @@ app.use(paginate.middleware(10, 50));
 
 app.use('/api/v1', routes);
 
-app.use('/', express.static('html/public'));
+app.use('/', express.static('../frontend/public'));
 
 (async () => {
   try {
     await mongoDB.connect();
     const port = process.env.PORT;
     app.listen(port);
+    console.log(package.name, package.version, 'listening on port', process.env.PORT);
   } catch (error) {
     console.log('error occurred:', error);
   }
