@@ -3,7 +3,5 @@
   "compilerOptions": {
     "target": "es6"
   },
-  "exclude": [
-    "/js"
-  ]
+  "exclude": ["node_modules", "js"]
 }

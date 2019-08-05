@@ -1,5 +1,9 @@
 {
-  "extends": ["airbnb", "plugin:prettier/recommended"],
+  "extends": [
+    "airbnb",
+    "plugin:prettier/recommended",
+    "prettier/react"
+  ],
   "env": {
     "browser": true,
     "commonjs": true,
@@ -9,12 +13,7 @@
   },
   "rules": {
     "jsx-a11y/href-no-hash": ["off"],
-    "react/jsx-filename-extension": [
-      "warn",
-      {
-        "extensions": [".js", ".jsx"]
-      }
-    ],
+    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
     "max-len": [
       "warn",
       {
@@ -29,15 +28,6 @@
         "ignoreRegExpLiterals": true
       }
     ],
-    "sort-vars": "error",
-    "sort-imports": [
-      "error",
-      {
-        "ignoreCase": false,
-        "ignoreDeclarationSort": false,
-        "ignoreMemberSort": false,
-        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
-      }
-    ]
+    "no-console": "off"
   }
 }
