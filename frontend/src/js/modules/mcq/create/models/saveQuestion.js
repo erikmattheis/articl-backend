@@ -54,7 +54,6 @@ async function saveQuestion() {
     } else if (result.error && result.error.message) {
       writeError(result.error.message);
     } else if (result.error && result.error.errmsg) {
-      console.log('result.error.errmsg', result.error.errmsg);
       writeError(result.error.errmsg);
     } else if (result.name === 'DatabaseError') {
       writeError(result.message);

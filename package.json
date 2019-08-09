@@ -1,7 +1,7 @@
 {
-  "name": "articlrestfulapi",
+  "name": "Articl.net",
   "version": "0.1.0",
-  "description": "Articl.net API Server",
+  "description": "Articl.net front and backends",
   "main": "backend/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

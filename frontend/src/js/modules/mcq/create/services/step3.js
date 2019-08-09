@@ -1,22 +1,14 @@
-function createSelectCorrectAnswer() {
-  const sel = $('#correctAnswer');
-  /*
-  sel.append(
-    $('<option>')
-      .attr('value', '')
-      .text('Choose the correct answer')
-  );
-  */
+import { markInvalid, markValid } from '../../shared/forms/validationStyles';
+import saveQuestion from '../models/saveQuestion';
 
+function createSelectCorrectAnswer() {
   $('.answer').each(function addOption() {
-    sel.append(
+    $('#correctAnswer').append(
       $('<option>')
         .attr('value', $(this).val())
         .text($(this).val())
     );
   });
-
-  // update();
 }
 
 function createExplanationField(answerNumber, parentElement, required) {
@@ -43,6 +35,7 @@ function createLabel(text, classes, uniqueName, parentElement) {
     .prop('id', uniqueName);
   parentElement.append(answerLabel);
 }
+
 const numberOfAnswersCounter = $('#answers').children().length;
 
 function createExplanationFields() {
@@ -60,5 +53,38 @@ function initStep3() {
   createSelectCorrectAnswer();
   createExplanationFields();
 }
+
+function checkCorrectAnswer() {
+  $('#correctAnswer').val();
+  if (!$('#correctAnswer').val().length) {
+    markInvalid($('#correctAnswer'));
+    return false;
+  }
+
+  markValid($('#correctAnswer'));
+  return true;
+}
+$('#correctAnswer').on('change blur', checkCorrectAnswer);
+
+function submitMCQ() {
+  if (checkCorrectAnswer()) {
+    saveQuestion();
+  }
+}
+
+$('#submitButton').click(submitMCQ);
+
+function checkMCQExplnation() {
+  if ($(this).val().length < 5) {
+    markInvalid($(this));
+    // $('#checkQandALength').text('Your question must be at least 5 characters long.');
+  } else {
+    markValid($(this));
+    saveQuestion();
+    // $('#checkQandALength').text('');
+  }
+}
+
+$('#answersResponses textarea').on('keyup focus blur change', checkMCQExplnation);
 
 export { initStep3 };

@@ -1,4 +1,4 @@
-// import { markInvalid, markValid } from '../../shared/forms/validationStyles';
+import { markInvalid, markValid } from '../../shared/forms/validationStyles';
 
 let numberOfAnswersCounter = 0;
 function addAnswerInputBoxButtonClick() {
@@ -32,4 +32,15 @@ function addAnswerInputBoxButtonClick() {
 
 addAnswerInputBoxButtonClick();
 addAnswerInputBoxButtonClick();
-console.log('here i am');
+
+function checkMCQAnswer() {
+  if ($(this).val().length < 1) {
+    markInvalid($(this));
+    // $('#checkQandALength').text('Your question must be at least 5 characters long.');
+  } else {
+    markValid($(this));
+    // $('#checkQandALength').text('');
+  }
+}
+
+$('#answers .answer').on('keyup focus blur change', checkMCQAnswer);

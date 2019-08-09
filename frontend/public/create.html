@@ -32,7 +32,7 @@
         <div class="card-body">
           <form id="step1Card" class="needs-validation" data-next-section="sectionTwo">
              <div class="form-group">
-              <input id="mcqQuestion" name="mcqQuestion" type="text" class="mcqQuestion form-control" placeholder="Type the question here"
+              <input id="mcqQuestion" autocomplete="off" name="mcqQuestion" type="text" class="mcqQuestion form-control" placeholder="Type the question here"
                 required />
               <label id="mcqLabel" for="mcqQuestion" class="text-danger form-text"></label>
             </div>
@@ -40,7 +40,7 @@
             <div class="form-group">
               <!-- added name to category field -->
               <input id="mcqCategory" name="mcqCategory" type="text" class="typeahead form-control"
-                autocomplete="on" spellcheck="false" placeholder="Choose Category" required />
+                autocomplete="off" spellcheck="false" placeholder="Choose Category" required />
             </div>
 
             <button disabled id="nextStepButton1" type="button" class="btn btn-primary step-btn" data-toggle="collapse"
@@ -108,8 +108,6 @@
     </div>
 
   </div>
-
-
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

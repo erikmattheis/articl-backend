@@ -15,7 +15,7 @@ async function init() {
 
 init();
 
-$('#mcqQuestion').keyup(function mcqQuestionKeyUp() {
+function checkMCQuestion() {
   if ($(this).val().length < 5) {
     markInvalid($(this));
     $('#checkQandALength').text('Your question must be at least 5 characters long.');
@@ -23,36 +23,17 @@ $('#mcqQuestion').keyup(function mcqQuestionKeyUp() {
     markValid($(this));
     $('#checkQandALength').text('');
   }
-});
+}
 
-$('#mcqCategory').keyup(function mcqCategoryKeyUp() {
-  if (categoryNames.indexOf($(this).val()) > -1) {
-    markValid($(this));
-  } else {
-    markInvalid($(this));
-  }
-});
+$('#mcqQuestion').on('keyup focus blur change', checkMCQuestion);
 
-$('#collapseOne .typeahead').bind('typeahead:select', function typeaheadSelect() {
+function isCategory() {
   if (categoryNames.indexOf($(this).val()) > -1) {
     markValid($('#mcqCategory'));
   } else {
     markInvalid($('#mcqCategory'));
   }
-});
-
-function checkMCQCategory() {
-  if (categoryNames.indexOf($(this).val()) > -1) {
-    $(this).removeClass('is-invalid');
-    $(this).addClass('is-valid');
-  } else {
-    $(this).addClass('is-invalid');
-    $(this).removeClass('is-valid');
-  }
 }
 
-$('#mcqCategory').keyup(checkMCQCategory);
-
-$('.tt-suggestion .tt-selectable').click(function suggestionClick() {
-  markValid($(this));
-});
+$('#mcqCategory').on('keyup focus blur change', isCategory);
+$('#mcqCategory').bind('typeahead:select', isCategory);
