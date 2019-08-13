@@ -901,27 +901,25 @@
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
-              console.log('getting category names');
-              _context3.next = 4;
+              _context3.next = 3;
               return getCategoryNames();
 
-            case 4:
+            case 3:
               categoryNames = _context3.sent;
-              console.log('done getting category names');
-              _context3.next = 11;
+              _context3.next = 9;
               break;
 
-            case 8:
-              _context3.prev = 8;
+            case 6:
+              _context3.prev = 6;
               _context3.t0 = _context3["catch"](0);
               throw new Error(_context3.t0);
 
-            case 11:
+            case 9:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 8]]);
+      }, _callee3, null, [[0, 6]]);
     }));
     return _init.apply(this, arguments);
   }
@@ -955,7 +953,7 @@
 
     if (document.domain === 'localhost') {
       $('#mcqQuestion').val('This is the first question');
-      $('.typeahead').typeahead('val', 'Acute Aortic Syndrome Radiology');
+      $('.typeahead').typeahead('val', 'Artificial Intelligence in Chest Radiology');
     }
   }
 
@@ -999,12 +997,10 @@
   init$1();
 
   function markInvalid(context) {
-    console.log('invalid');
     $(context).addClass('is-invalid').removeClass('is-valid');
   }
 
   function markValid(context) {
-    console.log('valid');
     $(context).addClass('is-valid').removeClass('is-invalid');
   }
 
@@ -1048,30 +1044,39 @@
 
   init$2();
 
-  function checkMCQuestion() {
-    console.log('checkMCQuestion');
-
-    if ($(this).val().length < 5) {
-      markInvalid($(this));
-      $('#checkQandALength').text('Your question must be at least 5 characters long.');
-    } else {
-      markValid($(this));
-      $('#checkQandALength').text('');
-    }
+  function checkMCQuestionPassed() {
+    return $('#mcqQuestion').val().length < 5;
   }
 
-  $('#mcqQuestion').on('keyup focus blur change', checkMCQuestion);
-  $('#mcqQuestion').on('change', continueToNextSection);
+  function checkMCQuestion() {
+    if (checkMCQuestionPassed()) {
+      markInvalid($('#mcqQuestion'));
+      $('#checkQandALength').text('Your question must be at least 5 characters long.');
+      return false;
+    }
+
+    markValid($('#mcqQuestion'));
+    $('#checkQandALength').text('');
+    return true;
+  }
+
+  $('#mcqQuestion').on('keyup focus blur', checkMCQuestion);
+
+  function isCategoryPassed() {
+    return categoryNames$2.indexOf($('#mcqCategory').val()) > -1;
+  }
 
   function isCategory() {
-    if (categoryNames$2.indexOf($(this).val()) > -1) {
+    if (isCategoryPassed()) {
       markValid($('#mcqCategory'));
-    } else {
-      markInvalid($('#mcqCategory'));
+      return true;
     }
+
+    markInvalid($('#mcqCategory'));
+    return false;
   }
 
-  $('#mcqCategory').on('keyup focus blur change', isCategory);
+  $('#mcqCategory').on('keyup focus blur', isCategory);
   $('#mcqCategory').bind('typeahead:select', isCategory);
   /*
   $('.needs-validation')
@@ -1079,15 +1084,22 @@
     .on('keyup focus blur change', continueToNextSection);
   */
 
-  function continueToNextSection() {
-    console.log('continueToNextSection');
-    console.log();
+  function checkAllFields() {
+    console.log('checkAllFields');
+    var passed;
+    console.log(isCategoryPassed(), checkMCQuestionPassed());
 
-    if (isCategory() && $('#mcqQuestion').keyup()) {
+    if (isCategoryPassed() && checkMCQuestionPassed()) {
       console.log('passed');
+      passed = true;
     } else {
       console.log('not passed');
+      passed = false;
     }
+
+    $('collapseTwo').find('button:first').prop('disabled', !passed);
+    $('collapseThree').find('button:first').prop('disabled', !passed);
+    return passed;
     /*
     $('.needs-validation .step-btn').prop('disabled', !this.closest('form').checkValidity());
     const nextSection = $(this)
@@ -1097,11 +1109,10 @@
       .find('button:first')
       .prop('disabled', !this.closest('form').checkValidity());
     */
-
   }
 
-  $('#mcqCategory').on('change', continueToNextSection);
-  $('#nextStepButton1').click(continueToNextSection);
+  $('#mcqQuestion').change(checkAllFields);
+  $('#nextStepButton1').click(checkAllFields);
 
   var numberOfAnswersCounter = 0;
 

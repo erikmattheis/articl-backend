@@ -32,7 +32,7 @@ function setCategories() {
   );
   if (document.domain === 'localhost') {
     $('#mcqQuestion').val('This is the first question');
-    $('.typeahead').typeahead('val', 'Acute Aortic Syndrome Radiology');
+    $('.typeahead').typeahead('val', 'Artificial Intelligence in Chest Radiology');
   }
 }
 

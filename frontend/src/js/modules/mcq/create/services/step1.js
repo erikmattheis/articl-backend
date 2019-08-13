@@ -15,29 +15,35 @@ async function init() {
 
 init();
 
+function checkMCQuestionPassed() {
+  return $('#mcqQuestion').val().length < 5;
+}
 function checkMCQuestion() {
-  console.log('checkMCQuestion');
-  if ($(this).val().length < 5) {
-    markInvalid($(this));
+  if (checkMCQuestionPassed()) {
+    markInvalid($('#mcqQuestion'));
     $('#checkQandALength').text('Your question must be at least 5 characters long.');
-  } else {
-    markValid($(this));
-    $('#checkQandALength').text('');
+    return false;
   }
+  markValid($('#mcqQuestion'));
+  $('#checkQandALength').text('');
+  return true;
 }
 
-$('#mcqQuestion').on('keyup focus blur change', checkMCQuestion);
-$('#mcqQuestion').on('change', continueToNextSection);
+$('#mcqQuestion').on('keyup focus blur', checkMCQuestion);
+
+function isCategoryPassed() {
+  return categoryNames.indexOf($('#mcqCategory').val()) > -1;
+}
 
 function isCategory() {
-  if (categoryNames.indexOf($(this).val()) > -1) {
+  if (isCategoryPassed()) {
     markValid($('#mcqCategory'));
-  } else {
-    markInvalid($('#mcqCategory'));
+    return true;
   }
+  markInvalid($('#mcqCategory'));
+  return false;
 }
-
-$('#mcqCategory').on('keyup focus blur change', isCategory);
+$('#mcqCategory').on('keyup focus blur', isCategory);
 $('#mcqCategory').bind('typeahead:select', isCategory);
 
 /*
@@ -46,15 +52,24 @@ $('.needs-validation')
   .on('keyup focus blur change', continueToNextSection);
 */
 
-function continueToNextSection() {
-  console.log('continueToNextSection');
-  console.log();
-  if (isCategory() && $('#mcqQuestion').keyup()) {
+function checkAllFields() {
+  console.log('checkAllFields');
+  let passed;
+  console.log(isCategoryPassed(), checkMCQuestionPassed());
+  if (isCategoryPassed() && checkMCQuestionPassed()) {
     console.log('passed');
+    passed = true;
   } else {
     console.log('not passed');
+    passed = false;
   }
-
+  $('collapseTwo')
+    .find('button:first')
+    .prop('disabled', !passed);
+  $('collapseThree')
+    .find('button:first')
+    .prop('disabled', !passed);
+  return passed;
   /*
   $('.needs-validation .step-btn').prop('disabled', !this.closest('form').checkValidity());
   const nextSection = $(this)
@@ -66,6 +81,5 @@ function continueToNextSection() {
     .prop('disabled', !this.closest('form').checkValidity());
   */
 }
-
-$('#mcqCategory').on('change', continueToNextSection);
-$('#nextStepButton1').click(continueToNextSection);
+$('#mcqQuestion').change(checkAllFields);
+$('#nextStepButton1').click(checkAllFields);

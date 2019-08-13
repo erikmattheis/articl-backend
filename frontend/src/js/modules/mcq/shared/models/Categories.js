@@ -29,9 +29,7 @@ async function getCategoryNames() {
 
 async function init() {
   try {
-    console.log('getting category names');
     categoryNames = await getCategoryNames();
-    console.log('done getting category names');
   } catch (error) {
     throw new Error(error);
   }

@@ -1,6 +1,4 @@
-(function () {
-  'use strict';
-
+(function() {
   let categoryNames;
 
   async function getAPICategoryNames() {
@@ -97,11 +95,6 @@
   }
 
   init$2();
-
-  if (document.domain === 'localhost') {
-    $('#mcqQuestion').val('This is the first question');
-    $('mcqCategory').val('Acute Aortic Syndrome Radiology');
-  }
 
   const errorMessages = {
     mcqCategory: {
@@ -399,5 +392,4 @@
   $('#step2Save').click(saveStep2);
 
   $('#submitButton').click(saveQuestion);
-
-}());
+})();
