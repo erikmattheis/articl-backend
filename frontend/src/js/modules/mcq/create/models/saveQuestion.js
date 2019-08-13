@@ -41,6 +41,7 @@ async function saveQuestion() {
 
     const promise = await fetch('http://api.articl.net/api/v1/questions', {
       method: 'POST', // or 'PUT'
+      mode: 'cors',
       body: JSON.stringify(question), // data can be `string` or {object}!
       headers: {
         'Content-Type': 'application/json'
