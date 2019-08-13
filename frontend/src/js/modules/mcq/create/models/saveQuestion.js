@@ -48,7 +48,6 @@ async function saveQuestion() {
       }
     });
     const result = await promise.json();
-    console.log(result);
 
     if (result.error && result.error.message instanceof Array) {
       result.error.message.forEach(writeError);

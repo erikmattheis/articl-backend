@@ -1049,6 +1049,8 @@
   init$2();
 
   function checkMCQuestion() {
+    console.log('checkMCQuestion');
+
     if ($(this).val().length < 5) {
       markInvalid($(this));
       $('#checkQandALength').text('Your question must be at least 5 characters long.');
@@ -1059,6 +1061,7 @@
   }
 
   $('#mcqQuestion').on('keyup focus blur change', checkMCQuestion);
+  $('#mcqQuestion').on('change', continueToNextSection);
 
   function isCategory() {
     if (categoryNames$2.indexOf($(this).val()) > -1) {
@@ -1070,6 +1073,35 @@
 
   $('#mcqCategory').on('keyup focus blur change', isCategory);
   $('#mcqCategory').bind('typeahead:select', isCategory);
+  /*
+  $('.needs-validation')
+    .find('input, textarea')
+    .on('keyup focus blur change', continueToNextSection);
+  */
+
+  function continueToNextSection() {
+    console.log('continueToNextSection');
+    console.log();
+
+    if (isCategory() && $('#mcqQuestion').keyup()) {
+      console.log('passed');
+    } else {
+      console.log('not passed');
+    }
+    /*
+    $('.needs-validation .step-btn').prop('disabled', !this.closest('form').checkValidity());
+    const nextSection = $(this)
+      .closest('form')
+      .data('nextSection');
+     $(`#${nextSection}`)
+      .find('button:first')
+      .prop('disabled', !this.closest('form').checkValidity());
+    */
+
+  }
+
+  $('#mcqCategory').on('change', continueToNextSection);
+  $('#nextStepButton1').click(continueToNextSection);
 
   var numberOfAnswersCounter = 0;
 
@@ -1166,7 +1198,6 @@
 
             case 7:
               result = _context.sent;
-              console.log(result);
 
               if (result.error && result.error.message instanceof Array) {
                 result.error.message.forEach(writeError);
@@ -1183,11 +1214,11 @@
                 writeSuccess(result);
               }
 
-              _context.next = 15;
+              _context.next = 14;
               break;
 
-            case 12:
-              _context.prev = 12;
+            case 11:
+              _context.prev = 11;
               _context.t0 = _context["catch"](0);
 
               // const message = await error.json();
@@ -1195,12 +1226,12 @@
                 writeError(_context.t0.message);
               }
 
-            case 15:
+            case 14:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 12]]);
+      }, _callee, null, [[0, 11]]);
     }));
     return _saveQuestion.apply(this, arguments);
   }
@@ -1277,14 +1308,6 @@
 
   $('#answersResponses textarea').on('keyup focus blur change', checkMCQExplnation);
 
-  function continueToNextSection() {
-    $('.needs-validation .step-btn').prop('disabled', !this.closest('form').checkValidity());
-    var nextSection = $(this).closest('form').data('nextSection');
-    $("#".concat(nextSection)).find('button:first').prop('disabled', !this.closest('form').checkValidity());
-  }
-
-  $('.needs-validation').find('input, textarea').on('keyup focus blur change', continueToNextSection);
-  $('#nextStepButton1').click(continueToNextSection);
   $('#step2Save').click(initStep3);
 
 }());
