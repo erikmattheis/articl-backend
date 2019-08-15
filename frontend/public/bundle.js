@@ -1087,9 +1087,9 @@
   function checkAllFields() {
     console.log('checkAllFields');
     var passed;
-    console.log(isCategoryPassed(), checkMCQuestionPassed());
+    console.log(isCategory(), checkMCQuestion());
 
-    if (isCategoryPassed() && checkMCQuestionPassed()) {
+    if (isCategory() && checkMCQuestion()) {
       console.log('passed');
       passed = true;
     } else {

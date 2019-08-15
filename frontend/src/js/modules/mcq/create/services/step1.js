@@ -55,8 +55,8 @@ $('.needs-validation')
 function checkAllFields() {
   console.log('checkAllFields');
   let passed;
-  console.log(isCategoryPassed(), checkMCQuestionPassed());
-  if (isCategoryPassed() && checkMCQuestionPassed()) {
+  console.log(isCategory(), checkMCQuestion());
+  if (isCategory() && checkMCQuestion()) {
     console.log('passed');
     passed = true;
   } else {
