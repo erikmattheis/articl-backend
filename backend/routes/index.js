@@ -4,8 +4,6 @@ const { FileNotFoundError, DatabaseError } = require('../errors/errors.js');
 
 const router = express.Router();
 
-const { FileNotFoundError } = require('../errors');
-
 module.exports = router;
 
 router.get('/categories', categoriesController.getCategories);
