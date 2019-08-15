@@ -1,0 +1,43 @@
+/*
+
+html, body {
+  height: 100%;
+  min-height: 100%;
+}
+
+#mcqAccordion {
+  min-height: 100vh;
+
+  .card {
+    flex: 1 1 100%;
+  }
+
+  .collapse {
+    flex: 0 0 auto;
+    transition: all 0.2s;
+  }
+
+.accordion .collapse:not(show) {
+  display: none;
+}
+.accordion .collapse {
+  display: none;
+  &.show {
+    display: block;
+  }
+}
+
+  .collapsing {
+    flex: 1 1 100%;
+    transition: flex 0.3s;
+  }
+
+  .collapse.show {
+    flex: 1 0 auto;
+  }
+
+  .card .collapse.show {
+    height: 100%;
+  }
+}
+*/
