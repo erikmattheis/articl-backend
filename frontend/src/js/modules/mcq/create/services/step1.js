@@ -63,10 +63,10 @@ function checkAllFields() {
     console.log('not passed');
     passed = false;
   }
-  $('collapseTwo')
+  $('#collapseTwo')
     .find('button:first')
     .prop('disabled', !passed);
-  $('collapseThree')
+  $('#collapseThree')
     .find('button:first')
     .prop('disabled', !passed);
   return passed;

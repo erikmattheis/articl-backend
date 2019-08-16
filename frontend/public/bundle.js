@@ -1097,8 +1097,8 @@
       passed = false;
     }
 
-    $('collapseTwo').find('button:first').prop('disabled', !passed);
-    $('collapseThree').find('button:first').prop('disabled', !passed);
+    $('#collapseTwo').find('button:first').prop('disabled', !passed);
+    $('#collapseThree').find('button:first').prop('disabled', !passed);
     return passed;
     /*
     $('.needs-validation .step-btn').prop('disabled', !this.closest('form').checkValidity());
