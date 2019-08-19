@@ -1044,6 +1044,11 @@
 
   init$2();
 
+  function enableOrDisableOtherSections(enable) {
+    $('#sectionTwo').find('button:first').prop('disabled', enable);
+    $('#sectionThree').find('button:first').prop('disabled', enable);
+  }
+
   function checkMCQuestionPassed() {
     return $('#mcqQuestion').val().length < 5;
   }
@@ -1052,11 +1057,13 @@
     if (checkMCQuestionPassed()) {
       markInvalid($('#mcqQuestion'));
       $('#checkQandALength').text('Your question must be at least 5 characters long.');
+      enableOrDisableOtherSections(false);
       return false;
     }
 
     markValid($('#mcqQuestion'));
     $('#checkQandALength').text('');
+    enableOrDisableOtherSections(true);
     return true;
   }
 
@@ -1069,46 +1076,31 @@
   function isCategory() {
     if (isCategoryPassed()) {
       markValid($('#mcqCategory'));
+      enableOrDisableOtherSections(true);
       return true;
     }
 
     markInvalid($('#mcqCategory'));
+    enableOrDisableOtherSections(false);
     return false;
   }
 
   $('#mcqCategory').on('keyup focus blur', isCategory);
   $('#mcqCategory').bind('typeahead:select', isCategory);
-  /*
-  $('.needs-validation')
-    .find('input, textarea')
-    .on('keyup focus blur change', continueToNextSection);
-  */
 
   function checkAllFields() {
-    console.log('checkAllFields');
     var passed;
-    console.log(isCategory(), checkMCQuestion());
 
     if (isCategory() && checkMCQuestion()) {
-      console.log('passed');
       passed = true;
     } else {
-      console.log('not passed');
       passed = false;
     }
 
-    $('#collapseTwo').find('button:first').prop('disabled', !passed);
-    $('#collapseThree').find('button:first').prop('disabled', !passed);
+    enableOrDisableOtherSections(!passed);
+    $('#sectionTwo').find('button:first').prop('disabled', !passed);
+    $('#sectionThree').find('button:first').prop('disabled', !passed);
     return passed;
-    /*
-    $('.needs-validation .step-btn').prop('disabled', !this.closest('form').checkValidity());
-    const nextSection = $(this)
-      .closest('form')
-      .data('nextSection');
-     $(`#${nextSection}`)
-      .find('button:first')
-      .prop('disabled', !this.closest('form').checkValidity());
-    */
   }
 
   $('#mcqQuestion').change(checkAllFields);
