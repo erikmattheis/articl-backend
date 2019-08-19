@@ -26,6 +26,31 @@ async function postQuestion(req) {
 }
 exports.postQuestion = postQuestion;
 
+/*
+function updateQCategories() {
+  Question.update(
+    {},
+    {
+      $set: {
+        category: {
+          category_image: '',
+          description: 'This description.',
+          parent: 0,
+          term_id: 9999999,
+          title: 'Fake category'
+        }
+      }
+    },
+    { multi: true },
+    function(error, properties) {
+      console.log('error', error);
+      console.log('epropertiesrror', properties);
+    }
+  );
+}
+
+updateQCategories();
+*/
 async function getQuestions(req) {
   req.query.sort = req.query.sort ? req.query.sort : 'updated';
   try {
