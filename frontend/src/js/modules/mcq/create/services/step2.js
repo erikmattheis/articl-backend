@@ -5,11 +5,11 @@ function addAnswerInputBoxButtonClick() {
   numberOfAnswersCounter += 1;
 
   $('#answers').append(
-    `<div id="answer${numberOfAnswersCounter}" class="input-group mb-3">
+    `<div class="input-group mb-3">
       <div class="input-group-prepend">
         <span class="input-group-text">${numberOfAnswersCounter}.</span>
       </div>
-      <input type="text" class="form-control answer" placeholder="Type an answer here" required>
+      <input id="answer${numberOfAnswersCounter}" type="text" class="form-control answer" placeholder="Type an answer here" required>
       <div class="input-group-append d-none">
         <button class="btn btn-outline-secondary add-question-button" type="button">Add Answer</button>
       </div>
@@ -19,9 +19,7 @@ function addAnswerInputBoxButtonClick() {
   $('#answers').on('click', '.add-question-button', addAnswerInputBoxButtonClick);
 
   if (document.domain === 'localhost') {
-    $(`#answer${numberOfAnswersCounter}`)
-      .find('.answer')
-      .val(`This is answer ${numberOfAnswersCounter}`);
+    $(`#answer${numberOfAnswersCounter}`).val(`This is answer ${numberOfAnswersCounter}`);
   }
   const buttons = $(document.getElementsByClassName('input-group-append'));
   buttons
@@ -33,6 +31,33 @@ function addAnswerInputBoxButtonClick() {
 addAnswerInputBoxButtonClick();
 addAnswerInputBoxButtonClick();
 
+function checkMCQDuplicate(element) {
+  let passed = true;
+
+  $('#answers input').each(function check() {
+    console.log();
+    if (
+      JSON.stringify(element) !== JSON.stringify($(this)) &&
+      element
+        .val()
+        .toLowerCase()
+        .trim() ===
+        $(this)
+          .val()
+          .toLowerCase()
+          .trim()
+    ) {
+      passed = false;
+      markInvalid($(this));
+    }
+  });
+  if (passed) {
+    markValid(element);
+  } else {
+    markInvalid(element);
+  }
+}
+
 function checkMCQAnswer() {
   if ($(this).val().length < 1) {
     markInvalid($(this));
@@ -41,6 +66,7 @@ function checkMCQAnswer() {
     markValid($(this));
     // $('#checkQandALength').text('');
   }
+  checkMCQDuplicate($(this));
 }
 
 $('#answers .answer').on('keyup focus blur change', checkMCQAnswer);

@@ -1110,11 +1110,11 @@
 
   function addAnswerInputBoxButtonClick() {
     numberOfAnswersCounter += 1;
-    $('#answers').append("<div id=\"answer".concat(numberOfAnswersCounter, "\" class=\"input-group mb-3\">\n      <div class=\"input-group-prepend\">\n        <span class=\"input-group-text\">").concat(numberOfAnswersCounter, ".</span>\n      </div>\n      <input type=\"text\" class=\"form-control answer\" placeholder=\"Type an answer here\" required>\n      <div class=\"input-group-append d-none\">\n        <button class=\"btn btn-outline-secondary add-question-button\" type=\"button\">Add Answer</button>\n      </div>\n    </div>"));
+    $('#answers').append("<div class=\"input-group mb-3\">\n      <div class=\"input-group-prepend\">\n        <span class=\"input-group-text\">".concat(numberOfAnswersCounter, ".</span>\n      </div>\n      <input id=\"answer").concat(numberOfAnswersCounter, "\" type=\"text\" class=\"form-control answer\" placeholder=\"Type an answer here\" required>\n      <div class=\"input-group-append d-none\">\n        <button class=\"btn btn-outline-secondary add-question-button\" type=\"button\">Add Answer</button>\n      </div>\n    </div>"));
     $('#answers').on('click', '.add-question-button', addAnswerInputBoxButtonClick);
 
     if (document.domain === 'localhost') {
-      $("#answer".concat(numberOfAnswersCounter)).find('.answer').val("This is answer ".concat(numberOfAnswersCounter));
+      $("#answer".concat(numberOfAnswersCounter)).val("This is answer ".concat(numberOfAnswersCounter));
     }
 
     var buttons = $(document.getElementsByClassName('input-group-append'));
@@ -1124,12 +1124,32 @@
   addAnswerInputBoxButtonClick();
   addAnswerInputBoxButtonClick();
 
+  function checkMCQDuplicate(element) {
+    var passed = true;
+    $('#answers input').each(function check() {
+      console.log();
+
+      if (JSON.stringify(element) !== JSON.stringify($(this)) && element.val().toLowerCase().trim() === $(this).val().toLowerCase().trim()) {
+        passed = false;
+        markInvalid($(this));
+      }
+    });
+
+    if (passed) {
+      markValid(element);
+    } else {
+      markInvalid(element);
+    }
+  }
+
   function checkMCQAnswer() {
     if ($(this).val().length < 1) {
       markInvalid($(this)); // $('#checkQandALength').text('Your question must be at least 5 characters long.');
     } else {
       markValid($(this)); // $('#checkQandALength').text('');
     }
+
+    checkMCQDuplicate($(this));
   }
 
   $('#answers .answer').on('keyup focus blur change', checkMCQAnswer);
