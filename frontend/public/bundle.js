@@ -1044,9 +1044,9 @@
 
   init$2();
 
-  function enableOrDisableOtherSections(enable) {
-    $('#sectionTwo').find('button:first').prop('disabled', enable);
-    $('#sectionThree').find('button:first').prop('disabled', enable);
+  function enableOtherSections(enable) {
+    $('#sectionTwo').find('button:first').prop('disabled', !enable);
+    $('#sectionThree').find('button:first').prop('disabled', !enable);
   }
 
   function checkMCQuestionPassed() {
@@ -1057,13 +1057,13 @@
     if (checkMCQuestionPassed()) {
       markInvalid($('#mcqQuestion'));
       $('#checkQandALength').text('Your question must be at least 5 characters long.');
-      enableOrDisableOtherSections(false);
+      enableOtherSections(false);
       return false;
     }
 
     markValid($('#mcqQuestion'));
     $('#checkQandALength').text('');
-    enableOrDisableOtherSections(true);
+    enableOtherSections(true);
     return true;
   }
 
@@ -1076,12 +1076,12 @@
   function isCategory() {
     if (isCategoryPassed()) {
       markValid($('#mcqCategory'));
-      enableOrDisableOtherSections(true);
+      enableOtherSections(true);
       return true;
     }
 
     markInvalid($('#mcqCategory'));
-    enableOrDisableOtherSections(false);
+    enableOtherSections(false);
     return false;
   }
 
@@ -1097,62 +1097,100 @@
       passed = false;
     }
 
-    enableOrDisableOtherSections(!passed);
-    $('#sectionTwo').find('button:first').prop('disabled', !passed);
-    $('#sectionThree').find('button:first').prop('disabled', !passed);
+    enableOtherSections(passed);
     return passed;
   }
 
   $('#mcqQuestion').change(checkAllFields);
   $('#nextStepButton1').click(checkAllFields);
 
+  function enableOtherSections$1(enable) {
+    $('#sectionOne').find('button:first').prop('disabled', !enable);
+    $('#sectionThree').find('button:first').prop('disabled', !enable);
+  }
+
+  function checkMCQDuplicate(element) {
+    var passed = true;
+    $('#answers input').each(function check() {
+      if (JSON.stringify(element) !== JSON.stringify($(this)) && element.val().toLowerCase().trim() === $(this).val().toLowerCase().trim()) {
+        // console.log('marking', $(this).attr('name'), element.attr('name'), 'invalid');
+        markInvalid($(this));
+        markInvalid(element);
+        enableOtherSections$1(false);
+        passed = false;
+        return false;
+      }
+
+      markValid($(this));
+      markValid(element);
+      enableOtherSections$1(true);
+      return true;
+    });
+
+    if (passed) {
+      enableOtherSections$1(true);
+      markValid(element);
+    }
+
+    return passed;
+  }
+
+  function checkMCQAnswer() {
+    if ($(this).val().length < 1) {
+      enableOtherSections$1(false);
+      markInvalid($(this));
+      return false; // $('#checkQandALength').text('Your question must be at least 5 characters long.');
+    }
+
+    markValid($(this)); // $('#checkQandALength').text('');
+
+    return checkMCQDuplicate($(this));
+  }
+
   var numberOfAnswersCounter = 0;
 
   function addAnswerInputBoxButtonClick() {
     numberOfAnswersCounter += 1;
     $('#answers').append("<div class=\"input-group mb-3\">\n      <div class=\"input-group-prepend\">\n        <span class=\"input-group-text\">".concat(numberOfAnswersCounter, ".</span>\n      </div>\n      <input id=\"answer").concat(numberOfAnswersCounter, "\" type=\"text\" class=\"form-control answer\" placeholder=\"Type an answer here\" required>\n      <div class=\"input-group-append d-none\">\n        <button class=\"btn btn-outline-secondary add-question-button\" type=\"button\">Add Answer</button>\n      </div>\n    </div>"));
-    $('#answers').on('click', '.add-question-button', addAnswerInputBoxButtonClick);
 
     if (document.domain === 'localhost') {
       $("#answer".concat(numberOfAnswersCounter)).val("This is answer ".concat(numberOfAnswersCounter));
     }
 
     var buttons = $(document.getElementsByClassName('input-group-append'));
-    buttons.addClass('d-none').last().removeClass('d-none');
+    buttons.addClass('d-none');
+
+    if (numberOfAnswersCounter < 5) {
+      buttons.last().removeClass('d-none');
+    }
+
+    $("#answer".concat(numberOfAnswersCounter)).on('keyup focus blur change', checkMCQAnswer);
   }
 
   addAnswerInputBoxButtonClick();
   addAnswerInputBoxButtonClick();
+  $('#answers').on('click', '.add-question-button', addAnswerInputBoxButtonClick);
 
-  function checkMCQDuplicate(element) {
+  function checkAllFields$1() {
     var passed = true;
     $('#answers input').each(function check() {
-      console.log();
-
-      if (JSON.stringify(element) !== JSON.stringify($(this)) && element.val().toLowerCase().trim() === $(this).val().toLowerCase().trim()) {
+      if (!checkMCQAnswer.call(this)) {
         passed = false;
-        markInvalid($(this));
+        enableOtherSections$1(false);
+        return false;
       }
+
+      return true;
     });
 
     if (passed) {
-      markValid(element);
-    } else {
-      markInvalid(element);
-    }
-  }
-
-  function checkMCQAnswer() {
-    if ($(this).val().length < 1) {
-      markInvalid($(this)); // $('#checkQandALength').text('Your question must be at least 5 characters long.');
-    } else {
-      markValid($(this)); // $('#checkQandALength').text('');
+      enableOtherSections$1(true);
     }
 
-    checkMCQDuplicate($(this));
+    return passed;
   }
 
-  $('#answers .answer').on('keyup focus blur change', checkMCQAnswer);
+  $('#nextStepButton2').click(checkAllFields$1);
 
   function writeSuccess(el) {
     $('#postQuestionSuccess').append($("<p>".concat(JSON.stringify(el.question), "</p>")));

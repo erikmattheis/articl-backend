@@ -15,28 +15,29 @@ async function init() {
 
 init();
 
-function enableOrDisableOtherSections(enable) {
+function enableOtherSections(enable) {
   $('#sectionTwo')
     .find('button:first')
-    .prop('disabled', enable);
+    .prop('disabled', !enable);
   $('#sectionThree')
     .find('button:first')
-    .prop('disabled', enable);
+    .prop('disabled', !enable);
 }
 
 function checkMCQuestionPassed() {
   return $('#mcqQuestion').val().length < 5;
 }
+
 function checkMCQuestion() {
   if (checkMCQuestionPassed()) {
     markInvalid($('#mcqQuestion'));
     $('#checkQandALength').text('Your question must be at least 5 characters long.');
-    enableOrDisableOtherSections(false);
+    enableOtherSections(false);
     return false;
   }
   markValid($('#mcqQuestion'));
   $('#checkQandALength').text('');
-  enableOrDisableOtherSections(true);
+  enableOtherSections(true);
   return true;
 }
 
@@ -49,11 +50,11 @@ function isCategoryPassed() {
 function isCategory() {
   if (isCategoryPassed()) {
     markValid($('#mcqCategory'));
-    enableOrDisableOtherSections(true);
+    enableOtherSections(true);
     return true;
   }
   markInvalid($('#mcqCategory'));
-  enableOrDisableOtherSections(false);
+  enableOtherSections(false);
   return false;
 }
 $('#mcqCategory').on('keyup focus blur', isCategory);
@@ -67,13 +68,8 @@ function checkAllFields() {
   } else {
     passed = false;
   }
-  enableOrDisableOtherSections(!passed);
-  $('#sectionTwo')
-    .find('button:first')
-    .prop('disabled', !passed);
-  $('#sectionThree')
-    .find('button:first')
-    .prop('disabled', !passed);
+  enableOtherSections(passed);
+
   return passed;
 }
 $('#mcqQuestion').change(checkAllFields);
