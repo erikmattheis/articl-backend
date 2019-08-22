@@ -13,6 +13,26 @@ const cache = require('../cache');
 // const timer = require('../utils/timer');
 // const memory = require('../utils/memory');
 
+/*
+function trimValues() {
+  const batch = [];
+  Category.find({ title: /^\s+|\s+$/ }, { title: 1 }).then(title => {
+    title.forEach(function doTrim(doc) {
+      batch.push({
+        updateOne: {
+          filter: { _id: doc._id },
+          update: { $set: { title: doc.title.trim() } }
+        }
+      });
+    });
+
+    Category.bulkWrite(batch);
+  });
+}
+
+trimValues();
+*/
+
 async function getCategoryNames() {
   try {
     let categoryNames = await cache.getValue('categoryNames');
