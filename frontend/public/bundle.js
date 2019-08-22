@@ -1104,9 +1104,38 @@
   $('#mcqQuestion').change(checkAllFields);
   $('#nextStepButton1').click(checkAllFields);
 
-  function writeSuccess(el) {
-    $('#postQuestionError').removeClass('d-none');
-    $('#postQuestionSuccess').append($("<p>".concat(JSON.stringify(el.question), "</p>")));
+  function writeSuccess(message) {
+    console.log('writeSuccess', message);
+    $('#postQuestionSuccess').removeClass('d-none');
+    /*
+    {"question":
+    {"_id":"5d5e2ebeab29b000178b5303",
+    "answers":[
+      {"_id":"5d5e2ebeab29b000178b5305",
+      "answer":"This is answer 1",
+      "correct":true,
+      "explanation":"This is explanation response00"
+      },
+      {"_id":"5d5e2ebeab29b000178b5304",
+      "answer":"This is answer 2",
+      "correct":false,
+      "explanation":"This is explanation response11"}
+      ],"author":"TODO: insert real author",
+      "category":[
+        {"_id":"5d5e2ebeab29b000178b5306",
+        "category_image":"",
+        "description":"desc",
+        "parent":0,
+        "term_id":1,
+        "title":"My Title"}
+        ],"createTime":"2019-08-22T05:57:18.957Z",
+        "question":"This is the first question",
+        "updated":"2019-08-22T05:57:18.957Z",
+        "__v":0},
+        "success":"success"}
+        */
+
+    $('#postQuestionSuccess').append($("<p>".concat(JSON.stringify(message), "</p>")));
   }
 
   function writeError(obj) {
@@ -1139,6 +1168,10 @@
   }
 
   function handleSuccess(result) {
+    writeSuccess(result);
+  }
+
+  function handleError(result) {
     if (result.error && result.error.message instanceof Array) {
       result.error.message.forEach(writeError);
     } else if (result.error && result.error.message) {
@@ -1150,8 +1183,7 @@
     } else if (result.name) {
       writeError(result.message);
     } else {
-      $('#postQuestionSuccess').removeClass('d-none');
-      writeSuccess(result);
+      writeError(result);
     }
   }
 
@@ -1181,11 +1213,20 @@
                   data: JSON.stringify(question),
                   contentType: 'application/json',
                   timeout: 5000,
-                  success: function success(data) {
-                    handleSuccess(data.responseJSON);
+                  success: function success(data, statusText) {
+                    console.log('statusText', statusText);
+
+                    if (statusText === 'success') {
+                      console.log('success', data);
+                      handleSuccess(data);
+                    } else {
+                      console.log('statusText', statusText);
+                      handleError(data.responseJSON || data);
+                    }
                   },
                   error: function error(_error) {
-                    handleSuccess(_error.responseJSON);
+                    console.log('errorHandler', _error);
+                    handleError(_error.responseJSON || _error);
                   }
                 });
               } catch (error) {
