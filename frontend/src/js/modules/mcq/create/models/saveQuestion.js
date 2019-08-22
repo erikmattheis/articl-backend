@@ -1,4 +1,5 @@
 function writeSuccess(el) {
+  $('#postQuestionError').removeClass('d-none');
   $('#postQuestionSuccess').append($(`<p>${JSON.stringify(el.question)}</p>`));
 }
 
@@ -15,9 +16,19 @@ function formatAnswers() {
     .find('.answer')
     .each(i => {
       answers.push({
-        answer: $('#answers').find('.answer')[i].value,
-        correct: $('#answers').find('.answer')[i].value === $('#correctAnswer').val(),
-        explanation: $('#answersResponses').find('textarea')[i].value
+        answer: $('#answers')
+          .find('.answer')
+          [i].value.trim(),
+        correct:
+          $('#answers')
+            .find('.answer')
+            [i].value.trim() ===
+          $('#correctAnswer')
+            .val()
+            .trim(),
+        explanation: $('#answerExplanations')
+          .find('textarea')
+          [i].value.trim()
       });
     });
   return answers;
@@ -26,8 +37,12 @@ function formatAnswers() {
 function formatQuestion() {
   const answers = formatAnswers();
   const question = {
-    question: $('#mcqQuestion').val(),
-    category: $('#mcqCategory').val(),
+    question: $('#mcqQuestion')
+      .val()
+      .trim(),
+    category: $('#mcqCategory')
+      .val()
+      .trim(),
     author: 'TODO: insert real author',
     answers
   };
@@ -35,39 +50,49 @@ function formatQuestion() {
   return question;
 }
 
+function handleSuccess(result) {
+  if (result.error && result.error.message instanceof Array) {
+    result.error.message.forEach(writeError);
+  } else if (result.error && result.error.message) {
+    writeError(result.error.message);
+  } else if (result.error && result.error.errmsg) {
+    writeError(result.error.errmsg);
+  } else if (result.name === 'DatabaseError') {
+    writeError(result.message);
+  } else if (result.name) {
+    writeError(result.message);
+  } else {
+    $('#postQuestionSuccess').removeClass('d-none');
+    writeSuccess(result);
+  }
+}
+
 async function saveQuestion() {
+  $('#postQuestionError')
+    .addClass('d-none')
+    .empty();
+  $('#postQuestionSuccess')
+    .addClass('d-none')
+    .empty();
   try {
     const question = formatQuestion();
-
-    const promise = await fetch('http://api.articl.net/api/v1/questions', {
-      method: 'POST', // or 'PUT'
-      mode: 'cors',
-      body: JSON.stringify(question), // data can be `string` or {object}!
-      headers: {
-        'Content-Type': 'application/json'
+    $.ajax({
+      type: 'POST',
+      url: 'https://api.articl.net/api/v1/questions',
+      dataType: 'json',
+      cache: false,
+      data: JSON.stringify(question),
+      contentType: 'application/json',
+      timeout: 5000,
+      success(data) {
+        handleSuccess(data.responseJSON);
+      },
+      error(error) {
+        handleSuccess(error.responseJSON);
       }
     });
-    const result = await promise.json();
-
-    if (result.error && result.error.message instanceof Array) {
-      result.error.message.forEach(writeError);
-    } else if (result.error && result.error.message) {
-      writeError(result.error.message);
-    } else if (result.error && result.error.errmsg) {
-      writeError(result.error.errmsg);
-    } else if (result.name === 'DatabaseError') {
-      writeError(result.message);
-    } else if (result.name) {
-      writeError(result.message);
-    } else {
-      $('#postQuestionSuccess').removeClass('d-none');
-      writeSuccess(result);
-    }
   } catch (error) {
-    // const message = await error.json();
-    if (error.message) {
-      writeError(error.message);
-    }
+    writeError(error);
   }
 }
 

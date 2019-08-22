@@ -1,6 +1,15 @@
 import { markInvalid, markValid } from '../../shared/forms/validationStyles';
 import saveQuestion from '../models/saveQuestion';
 
+function enableOtherSections(enable) {
+  $('#sectionOne')
+    .find('button:first')
+    .prop('disabled', !enable);
+  $('#sectionTwo')
+    .find('button:first')
+    .prop('disabled', !enable);
+}
+
 function createSelectCorrectAnswer() {
   $('.answer').each(function addOption() {
     $('#correctAnswer').append(
@@ -12,7 +21,7 @@ function createSelectCorrectAnswer() {
 }
 
 function createExplanationField(answerNumber, parentElement, required) {
-  let textAreaId = 'response';
+  let textAreaId = `response${answerNumber}`;
   textAreaId += answerNumber.toString();
   const answerResponse = $(`<textarea>This is explanation ${textAreaId}</textarea>`)
     .addClass('md-textarea form-control explanation')
@@ -36,20 +45,21 @@ function createLabel(text, classes, uniqueName, parentElement) {
   parentElement.append(answerLabel);
 }
 
-const numberOfAnswersCounter = $('#answers').children().length;
-
+let numberOfAnswersCounter;
+let numberOfExplanationsCounter;
 function createExplanationFields() {
-  for (let i = 0; i < numberOfAnswersCounter; i += 1) {
+  for (let i = numberOfExplanationsCounter; i < numberOfAnswersCounter; i += 1) {
     if ($('#answers').find('input')[i].value !== '') {
-      let labelId = 'answerLabel';
-      labelId += i.toString();
-      createLabel($('#answers').find('input')[i].value, 'nameOfAnswer', labelId, $('#answers'));
-      createExplanationField(i, $('#answersResponses'), true);
+      const labelId = `answerLabel${i}`;
+      createLabel($('#answers').find('input')[i].value, 'nameOfAnswer', labelId, $('#answerExplanations'));
+      createExplanationField(i, $('#answerExplanations'), true);
     }
   }
 }
 
 function initStep3() {
+  numberOfAnswersCounter = $('#answers').find('input').length;
+  numberOfExplanationsCounter = $('#answerExplanations').find('textarea').length;
   createSelectCorrectAnswer();
   createExplanationFields();
 }
@@ -58,6 +68,7 @@ function checkCorrectAnswer() {
   $('#correctAnswer').val();
   if (!$('#correctAnswer').val().length) {
     markInvalid($('#correctAnswer'));
+    enableOtherSections(false);
     return false;
   }
 
@@ -66,25 +77,44 @@ function checkCorrectAnswer() {
 }
 $('#correctAnswer').on('change blur', checkCorrectAnswer);
 
-function submitMCQ() {
-  if (checkCorrectAnswer()) {
-    saveQuestion();
+function checkMCQExplnation() {
+  if ($(this).val().length < 5) {
+    enableOtherSections(false);
+    markInvalid($(this));
+    return false;
+    // $('#checkQandALength').text('Your question must be at least 5 characters long.');
   }
+
+  markValid($(this));
+  return true;
+  // $('#checkQandALength').text('');
+}
+
+function checkAllFields() {
+  let passed = true;
+  $('#answerResponses textarea').each(function check() {
+    if (!checkMCQExplnation.call(this)) {
+      passed = false;
+      enableOtherSections(false);
+      return false;
+    }
+    return true;
+  });
+  if (passed) {
+    enableOtherSections(true);
+  }
+  return passed;
+}
+
+function submitMCQ() {
+  if (!checkCorrectAnswer() || !checkAllFields()) {
+    return false;
+  }
+  return saveQuestion();
 }
 
 $('#submitButton').click(submitMCQ);
 
-function checkMCQExplnation() {
-  if ($(this).val().length < 5) {
-    markInvalid($(this));
-    // $('#checkQandALength').text('Your question must be at least 5 characters long.');
-  } else {
-    markValid($(this));
-    saveQuestion();
-    // $('#checkQandALength').text('');
-  }
-}
-
-$('#answersResponses textarea').on('keyup focus blur change', checkMCQExplnation);
+$('#answerExplanations textarea').on('keyup focus blur change', checkMCQExplnation);
 
 export { initStep3 };

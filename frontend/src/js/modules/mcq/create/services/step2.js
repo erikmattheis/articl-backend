@@ -1,3 +1,4 @@
+import { initStep3 } from './step3';
 import { markInvalid, markValid } from '../../shared/forms/validationStyles';
 
 function enableOtherSections(enable) {
@@ -104,6 +105,7 @@ function checkAllFields() {
   });
   if (passed) {
     enableOtherSections(true);
+    initStep3();
   }
   return passed;
 }

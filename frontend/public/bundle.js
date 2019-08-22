@@ -1104,95 +1104,8 @@
   $('#mcqQuestion').change(checkAllFields);
   $('#nextStepButton1').click(checkAllFields);
 
-  function enableOtherSections$1(enable) {
-    $('#sectionOne').find('button:first').prop('disabled', !enable);
-    $('#sectionThree').find('button:first').prop('disabled', !enable);
-  }
-
-  function checkMCQDuplicate(element) {
-    var passed = true;
-    $('#answers input').each(function check() {
-      if (JSON.stringify(element) !== JSON.stringify($(this)) && element.val().toLowerCase().trim() === $(this).val().toLowerCase().trim()) {
-        // console.log('marking', $(this).attr('name'), element.attr('name'), 'invalid');
-        markInvalid($(this));
-        markInvalid(element);
-        enableOtherSections$1(false);
-        passed = false;
-        return false;
-      }
-
-      markValid($(this));
-      markValid(element);
-      enableOtherSections$1(true);
-      return true;
-    });
-
-    if (passed) {
-      enableOtherSections$1(true);
-      markValid(element);
-    }
-
-    return passed;
-  }
-
-  function checkMCQAnswer() {
-    if ($(this).val().length < 1) {
-      enableOtherSections$1(false);
-      markInvalid($(this));
-      return false; // $('#checkQandALength').text('Your question must be at least 5 characters long.');
-    }
-
-    markValid($(this)); // $('#checkQandALength').text('');
-
-    return checkMCQDuplicate($(this));
-  }
-
-  var numberOfAnswersCounter = 0;
-
-  function addAnswerInputBoxButtonClick() {
-    numberOfAnswersCounter += 1;
-    $('#answers').append("<div class=\"input-group mb-3\">\n      <div class=\"input-group-prepend\">\n        <span class=\"input-group-text\">".concat(numberOfAnswersCounter, ".</span>\n      </div>\n      <input id=\"answer").concat(numberOfAnswersCounter, "\" type=\"text\" class=\"form-control answer\" placeholder=\"Type an answer here\" required>\n      <div class=\"input-group-append d-none\">\n        <button class=\"btn btn-outline-secondary add-question-button\" type=\"button\">Add Answer</button>\n      </div>\n    </div>"));
-
-    if (document.domain === 'localhost') {
-      $("#answer".concat(numberOfAnswersCounter)).val("This is answer ".concat(numberOfAnswersCounter));
-    }
-
-    var buttons = $(document.getElementsByClassName('input-group-append'));
-    buttons.addClass('d-none');
-
-    if (numberOfAnswersCounter < 5) {
-      buttons.last().removeClass('d-none');
-    }
-
-    $("#answer".concat(numberOfAnswersCounter)).on('keyup focus blur change', checkMCQAnswer);
-  }
-
-  addAnswerInputBoxButtonClick();
-  addAnswerInputBoxButtonClick();
-  $('#answers').on('click', '.add-question-button', addAnswerInputBoxButtonClick);
-
-  function checkAllFields$1() {
-    var passed = true;
-    $('#answers input').each(function check() {
-      if (!checkMCQAnswer.call(this)) {
-        passed = false;
-        enableOtherSections$1(false);
-        return false;
-      }
-
-      return true;
-    });
-
-    if (passed) {
-      enableOtherSections$1(true);
-    }
-
-    return passed;
-  }
-
-  $('#nextStepButton2').click(checkAllFields$1);
-
   function writeSuccess(el) {
+    $('#postQuestionError').removeClass('d-none');
     $('#postQuestionSuccess').append($("<p>".concat(JSON.stringify(el.question), "</p>")));
   }
 
@@ -1206,9 +1119,9 @@
     var answers = [];
     $('#answers').find('.answer').each(function (i) {
       answers.push({
-        answer: $('#answers').find('.answer')[i].value,
-        correct: $('#answers').find('.answer')[i].value === $('#correctAnswer').val(),
-        explanation: $('#answersResponses').find('textarea')[i].value
+        answer: $('#answers').find('.answer')[i].value.trim(),
+        correct: $('#answers').find('.answer')[i].value.trim() === $('#correctAnswer').val().trim(),
+        explanation: $('#answerExplanations').find('textarea')[i].value.trim()
       });
     });
     return answers;
@@ -1217,12 +1130,29 @@
   function formatQuestion() {
     var answers = formatAnswers();
     var question = {
-      question: $('#mcqQuestion').val(),
-      category: $('#mcqCategory').val(),
+      question: $('#mcqQuestion').val().trim(),
+      category: $('#mcqCategory').val().trim(),
       author: 'TODO: insert real author',
       answers: answers
     };
     return question;
+  }
+
+  function handleSuccess(result) {
+    if (result.error && result.error.message instanceof Array) {
+      result.error.message.forEach(writeError);
+    } else if (result.error && result.error.message) {
+      writeError(result.error.message);
+    } else if (result.error && result.error.errmsg) {
+      writeError(result.error.errmsg);
+    } else if (result.name === 'DatabaseError') {
+      writeError(result.message);
+    } else if (result.name) {
+      writeError(result.message);
+    } else {
+      $('#postQuestionSuccess').removeClass('d-none');
+      writeSuccess(result);
+    }
   }
 
   function saveQuestion() {
@@ -1233,68 +1163,48 @@
     _saveQuestion = asyncToGenerator(
     /*#__PURE__*/
     regenerator.mark(function _callee() {
-      var question, promise, result;
+      var question;
       return regenerator.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.prev = 0;
-              question = formatQuestion();
-              _context.next = 4;
-              return fetch('http://api.articl.net/api/v1/questions', {
-                method: 'POST',
-                // or 'PUT'
-                mode: 'cors',
-                body: JSON.stringify(question),
-                // data can be `string` or {object}!
-                headers: {
-                  'Content-Type': 'application/json'
-                }
-              });
+              $('#postQuestionError').addClass('d-none').empty();
+              $('#postQuestionSuccess').addClass('d-none').empty();
 
-            case 4:
-              promise = _context.sent;
-              _context.next = 7;
-              return promise.json();
-
-            case 7:
-              result = _context.sent;
-
-              if (result.error && result.error.message instanceof Array) {
-                result.error.message.forEach(writeError);
-              } else if (result.error && result.error.message) {
-                writeError(result.error.message);
-              } else if (result.error && result.error.errmsg) {
-                writeError(result.error.errmsg);
-              } else if (result.name === 'DatabaseError') {
-                writeError(result.message);
-              } else if (result.name) {
-                writeError(result.message);
-              } else {
-                $('#postQuestionSuccess').removeClass('d-none');
-                writeSuccess(result);
+              try {
+                question = formatQuestion();
+                $.ajax({
+                  type: 'POST',
+                  url: 'https://api.articl.net/api/v1/questions',
+                  dataType: 'json',
+                  cache: false,
+                  data: JSON.stringify(question),
+                  contentType: 'application/json',
+                  timeout: 5000,
+                  success: function success(data) {
+                    handleSuccess(data.responseJSON);
+                  },
+                  error: function error(_error) {
+                    handleSuccess(_error.responseJSON);
+                  }
+                });
+              } catch (error) {
+                writeError(error);
               }
 
-              _context.next = 14;
-              break;
-
-            case 11:
-              _context.prev = 11;
-              _context.t0 = _context["catch"](0);
-
-              // const message = await error.json();
-              if (_context.t0.message) {
-                writeError(_context.t0.message);
-              }
-
-            case 14:
+            case 3:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 11]]);
+      }, _callee);
     }));
     return _saveQuestion.apply(this, arguments);
+  }
+
+  function enableOtherSections$1(enable) {
+    $('#sectionOne').find('button:first').prop('disabled', !enable);
+    $('#sectionTwo').find('button:first').prop('disabled', !enable);
   }
 
   function createSelectCorrectAnswer() {
@@ -1304,7 +1214,7 @@
   }
 
   function createExplanationField(answerNumber, parentElement, required) {
-    var textAreaId = 'response';
+    var textAreaId = "response".concat(answerNumber);
     textAreaId += answerNumber.toString();
     var answerResponse = $("<textarea>This is explanation ".concat(textAreaId, "</textarea>")).addClass('md-textarea form-control explanation').prop('rows', '4').prop('required', required).prop('placeholder', 'Type what you would like to display when this answer is selected').prop('id', textAreaId);
     var textAreaErrorId = 'responseError';
@@ -1318,20 +1228,22 @@
     parentElement.append(answerLabel);
   }
 
-  var numberOfAnswersCounter$1 = $('#answers').children().length;
+  var numberOfAnswersCounter;
+  var numberOfExplanationsCounter;
 
   function createExplanationFields() {
-    for (var i = 0; i < numberOfAnswersCounter$1; i += 1) {
+    for (var i = numberOfExplanationsCounter; i < numberOfAnswersCounter; i += 1) {
       if ($('#answers').find('input')[i].value !== '') {
-        var labelId = 'answerLabel';
-        labelId += i.toString();
-        createLabel($('#answers').find('input')[i].value, 'nameOfAnswer', labelId, $('#answers'));
-        createExplanationField(i, $('#answersResponses'), true);
+        var labelId = "answerLabel".concat(i);
+        createLabel($('#answers').find('input')[i].value, 'nameOfAnswer', labelId, $('#answerExplanations'));
+        createExplanationField(i, $('#answerExplanations'), true);
       }
     }
   }
 
   function initStep3() {
+    numberOfAnswersCounter = $('#answers').find('input').length;
+    numberOfExplanationsCounter = $('#answerExplanations').find('textarea').length;
     createSelectCorrectAnswer();
     createExplanationFields();
   }
@@ -1341,6 +1253,7 @@
 
     if (!$('#correctAnswer').val().length) {
       markInvalid($('#correctAnswer'));
+      enableOtherSections$1(false);
       return false;
     }
 
@@ -1350,24 +1263,135 @@
 
   $('#correctAnswer').on('change blur', checkCorrectAnswer);
 
-  function submitMCQ() {
-    if (checkCorrectAnswer()) {
-      saveQuestion();
+  function checkMCQExplnation() {
+    if ($(this).val().length < 5) {
+      enableOtherSections$1(false);
+      markInvalid($(this));
+      return false; // $('#checkQandALength').text('Your question must be at least 5 characters long.');
     }
+
+    markValid($(this));
+    return true; // $('#checkQandALength').text('');
+  }
+
+  function checkAllFields$1() {
+    var passed = true;
+    $('#answerResponses textarea').each(function check() {
+      if (!checkMCQExplnation.call(this)) {
+        passed = false;
+        enableOtherSections$1(false);
+        return false;
+      }
+
+      return true;
+    });
+
+    if (passed) {
+      enableOtherSections$1(true);
+    }
+
+    return passed;
+  }
+
+  function submitMCQ() {
+    if (!checkCorrectAnswer() || !checkAllFields$1()) {
+      return false;
+    }
+
+    return saveQuestion();
   }
 
   $('#submitButton').click(submitMCQ);
+  $('#answerExplanations textarea').on('keyup focus blur change', checkMCQExplnation);
 
-  function checkMCQExplnation() {
-    if ($(this).val().length < 5) {
-      markInvalid($(this)); // $('#checkQandALength').text('Your question must be at least 5 characters long.');
-    } else {
-      markValid($(this));
-      saveQuestion(); // $('#checkQandALength').text('');
-    }
+  function enableOtherSections$2(enable) {
+    $('#sectionOne').find('button:first').prop('disabled', !enable);
+    $('#sectionThree').find('button:first').prop('disabled', !enable);
   }
 
-  $('#answersResponses textarea').on('keyup focus blur change', checkMCQExplnation);
+  function checkMCQDuplicate(element) {
+    var passed = true;
+    $('#answers input').each(function check() {
+      if (JSON.stringify(element) !== JSON.stringify($(this)) && element.val().toLowerCase().trim() === $(this).val().toLowerCase().trim()) {
+        // console.log('marking', $(this).attr('name'), element.attr('name'), 'invalid');
+        markInvalid($(this));
+        markInvalid(element);
+        enableOtherSections$2(false);
+        passed = false;
+        return false;
+      }
+
+      markValid($(this));
+      markValid(element);
+      enableOtherSections$2(true);
+      return true;
+    });
+
+    if (passed) {
+      enableOtherSections$2(true);
+      markValid(element);
+    }
+
+    return passed;
+  }
+
+  function checkMCQAnswer() {
+    if ($(this).val().length < 1) {
+      enableOtherSections$2(false);
+      markInvalid($(this));
+      return false; // $('#checkQandALength').text('Your question must be at least 5 characters long.');
+    }
+
+    markValid($(this)); // $('#checkQandALength').text('');
+
+    return checkMCQDuplicate($(this));
+  }
+
+  var numberOfAnswersCounter$1 = 0;
+
+  function addAnswerInputBoxButtonClick() {
+    numberOfAnswersCounter$1 += 1;
+    $('#answers').append("<div class=\"input-group mb-3\">\n      <div class=\"input-group-prepend\">\n        <span class=\"input-group-text\">".concat(numberOfAnswersCounter$1, ".</span>\n      </div>\n      <input id=\"answer").concat(numberOfAnswersCounter$1, "\" type=\"text\" class=\"form-control answer\" placeholder=\"Type an answer here\" required>\n      <div class=\"input-group-append d-none\">\n        <button class=\"btn btn-outline-secondary add-question-button\" type=\"button\">Add Answer</button>\n      </div>\n    </div>"));
+
+    if (document.domain === 'localhost') {
+      $("#answer".concat(numberOfAnswersCounter$1)).val("This is answer ".concat(numberOfAnswersCounter$1));
+    }
+
+    var buttons = $(document.getElementsByClassName('input-group-append'));
+    buttons.addClass('d-none');
+
+    if (numberOfAnswersCounter$1 < 5) {
+      buttons.last().removeClass('d-none');
+    }
+
+    $("#answer".concat(numberOfAnswersCounter$1)).on('keyup focus blur change', checkMCQAnswer);
+  }
+
+  addAnswerInputBoxButtonClick();
+  addAnswerInputBoxButtonClick();
+  $('#answers').on('click', '.add-question-button', addAnswerInputBoxButtonClick);
+
+  function checkAllFields$2() {
+    var passed = true;
+    $('#answers input').each(function check() {
+      if (!checkMCQAnswer.call(this)) {
+        passed = false;
+        enableOtherSections$2(false);
+        return false;
+      }
+
+      return true;
+    });
+
+    if (passed) {
+      enableOtherSections$2(true);
+      initStep3();
+    }
+
+    return passed;
+  }
+
+  $('#nextStepButton2').click(checkAllFields$2);
 
   $('#step2Save').click(initStep3);
 
