@@ -8,7 +8,6 @@ mongoose.Promise = Promise;
 async function postQuestion(req, res, next) {
   try {
     await questionsValidator.postQuestion(req);
-
     const insertionResult = await questionsData.postQuestion(req);
     res.status(201).json({ question: insertionResult, success: 'success' });
   } catch (error) {
@@ -40,6 +39,7 @@ async function deleteQuestions(req, res) {
       res.status(200).json({ result });
     }
   } catch (error) {
+    console.log('error', error);
     res.status(500).json({ error });
   }
 }

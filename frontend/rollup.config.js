@@ -5,6 +5,7 @@ import livereload from 'rollup-plugin-livereload';
 import babel from 'rollup-plugin-babel';
 import postcss from 'rollup-plugin-postcss';
 import cssnano from 'cssnano';
+import copy from 'rollup-plugin-copy';
 
 // `npm run build` -> `production` is true
 // `npm run dev` -> `production` is false
@@ -25,6 +26,9 @@ export default {
     }
   },
   plugins: [
+    copy({
+      targets: [{ src: './node_modules/font-awesome/fonts', dest: './public' }]
+    }),
     resolve(),
     postcss({
       plugins: [cssnano()]

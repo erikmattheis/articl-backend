@@ -235,7 +235,7 @@
         let labelId = 'answerLabel';
         labelId += i.toString();
         createLabel($('#answers').find('input')[i].value, 'nameOfAnswer', labelId, $('#answers'));
-        createExplanationField(i, $('#answersResponses'), true);
+        createExplanationField(i, $('#answerExplanations'), true);
         update();
       }
     }
@@ -259,7 +259,7 @@
         answers.push({
           answer: $('#answers').find('.answer')[i].value,
           correct: $('#answers').find('.answer')[i].value === $('#correctAnswer').val(),
-          explanation: $('#answersResponses').find('textarea')[i].value
+          explanation: $('#answerExplanations').find('textarea')[i].value
         });
       });
     return answers;

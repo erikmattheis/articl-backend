@@ -15,17 +15,29 @@ async function init() {
 
 init();
 
+function enableOtherSections(enable) {
+  $('#sectionTwo')
+    .find('button:first')
+    .prop('disabled', !enable);
+  $('#sectionThree')
+    .find('button:first')
+    .prop('disabled', !enable);
+}
+
 function checkMCQuestionPassed() {
   return $('#mcqQuestion').val().length < 5;
 }
+
 function checkMCQuestion() {
   if (checkMCQuestionPassed()) {
     markInvalid($('#mcqQuestion'));
     $('#checkQandALength').text('Your question must be at least 5 characters long.');
+    enableOtherSections(false);
     return false;
   }
   markValid($('#mcqQuestion'));
   $('#checkQandALength').text('');
+  enableOtherSections(true);
   return true;
 }
 
@@ -38,48 +50,27 @@ function isCategoryPassed() {
 function isCategory() {
   if (isCategoryPassed()) {
     markValid($('#mcqCategory'));
+    enableOtherSections(true);
     return true;
   }
   markInvalid($('#mcqCategory'));
+  enableOtherSections(false);
   return false;
 }
 $('#mcqCategory').on('keyup focus blur', isCategory);
 $('#mcqCategory').bind('typeahead:select', isCategory);
 
-/*
-$('.needs-validation')
-  .find('input, textarea')
-  .on('keyup focus blur change', continueToNextSection);
-*/
-
 function checkAllFields() {
-  console.log('checkAllFields');
   let passed;
-  console.log(isCategoryPassed(), checkMCQuestionPassed());
-  if (isCategoryPassed() && checkMCQuestionPassed()) {
-    console.log('passed');
+
+  if (isCategory() && checkMCQuestion()) {
     passed = true;
   } else {
-    console.log('not passed');
     passed = false;
   }
-  $('collapseTwo')
-    .find('button:first')
-    .prop('disabled', !passed);
-  $('collapseThree')
-    .find('button:first')
-    .prop('disabled', !passed);
-  return passed;
-  /*
-  $('.needs-validation .step-btn').prop('disabled', !this.closest('form').checkValidity());
-  const nextSection = $(this)
-    .closest('form')
-    .data('nextSection');
+  enableOtherSections(passed);
 
-  $(`#${nextSection}`)
-    .find('button:first')
-    .prop('disabled', !this.closest('form').checkValidity());
-  */
+  return passed;
 }
 $('#mcqQuestion').change(checkAllFields);
 $('#nextStepButton1').click(checkAllFields);

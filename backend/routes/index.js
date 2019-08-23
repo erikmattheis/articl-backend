@@ -10,9 +10,21 @@ router.get('/categories', categoriesController.getCategories);
 
 router.get('/questions', questionsController.getQuestions);
 
-router.get('/questions/:id', questionsController.getQuestions);
+router.get('/questions/:id', async function handler(req, res, next) {
+  try {
+    questionsController.getQuestions(req, res, next);
+  } catch (error) {
+    next(error);
+  }
+});
 
-router.post('/questions', questionsController.postQuestion);
+router.post('/questions', async function handler(req, res, next) {
+  try {
+    questionsController.postQuestion(req, res, next);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.delete('/questions', questionsController.deleteQuestions);
 
@@ -32,6 +44,18 @@ router.use((error, req, res, next) => {
   next(error);
 });
 
+
+*/
+
+router.all('*', (req, res) => {
+  const error = new FileNotFoundError();
+  res.status(404).json({ error });
+});
+
+router.use((req, res) => {
+  res.status(500).json({ errors: ['An unknown error occurred.'] });
+});
+
 router.use((err, req, res, next) => {
   console.log('`MESSAGE: ', err.message);
   const error = err;
@@ -41,7 +65,6 @@ router.use((err, req, res, next) => {
   res.status(err.statusCode).send({ errors: error });
   next();
 });
-*/
 
 router.use((error, req, res, next) => {
   console.log('caught last');

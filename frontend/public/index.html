@@ -38,6 +38,7 @@
              <div class="form-group">
               <input id="mcqQuestion" autocomplete="off" name="mcqQuestion" type="text" class="mcqQuestion form-control" placeholder="Type the question here"
                 required />
+                <div class="form-control-feedback"></div>
               <label id="mcqLabel" for="mcqQuestion" class="text-danger form-text"></label>
             </div>
             <!-- category typeahead box-->
@@ -73,7 +74,7 @@
             </div>
             <label id="error-answer" for="answer" class="text-danger form-text"></label>
             <div class="save-q">
-              <button type="button" id="step2Save" class="btn btn-primary step-btn" disabled
+              <button type="button" id="nextStepButton2" class="btn btn-primary step-btn"  
                 data-toggle="collapse" data-target="#collapseThree" aria-controls="collapseTwo collapseThree">
                 Next step
               </button>
@@ -83,7 +84,7 @@
       </div>
     </div>
     <div class="card" id="sectionThree">
-      <div class=" card-header" id="headingThree">
+      <div class="card-header" id="headingThree">
         <h5 class="mb-0">
           <button disabled id="card3" class="btn btn-link collapsed step-btn" type="button"
             data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
@@ -99,10 +100,10 @@
                 <option>Please select the correct answer.</option>
               </select>
             </div>
-            <div id="answersResponses" class="md-form"></div>
+            <div id="answerExplanations" class="md-form"></div>
             <label for="responses" class="text-danger form-text"></label>
-            <button id="submitButton" type="button" class="btn btn-primary step-btn" disabled>
-              Submit Q&A
+            <button id="submitButton" type="button" class="btn btn-primary step-btn">
+              Submit Q&A <i class="d-none fas fa-cog fa-spin"></i>
             </button>
             <div id="postQuestionSuccess" class="alert alert-success d-none" role="alert"></div>
             <div id="postQuestionError" class="alert alert-danger d-none" role="alert"></div>
