@@ -105,6 +105,10 @@ function checkAllFields() {
 }
 
 function submitMCQ() {
+  $('#submitButton').prop('disabled', 'disabled');
+  $('#submitButton')
+    .find('.spinner')
+    .removeClass('d-none');
   if (!checkCorrectAnswer() || !checkAllFields()) {
     return false;
   }

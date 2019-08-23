@@ -1,12 +1,11 @@
 function writeSuccess(obj) {
-  console.log('writeSuccess', obj);
+  $('#submitButton').addClass('d-none');
   $('#postQuestionSuccess').removeClass('d-none');
   const questionPreview = $('<div/>').append($('<p/>', { text: obj.question.question }));
   const answersPreview = $('<ul/>');
   const correct = $('<i/>', { class: 'fa fa-check-circle text-success' });
   const incorrect = $('<i/>', { class: 'fa fa-times-circle text-danger' });
-  function addAnswer(answer, i) {
-    console.log('i', i);
+  function addAnswer(answer) {
     const text = $('<p/>', { text: answer.answer });
     const glyph = answer.correct ? correct : incorrect;
     glyph.appendTo(text);
@@ -15,49 +14,25 @@ function writeSuccess(obj) {
       .append(text)
       .append(explanation);
     wholeAnswer.appendTo(answersPreview);
-    /*
-      .append(text)
-      .append(glyph)
-      .append(explanation);
-      */
   }
   obj.question.answers.forEach(addAnswer);
   questionPreview.append(answersPreview);
   $('#postQuestionSuccess').append(questionPreview);
-  /*
-  {"question":
-  {"_id":"5d5e2ebeab29b000178b5303",
-  "answers":[
-    {"_id":"5d5e2ebeab29b000178b5305",
-    "answer":"This is answer 1",
-    "correct":true,
-    "explanation":"This is explanation response00"
-    },
-    {"_id":"5d5e2ebeab29b000178b5304",
-    "answer":"This is answer 2",
-    "correct":false,
-    "explanation":"This is explanation response11"}
-    ],"author":"TODO: insert real author",
-    "category":[
-      {"_id":"5d5e2ebeab29b000178b5306",
-      "category_image":"",
-      "description":"desc",
-      "parent":0,
-      "term_id":1,
-      "title":"My Title"}
-      ],"createTime":"2019-08-22T05:57:18.957Z",
-      "question":"This is the first question",
-      "updated":"2019-08-22T05:57:18.957Z",
-      "__v":0},
-      "success":"success"}
-      */
   $('#postQuestionSuccess').append($(`<p>${JSON.stringify(obj)}</p>`));
 }
 
 function writeError(obj) {
+  $('#submitButton').addClass('d-none');
   $('#postQuestionError').removeClass('d-none');
   const message = obj.msg ? obj.msg : obj;
   $('#postQuestionError').append($(`<p>${message}</p>`));
+}
+
+function resetSubmitButton() {
+  $('#submitButton').prop('disabled', false);
+  $('#submitButton')
+    .find('.spinner')
+    .addClass('d-none');
 }
 
 function formatAnswers() {
@@ -139,7 +114,7 @@ async function saveQuestion() {
       contentType: 'application/json',
       timeout: 5000,
       success(data, statusText) {
-        console.log('statusText', statusText);
+        resetSubmitButton();
         if (statusText === 'success') {
           console.log('success', data);
           handleSuccess(data);
@@ -149,11 +124,12 @@ async function saveQuestion() {
         }
       },
       error(error) {
-        console.log('errorHandler', error);
+        resetSubmitButton();
         handleError(error.responseJSON || error);
       }
     });
   } catch (error) {
+    resetSubmitButton();
     writeError(error);
   }
 }

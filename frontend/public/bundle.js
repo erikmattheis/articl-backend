@@ -1105,7 +1105,7 @@
   $('#nextStepButton1').click(checkAllFields);
 
   function writeSuccess(obj) {
-    console.log('writeSuccess', obj);
+    $('#submitButton').addClass('d-none');
     $('#postQuestionSuccess').removeClass('d-none');
     var questionPreview = $('<div/>').append($('<p/>', {
       text: obj.question.question
@@ -1118,8 +1118,7 @@
       "class": 'fa fa-times-circle text-danger'
     });
 
-    function addAnswer(answer, i) {
-      console.log('i', i);
+    function addAnswer(answer) {
       var text = $('<p/>', {
         text: answer.answer
       });
@@ -1130,51 +1129,24 @@
       });
       var wholeAnswer = $('<li/>').append(text).append(explanation);
       wholeAnswer.appendTo(answersPreview);
-      /*
-        .append(text)
-        .append(glyph)
-        .append(explanation);
-        */
     }
 
     obj.question.answers.forEach(addAnswer);
     questionPreview.append(answersPreview);
     $('#postQuestionSuccess').append(questionPreview);
-    /*
-    {"question":
-    {"_id":"5d5e2ebeab29b000178b5303",
-    "answers":[
-      {"_id":"5d5e2ebeab29b000178b5305",
-      "answer":"This is answer 1",
-      "correct":true,
-      "explanation":"This is explanation response00"
-      },
-      {"_id":"5d5e2ebeab29b000178b5304",
-      "answer":"This is answer 2",
-      "correct":false,
-      "explanation":"This is explanation response11"}
-      ],"author":"TODO: insert real author",
-      "category":[
-        {"_id":"5d5e2ebeab29b000178b5306",
-        "category_image":"",
-        "description":"desc",
-        "parent":0,
-        "term_id":1,
-        "title":"My Title"}
-        ],"createTime":"2019-08-22T05:57:18.957Z",
-        "question":"This is the first question",
-        "updated":"2019-08-22T05:57:18.957Z",
-        "__v":0},
-        "success":"success"}
-        */
-
     $('#postQuestionSuccess').append($("<p>".concat(JSON.stringify(obj), "</p>")));
   }
 
   function writeError(obj) {
+    $('#submitButton').addClass('d-none');
     $('#postQuestionError').removeClass('d-none');
     var message = obj.msg ? obj.msg : obj;
     $('#postQuestionError').append($("<p>".concat(message, "</p>")));
+  }
+
+  function resetSubmitButton() {
+    $('#submitButton').prop('disabled', false);
+    $('#submitButton').find('.spinner').addClass('d-none');
   }
 
   function formatAnswers() {
@@ -1247,7 +1219,7 @@
                   contentType: 'application/json',
                   timeout: 5000,
                   success: function success(data, statusText) {
-                    console.log('statusText', statusText);
+                    resetSubmitButton();
 
                     if (statusText === 'success') {
                       console.log('success', data);
@@ -1258,11 +1230,12 @@
                     }
                   },
                   error: function error(_error) {
-                    console.log('errorHandler', _error);
+                    resetSubmitButton();
                     handleError(_error.responseJSON || _error);
                   }
                 });
               } catch (error) {
+                resetSubmitButton();
                 writeError(error);
               }
 
@@ -1366,6 +1339,9 @@
   }
 
   function submitMCQ() {
+    $('#submitButton').prop('disabled', 'disabled');
+    $('#submitButton').find('.spinner').removeClass('d-none');
+
     if (!checkCorrectAnswer() || !checkAllFields$1()) {
       return false;
     }

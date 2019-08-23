@@ -38,6 +38,7 @@
              <div class="form-group">
               <input id="mcqQuestion" autocomplete="off" name="mcqQuestion" type="text" class="mcqQuestion form-control" placeholder="Type the question here"
                 required />
+                <div class="form-control-feedback"></div>
               <label id="mcqLabel" for="mcqQuestion" class="text-danger form-text"></label>
             </div>
             <!-- category typeahead box-->
@@ -102,7 +103,7 @@
             <div id="answerExplanations" class="md-form"></div>
             <label for="responses" class="text-danger form-text"></label>
             <button id="submitButton" type="button" class="btn btn-primary step-btn">
-              Submit Q&A
+              Submit Q&A <i class="d-none fas fa-cog fa-spin"></i>
             </button>
             <div id="postQuestionSuccess" class="alert alert-success d-none" role="alert"></div>
             <div id="postQuestionError" class="alert alert-danger d-none" role="alert"></div>
