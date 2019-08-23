@@ -1,6 +1,29 @@
-function writeSuccess(message) {
-  console.log('writeSuccess', message);
+function writeSuccess(obj) {
+  console.log('writeSuccess', obj);
   $('#postQuestionSuccess').removeClass('d-none');
+  const questionPreview = $('<div/>').append($('<p/>', { text: obj.question.question }));
+  const answersPreview = $('<ul/>');
+  const correct = $('<i/>', { class: 'fa fa-check-circle text-success' });
+  const incorrect = $('<i/>', { class: 'fa fa-times-circle text-danger' });
+  function addAnswer(answer, i) {
+    console.log('i', i);
+    const text = $('<p/>', { text: answer.answer });
+    const glyph = answer.correct ? correct : incorrect;
+    glyph.appendTo(text);
+    const explanation = $('<p/>', { text: answer.explanation });
+    const wholeAnswer = $('<li/>')
+      .append(text)
+      .append(explanation);
+    wholeAnswer.appendTo(answersPreview);
+    /*
+      .append(text)
+      .append(glyph)
+      .append(explanation);
+      */
+  }
+  obj.question.answers.forEach(addAnswer);
+  questionPreview.append(answersPreview);
+  $('#postQuestionSuccess').append(questionPreview);
   /*
   {"question":
   {"_id":"5d5e2ebeab29b000178b5303",
@@ -28,7 +51,7 @@ function writeSuccess(message) {
       "__v":0},
       "success":"success"}
       */
-  $('#postQuestionSuccess').append($(`<p>${JSON.stringify(message)}</p>`));
+  $('#postQuestionSuccess').append($(`<p>${JSON.stringify(obj)}</p>`));
 }
 
 function writeError(obj) {
