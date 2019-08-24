@@ -22,7 +22,6 @@ function writeSuccess(obj) {
 }
 
 function writeError(obj) {
-  $('#submitButton').addClass('d-none');
   $('#postQuestionError').removeClass('d-none');
   const message = obj.msg ? obj.msg : obj;
   $('#postQuestionError').append($(`<p>${message}</p>`));

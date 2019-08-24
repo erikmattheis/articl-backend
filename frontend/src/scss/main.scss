@@ -6,3 +6,9 @@
 .accordion > .card {
   overflow: visible;
 }
+
+/* workaround for minification bug in cssnano 4.1.10 */
+
+.form-control.is-valid, .was-validated .form-control:valid {
+  background-position: right $input-height-inner-quarter center;
+}

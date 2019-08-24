@@ -10,14 +10,18 @@ function enableOtherSections(enable) {
     .prop('disabled', !enable);
 }
 
+let numberOfAnswersCounter;
+let numberOfExplanationsCounter;
 function createSelectCorrectAnswer() {
-  $('.answer').each(function addOption() {
-    $('#correctAnswer').append(
-      $('<option>')
-        .attr('value', $(this).val())
-        .text($(this).val())
-    );
-  });
+  for (let i = numberOfExplanationsCounter; i < numberOfAnswersCounter; i += 1) {
+    if ($('#answers').find('input')[i].value !== '') {
+      $('#correctAnswer').append(
+        $('<option>')
+          .attr('value', $('#answers').find('input')[i].value)
+          .text($('#answers').find('input')[i].value)
+      );
+    }
+  }
 }
 
 function createExplanationField(answerNumber, parentElement, required) {
@@ -43,8 +47,6 @@ function createLabel(text, classes, uniqueName, parentElement) {
   parentElement.append(answerLabel);
 }
 
-let numberOfAnswersCounter;
-let numberOfExplanationsCounter;
 function createExplanationFields() {
   for (let i = numberOfExplanationsCounter; i < numberOfAnswersCounter; i += 1) {
     if ($('#answers').find('input')[i].value !== '') {
@@ -63,8 +65,12 @@ function initStep3() {
 }
 
 function checkCorrectAnswer() {
-  $('#correctAnswer').val();
-  if (!$('#correctAnswer').val().length) {
+  const tr = $(this)
+    .find('option:selected')
+    .val();
+  console.log('tr', tr);
+  console.log('answer', $('#correctAnswer').val());
+  if (!$('#correctAnswer').val()) {
     markInvalid($('#correctAnswer'));
     enableOtherSections(false);
     return false;
