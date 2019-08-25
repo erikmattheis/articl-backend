@@ -1295,10 +1295,6 @@
   }
 
   function checkCorrectAnswer() {
-    var tr = $(this).find('option:selected').val();
-    console.log('tr', tr);
-    console.log('answer', $('#correctAnswer').val());
-
     if (!$('#correctAnswer').val()) {
       markInvalid($('#correctAnswer'));
       enableOtherSections$1(false);
@@ -1342,13 +1338,12 @@
   }
 
   function submitMCQ() {
-    $('#submitButton').prop('disabled', 'disabled');
-    $('#submitButton').find('.spinner').removeClass('d-none');
-
     if (!checkCorrectAnswer() || !checkAllFields$1()) {
       return false;
     }
 
+    $('#submitButton').prop('disabled', 'disabled');
+    $('#submitButton').find('.spinner').removeClass('d-none');
     return saveQuestion();
   }
 

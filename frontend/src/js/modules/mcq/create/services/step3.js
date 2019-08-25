@@ -65,11 +65,6 @@ function initStep3() {
 }
 
 function checkCorrectAnswer() {
-  const tr = $(this)
-    .find('option:selected')
-    .val();
-  console.log('tr', tr);
-  console.log('answer', $('#correctAnswer').val());
   if (!$('#correctAnswer').val()) {
     markInvalid($('#correctAnswer'));
     enableOtherSections(false);
@@ -79,6 +74,7 @@ function checkCorrectAnswer() {
   markValid($('#correctAnswer'));
   return true;
 }
+
 $('#correctAnswer').on('change blur', checkCorrectAnswer);
 
 function checkMCQExplnation() {
@@ -111,13 +107,13 @@ function checkAllFields() {
 }
 
 function submitMCQ() {
+  if (!checkCorrectAnswer() || !checkAllFields()) {
+    return false;
+  }
   $('#submitButton').prop('disabled', 'disabled');
   $('#submitButton')
     .find('.spinner')
     .removeClass('d-none');
-  if (!checkCorrectAnswer() || !checkAllFields()) {
-    return false;
-  }
   return saveQuestion();
 }
 
