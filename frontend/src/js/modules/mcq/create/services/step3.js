@@ -26,12 +26,15 @@ function createSelectCorrectAnswer() {
 
 function createExplanationField(answerNumber, parentElement, required) {
   const textAreaId = `explanation${answerNumber}`;
-  const answerResponse = $(`<textarea>This is explanation ${textAreaId}</textarea>`)
+  const answerResponse = $(`<textarea></textarea>`)
     .addClass('md-textarea form-control explanation')
     .prop('rows', '4')
     .prop('required', required)
     .prop('placeholder', 'Type what you would like to display when this answer is selected')
     .prop('id', textAreaId);
+  if (document.domain === 'localhost') {
+    answerResponse.val('Explanation text');
+  }
   const explanationFeedback = $('<div/>')
     .addClass('form-text text-danger')
     .prop('id', `explanation${answerNumber}Feedback`);
