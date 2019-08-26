@@ -33,7 +33,7 @@ app.use(paginate.middleware(10, 50));
 
 app.use('/api/v1', routes);
 
-app.use('/', express.static('./frontend/public'));
+app.use('/', express.static('../frontend/public'));
 
 (async () => {
   try {

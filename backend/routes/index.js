@@ -46,12 +46,12 @@ router.use((error, req, res, next) => {
 
 
 */
-
+/*
 router.all('*', (req, res) => {
   const error = new FileNotFoundError();
   res.status(404).json({ error });
 });
-
+*/
 router.use((req, res) => {
   res.status(500).json({ errors: ['An unknown error occurred.'] });
 });
