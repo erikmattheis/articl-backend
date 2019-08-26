@@ -8,6 +8,9 @@ function enableOtherSections(enable) {
   $('#sectionTwo')
     .find('button:first')
     .prop('disabled', !enable);
+  $('#sectionThree')
+    .find('button')
+    .prop('disabled', !enable);
 }
 
 let numberOfAnswersCounter;
@@ -24,14 +27,21 @@ function createSelectCorrectAnswer() {
   }
 }
 
+function expandTextfield() {
+  this.style.height = '';
+  this.style.height = `${this.scrollHeight}px`;
+}
+
 function createExplanationField(answerNumber, parentElement, required) {
   const textAreaId = `explanation${answerNumber}`;
   const answerResponse = $(`<textarea></textarea>`)
     .addClass('md-textarea form-control explanation')
-    .prop('rows', '4')
     .prop('required', required)
+    .prop('rows', 1)
     .prop('placeholder', 'Type what you would like to display when this answer is selected')
     .prop('id', textAreaId);
+  answerResponse.on('keyup', expandTextfield);
+
   if (document.domain === 'localhost') {
     answerResponse.val('Explanation text');
   }
@@ -76,6 +86,7 @@ function checkCorrectAnswer() {
 
   markValid($('#correctAnswer'));
   $('#correctAnswerFeedback').text('');
+  enableOtherSections(true);
   return true;
 }
 

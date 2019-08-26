@@ -5,6 +5,9 @@ function enableOtherSections(enable) {
   $('#sectionOne')
     .find('button:first')
     .prop('disabled', !enable);
+  $('#sectionTwo')
+    .find('button')
+    .prop('disabled', !enable);
   $('#sectionThree')
     .find('button:first')
     .prop('disabled', !enable);
@@ -12,7 +15,7 @@ function enableOtherSections(enable) {
 
 function checkMCQDuplicate(element) {
   let passed = true;
-  $('#answers input').each(function check(i) {
+  $('#answers input').each(function check() {
     if (
       JSON.stringify(element) !== JSON.stringify($(this)) &&
       element
@@ -26,19 +29,20 @@ function checkMCQDuplicate(element) {
     ) {
       markInvalid($(this));
       markInvalid(element);
-      $(`#answer${i}Feedback`).text('Please enter a unique answer.');
+      $(`#${element.prop('id')}Feedback`).text('Please enter a unique answer.');
       enableOtherSections(false);
       passed = false;
       return false;
     }
-    return true;
+    return passed;
   });
   if (passed) {
     markValid(element);
-    element.text('');
+    $(`#${element.prop('id')}Feedback`).text('');
     enableOtherSections(true);
     return true;
   }
+  enableOtherSections(false);
   return false;
 }
 
@@ -83,7 +87,7 @@ function addAnswerInputBoxButtonClick() {
   }
 
   $(`#answer${numberOfAnswersCounter}`).on('keyup focus', checkMCQAnswer);
-  $(`#answer${numberOfAnswersCounter}`).on('change', function checkDuplicate() {
+  $(`#answer${numberOfAnswersCounter}`).on('keyup focus', function checkDuplicate() {
     checkMCQDuplicate($(`#answer${numberOfAnswersCounter}`));
   });
 }

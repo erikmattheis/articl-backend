@@ -12,3 +12,10 @@
 .form-control.is-valid, .was-validated .form-control:valid {
   background-position: right $input-height-inner-quarter center;
 }
+
+.btn {
+  &.disabled,
+  &:disabled {
+    opacity: 0.3;
+  }
+}

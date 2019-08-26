@@ -16,6 +16,9 @@ async function init() {
 init();
 
 function enableOtherSections(enable) {
+  $('#sectionOne')
+    .find('button')
+    .prop('disabled', !enable);
   $('#sectionTwo')
     .find('button:first')
     .prop('disabled', !enable);
@@ -40,7 +43,6 @@ function checkMCQuestion() {
   enableOtherSections(true);
   return true;
 }
-
 $('#mcqQuestion').on('keyup focus', checkMCQuestion);
 
 function isCategoryPassed() {
@@ -59,6 +61,7 @@ function isCategory() {
   enableOtherSections(false);
   return false;
 }
+
 $('#mcqCategory').on('keyup focus', isCategory);
 $('#mcqCategory').bind('typeahead:select', isCategory);
 
@@ -74,5 +77,7 @@ function checkAllFields() {
 
   return passed;
 }
-$('#mcqQuestion').change(checkAllFields);
+
+$('#mcqQuestion').on('change', checkAllFields);
+$('#mcqCategory').on('change', checkAllFields);
 $('#nextStepButton1').click(checkAllFields);
