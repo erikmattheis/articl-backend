@@ -1,5 +1,5 @@
 {
-  "name": "Articl.net",
+  "name": "articlnet",
   "version": "0.1.0",
   "description": "Articl.net front and backends",
   "main": "backend/app.js",

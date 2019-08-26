@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const paginate = require('express-paginate');
+const path = require('path');
 const mongoDB = require('./data/mongoDB');
 const routes = require('./routes');
 const npmpackage = require('./package.json');
@@ -33,7 +34,7 @@ app.use(paginate.middleware(10, 50));
 
 app.use('/api/v1', routes);
 
-app.use('/', express.static('../frontend/public'));
+app.use('/', express.static(path.join(__dirname, '../frontend/public')));
 
 (async () => {
   try {
