@@ -4,7 +4,6 @@ $(document).ready(function main() {
   let correctAnswer;
   function getQuestion(id) {
     $.getJSON(`https://immense-plains-76913.herokuapp.com/api/v1/questions/${  id}`).done(function(response) {
-      console.log(response);
       question = response;
       function createAlert(correct, explanation) {
         return $('<div></div>')

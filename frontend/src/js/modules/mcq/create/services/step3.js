@@ -25,18 +25,17 @@ function createSelectCorrectAnswer() {
 }
 
 function createExplanationField(answerNumber, parentElement, required) {
-  const textAreaId = `response${answerNumber}`;
+  const textAreaId = `explanation${answerNumber}`;
   const answerResponse = $(`<textarea>This is explanation ${textAreaId}</textarea>`)
     .addClass('md-textarea form-control explanation')
     .prop('rows', '4')
     .prop('required', required)
     .prop('placeholder', 'Type what you would like to display when this answer is selected')
     .prop('id', textAreaId);
-  const textAreaErrorId = `responseError${answerNumber}`;
-  const responseError = $('<label></label>')
-    .addClass('text-danger form-text')
-    .prop('id', textAreaErrorId);
-  parentElement.append(answerResponse).append(responseError);
+  const explanationFeedback = $('<div/>')
+    .addClass('form-text text-danger')
+    .prop('id', `explanation${answerNumber}Feedback`);
+  parentElement.append(answerResponse).append(explanationFeedback);
 }
 
 function createLabel(text, classes, uniqueName, parentElement) {
@@ -67,27 +66,31 @@ function initStep3() {
 function checkCorrectAnswer() {
   if (!$('#correctAnswer').val()) {
     markInvalid($('#correctAnswer'));
+    $('#correctAnswerFeedback').text('Please select the correct answer');
     enableOtherSections(false);
     return false;
   }
 
   markValid($('#correctAnswer'));
+  $('#correctAnswerFeedback').text('');
   return true;
 }
 
-$('#correctAnswer').on('change blur', checkCorrectAnswer);
+$('#correctAnswer').on('focus change', checkCorrectAnswer);
 
 function checkMCQExplnation() {
   if ($(this).val().length < 5) {
     enableOtherSections(false);
     markInvalid($(this));
+    $(`${$(this).prop('id')}Feedback`).text('Explanations must be at least five characters long.');
+
     return false;
-    // $('#checkQandALength').text('Your question must be at least 5 characters long.');
   }
 
   markValid($(this));
+  $(`${$(this).prop('id')}Feedback`).text('');
+
   return true;
-  // $('#checkQandALength').text('');
 }
 
 function checkAllFields() {
@@ -119,6 +122,6 @@ function submitMCQ() {
 
 $('#submitButton').click(submitMCQ);
 
-$('#answerExplanations textarea').on('keyup focus blur change', checkMCQExplnation);
+$('#answerExplanations textarea').on('keyup focus change', checkMCQExplnation);
 
-export { initStep3 };
+export default initStep3;

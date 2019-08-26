@@ -115,10 +115,8 @@ async function saveQuestion() {
       success(data, statusText) {
         resetSubmitButton();
         if (statusText === 'success') {
-          console.log('success', data);
           handleSuccess(data);
         } else {
-          console.log('statusText', statusText);
           handleError(data.responseJSON || data);
         }
       },
@@ -133,4 +131,4 @@ async function saveQuestion() {
   }
 }
 
-export { saveQuestion as default };
+export default saveQuestion;
