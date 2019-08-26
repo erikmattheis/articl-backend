@@ -1,12 +1,14 @@
 function writeSuccess(obj) {
   $('#submitButton').addClass('d-none');
   $('#postQuestionSuccess').removeClass('d-none');
-  const questionPreview = $('<div/>').append($('<p/>', { text: obj.question.question }));
+  const questionPreview = $('<div/>')
+    .append($('<p/>', { html: '<strong>Question created.</strong>' }))
+    .append($('<p/>', { text: `${obj.question.question} ` }));
   const answersPreview = $('<ul/>');
   const correct = $('<i/>', { class: 'fa fa-check-circle text-success' });
   const incorrect = $('<i/>', { class: 'fa fa-times-circle text-danger' });
   function addAnswer(answer) {
-    const text = $('<p/>', { text: answer.answer });
+    const text = $('<p/>', { text: `${answer.answer} ` });
     const glyph = answer.correct ? correct : incorrect;
     glyph.appendTo(text);
     const explanation = $('<p/>', { text: answer.explanation });
@@ -18,7 +20,7 @@ function writeSuccess(obj) {
   obj.question.answers.forEach(addAnswer);
   questionPreview.append(answersPreview);
   $('#postQuestionSuccess').append(questionPreview);
-  $('#postQuestionSuccess').append($(`<p>${JSON.stringify(obj)}</p>`));
+  // $('#postQuestionSuccess').append($(`<p>${JSON.stringify(obj)}</p>`));
 }
 
 function writeError(obj) {
