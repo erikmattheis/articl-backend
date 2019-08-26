@@ -43,7 +43,6 @@ function checkMCQuestion() {
   enableOtherSections(true);
   return true;
 }
-$('#mcqQuestion').on('keyup focus', checkMCQuestion);
 
 function isCategoryPassed() {
   return categoryNames.indexOf($('#mcqCategory').val()) > -1;
@@ -62,9 +61,6 @@ function isCategory() {
   return false;
 }
 
-$('#mcqCategory').on('keyup focus', isCategory);
-$('#mcqCategory').bind('typeahead:select', isCategory);
-
 function checkAllFields() {
   let passed;
 
@@ -78,6 +74,7 @@ function checkAllFields() {
   return passed;
 }
 
-$('#mcqQuestion').on('change', checkAllFields);
-$('#mcqCategory').on('change', checkAllFields);
+$('#mcqQuestion').on('blur change focus keyup', checkAllFields);
+$('#mcqCategory').on('blur change focus keyup', checkAllFields);
+$('#mcqCategory').bind('typeahead:select', checkAllFields);
 $('#nextStepButton1').click(checkAllFields);

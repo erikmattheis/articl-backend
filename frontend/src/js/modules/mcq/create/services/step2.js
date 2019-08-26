@@ -30,7 +30,6 @@ function checkMCQDuplicate(element) {
       markInvalid($(this));
       markInvalid(element);
       $(`#${element.prop('id')}Feedback`).text('Please enter a unique answer.');
-      enableOtherSections(false);
       passed = false;
       return false;
     }
@@ -39,16 +38,13 @@ function checkMCQDuplicate(element) {
   if (passed) {
     markValid(element);
     $(`#${element.prop('id')}Feedback`).text('');
-    enableOtherSections(true);
     return true;
   }
-  enableOtherSections(false);
   return false;
 }
 
 function checkMCQAnswer() {
   if ($(this).val().length < 1) {
-    enableOtherSections(false);
     markInvalid($(this));
     $(`#${$(this).prop('id')}Feedback`).text('Answers must be at least one character long.');
     return false;
@@ -85,11 +81,6 @@ function addAnswerInputBoxButtonClick() {
   if (numberOfAnswersCounter < 5) {
     buttons.last().removeClass('d-none');
   }
-
-  $(`#answer${numberOfAnswersCounter}`).on('keyup focus', checkMCQAnswer);
-  $(`#answer${numberOfAnswersCounter}`).on('keyup focus', function checkDuplicate() {
-    checkMCQDuplicate($(`#answer${numberOfAnswersCounter}`));
-  });
 }
 
 addAnswerInputBoxButtonClick();
@@ -105,6 +96,12 @@ function checkAllFields() {
       enableOtherSections(false);
       return false;
     }
+    if (!checkMCQDuplicate.call(this, $(this))) {
+      passed = false;
+      enableOtherSections(false);
+      return false;
+    }
+
     return true;
   });
   if (passed) {
@@ -113,5 +110,7 @@ function checkAllFields() {
   }
   return passed;
 }
+
+$('#answers input').on('blur change focus keyup', checkAllFields);
 
 $('#nextStepButton2').click(checkAllFields);
