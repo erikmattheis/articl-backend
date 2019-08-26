@@ -1,6 +1,6 @@
 import './typeaheadSubstringMatcher';
 
-import { getCategoryNames } from '../../shared/models/Categories';
+import getCategoryNames from '../../shared/models/Categories';
 import { markInvalid, markValid } from '../../shared/forms/validationStyles';
 
 let categoryNames;
@@ -31,17 +31,17 @@ function checkMCQuestionPassed() {
 function checkMCQuestion() {
   if (checkMCQuestionPassed()) {
     markInvalid($('#mcqQuestion'));
-    $('#checkQandALength').text('Your question must be at least 5 characters long.');
+    $('#mcqQuestionFeedback').text('Your question must be at least 5 characters long.');
     enableOtherSections(false);
     return false;
   }
   markValid($('#mcqQuestion'));
-  $('#checkQandALength').text('');
+  $('#mcqQuestionFeedback').text('');
   enableOtherSections(true);
   return true;
 }
 
-$('#mcqQuestion').on('keyup focus blur', checkMCQuestion);
+$('#mcqQuestion').on('keyup focus', checkMCQuestion);
 
 function isCategoryPassed() {
   return categoryNames.indexOf($('#mcqCategory').val()) > -1;
@@ -50,14 +50,16 @@ function isCategoryPassed() {
 function isCategory() {
   if (isCategoryPassed()) {
     markValid($('#mcqCategory'));
+    $('#mcqCategoryFeedback').text('');
     enableOtherSections(true);
     return true;
   }
   markInvalid($('#mcqCategory'));
+  $('#mcqCategoryFeedback').text('Please choose or enter a valid category.');
   enableOtherSections(false);
   return false;
 }
-$('#mcqCategory').on('keyup focus blur', isCategory);
+$('#mcqCategory').on('keyup focus', isCategory);
 $('#mcqCategory').bind('typeahead:select', isCategory);
 
 function checkAllFields() {

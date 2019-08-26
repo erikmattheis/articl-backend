@@ -22,7 +22,6 @@ function writeSuccess(obj) {
 }
 
 function writeError(obj) {
-  $('#submitButton').addClass('d-none');
   $('#postQuestionError').removeClass('d-none');
   const message = obj.msg ? obj.msg : obj;
   $('#postQuestionError').append($(`<p>${message}</p>`));
@@ -116,10 +115,8 @@ async function saveQuestion() {
       success(data, statusText) {
         resetSubmitButton();
         if (statusText === 'success') {
-          console.log('success', data);
           handleSuccess(data);
         } else {
-          console.log('statusText', statusText);
           handleError(data.responseJSON || data);
         }
       },
@@ -134,4 +131,4 @@ async function saveQuestion() {
   }
 }
 
-export { saveQuestion as default };
+export default saveQuestion;

@@ -1,13 +1,9 @@
-let categoryNames;
-
 async function getAPICategoryNames() {
   return $.ajax({
     type: 'GET',
     url: 'https://api.articl.net/api/v1/categories',
     dataType: 'json',
-    timeout: 5000,
     success(data) {
-      categoryNames = data;
       return data;
     },
     failure(error) {
@@ -15,26 +11,14 @@ async function getAPICategoryNames() {
     }
   });
 }
+
+let promise;
+
 async function getCategoryNames() {
-  try {
-    if (categoryNames) {
-      return categoryNames;
-    }
-    const result = await getAPICategoryNames();
-    return result;
-  } catch (error) {
-    throw error;
+  if (!promise) {
+    promise = getAPICategoryNames();
   }
+  return promise;
 }
 
-async function init() {
-  try {
-    categoryNames = await getCategoryNames();
-  } catch (error) {
-    throw new Error(error);
-  }
-}
-
-init();
-
-export { getCategoryNames, getAPICategoryNames };
+export default getCategoryNames;

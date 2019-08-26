@@ -1,4 +1,4 @@
-import { initStep3 } from './step3';
+import initStep3 from './step3';
 import { markInvalid, markValid } from '../../shared/forms/validationStyles';
 
 function enableOtherSections(enable) {
@@ -12,7 +12,7 @@ function enableOtherSections(enable) {
 
 function checkMCQDuplicate(element) {
   let passed = true;
-  $('#answers input').each(function check() {
+  $('#answers input').each(function check(i) {
     if (
       JSON.stringify(element) !== JSON.stringify($(this)) &&
       element
@@ -24,38 +24,34 @@ function checkMCQDuplicate(element) {
           .toLowerCase()
           .trim()
     ) {
-      // console.log('marking', $(this).attr('name'), element.attr('name'), 'invalid');
       markInvalid($(this));
       markInvalid(element);
+      $(`#answer${i}Feedback`).text('Please enter a unique answer.');
       enableOtherSections(false);
       passed = false;
       return false;
     }
-
-    markValid($(this));
-    markValid(element);
-    enableOtherSections(true);
     return true;
   });
   if (passed) {
-    enableOtherSections(true);
     markValid(element);
+    element.text('');
+    enableOtherSections(true);
+    return true;
   }
-  return passed;
+  return false;
 }
 
 function checkMCQAnswer() {
   if ($(this).val().length < 1) {
     enableOtherSections(false);
     markInvalid($(this));
+    $(`#${$(this).prop('id')}Feedback`).text('Answers must be at least one character long.');
     return false;
-    // $('#checkQandALength').text('Your question must be at least 5 characters long.');
   }
   markValid($(this));
-
-  // $('#checkQandALength').text('');
-
-  return checkMCQDuplicate($(this));
+  $(`#${$(this).prop('id')}Feedback`).text('');
+  return true;
 }
 
 let numberOfAnswersCounter = 0;
@@ -71,7 +67,8 @@ function addAnswerInputBoxButtonClick() {
       <div class="input-group-append d-none">
         <button class="btn btn-outline-secondary add-question-button" type="button">Add Answer</button>
       </div>
-    </div>`
+    </div>
+    <div id="answer${numberOfAnswersCounter}Feedback" class="form-text text-danger"></div>`
   );
 
   if (document.domain === 'localhost') {
@@ -85,7 +82,10 @@ function addAnswerInputBoxButtonClick() {
     buttons.last().removeClass('d-none');
   }
 
-  $(`#answer${numberOfAnswersCounter}`).on('keyup focus blur change', checkMCQAnswer);
+  $(`#answer${numberOfAnswersCounter}`).on('keyup focus', checkMCQAnswer);
+  $(`#answer${numberOfAnswersCounter}`).on('change', function checkDuplicate() {
+    checkMCQDuplicate($(`#answer${numberOfAnswersCounter}`));
+  });
 }
 
 addAnswerInputBoxButtonClick();

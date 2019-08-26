@@ -1,4 +1,4 @@
-import { getCategoryNames } from '../../shared/models/Categories';
+import getCategoryNames from '../../shared/models/Categories';
 
 let categoryNames;
 
