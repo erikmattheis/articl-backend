@@ -42,7 +42,7 @@ function createExplanationField(answerNumber, parentElement, required) {
     .prop('id', textAreaId);
   answerResponse.on('keyup', expandTextfield);
 
-  if (document.domain === 'localhost') {
+  if (document.domain === 'localhost2') {
     answerResponse.val('Explanation text');
   }
   const explanationFeedback = $('<div/>')

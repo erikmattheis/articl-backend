@@ -43,6 +43,7 @@ export default {
     production && terser() // minify, but only in production
   ]
 };
+
 /*
 import { rollup } from 'rollup'
 

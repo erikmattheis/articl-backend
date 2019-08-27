@@ -49,7 +49,7 @@ function isCategoryPassed() {
 }
 
 function isCategory() {
-  if (isCategoryPassed()) {
+  if (isCategoryPassed() && $('#mcqCategory').val()) {
     markValid($('#mcqCategory'));
     $('#mcqCategoryFeedback').text('');
     enableOtherSections(true);
@@ -61,10 +61,15 @@ function isCategory() {
   return false;
 }
 
+let mcqCategoryWasFocused;
+$('#mcqCategory').on('focus', () => {
+  mcqCategoryWasFocused = true;
+});
+
 function checkAllFields() {
   let passed;
 
-  if (isCategory() && checkMCQuestion()) {
+  if ((!mcqCategoryWasFocused || isCategory()) && checkMCQuestion()) {
     passed = true;
   } else {
     passed = false;

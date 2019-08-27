@@ -1,6 +1,4 @@
-@import "../../node_modules/bootstrap/scss/bootstrap-grid.scss";
-@import "../../node_modules/bootstrap/scss/bootstrap-reboot.scss";
-@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+@import "custom.scss";
 @import "typeahead.scss";
 @import "../../node_modules/font-awesome/scss/font-awesome.scss";
 .accordion > .card {
@@ -11,11 +9,4 @@
 
 .form-control.is-valid, .was-validated .form-control:valid {
   background-position: right $input-height-inner-quarter center;
-}
-
-.btn {
-  &.disabled,
-  &:disabled {
-    opacity: 0.3;
-  }
 }

@@ -30,7 +30,7 @@ function setCategories() {
       source: typeaheadSubstringMatcher(categoryNames)
     }
   );
-  if (document.domain === 'localhost') {
+  if (document.domain === 'localhost2') {
     $('#mcqQuestion').val('This is the first question');
     $('.typeahead').typeahead('val', 'Artificial Intelligence in Chest Radiology');
   }

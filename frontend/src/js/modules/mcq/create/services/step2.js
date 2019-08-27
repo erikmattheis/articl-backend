@@ -71,7 +71,7 @@ function addAnswerInputBoxButtonClick() {
     <div id="answer${numberOfAnswersCounter}Feedback" class="form-text text-danger"></div>`
   );
 
-  if (document.domain === 'localhost') {
+  if (document.domain === 'localhost2') {
     $(`#answer${numberOfAnswersCounter}`).val(`This is answer ${numberOfAnswersCounter}`);
   }
 
