@@ -45,31 +45,29 @@ function checkMCQuestion() {
 }
 
 function isCategoryPassed() {
-  return categoryNames.indexOf($('#mcqCategory').val()) > -1;
+  console.log($('#mcqCategory').val().length);
+  return categoryNames.indexOf($('#mcqCategory').val()) > -1 && $('#mcqCategory').val().length > 0;
 }
 
 function isCategory() {
-  if (isCategoryPassed() && $('#mcqCategory').val()) {
+  if (isCategoryPassed()) {
     markValid($('#mcqCategory'));
     $('#mcqCategoryFeedback').text('');
     enableOtherSections(true);
     return true;
   }
-  markInvalid($('#mcqCategory'));
-  $('#mcqCategoryFeedback').text('Please choose or enter a valid category.');
-  enableOtherSections(false);
+  if ($('#mcqCategory').val().length > 0) {
+    markInvalid($('#mcqCategory'));
+    $('#mcqCategoryFeedback').text('Please choose or enter a valid category.');
+    enableOtherSections(false);
+  }
   return false;
 }
-
-let mcqCategoryWasFocused;
-$('#mcqCategory').on('focus', () => {
-  mcqCategoryWasFocused = true;
-});
 
 function checkAllFields() {
   let passed;
 
-  if ((!mcqCategoryWasFocused || isCategory()) && checkMCQuestion()) {
+  if (isCategory() && checkMCQuestion()) {
     passed = true;
   } else {
     passed = false;
@@ -79,7 +77,7 @@ function checkAllFields() {
   return passed;
 }
 
-$('#mcqQuestion').on('blur change focus keyup', checkAllFields);
-$('#mcqCategory').on('blur change focus keyup', checkAllFields);
+$('#mcqQuestion').on('blur change keyup', checkAllFields);
+$('#mcqCategory').on('blur change keyup', checkAllFields);
 $('#mcqCategory').bind('typeahead:select', checkAllFields);
 $('#nextStepButton1').click(checkAllFields);
