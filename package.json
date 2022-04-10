@@ -7,8 +7,7 @@
     "node": "14.x"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=development nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "cross-env NODE_ENV=development nodemon src/index.js"
   },
   "original-git": "https://github.com/hagopj13/node-express-boilerplate",
   "author": "",
