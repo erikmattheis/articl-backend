@@ -54,8 +54,14 @@ if (config.env === 'production') {
 const path = __dirname + '/frontend/dist/';
 app.use(express.static(path));
 
+
+
 // v1 api routes
 app.use('/v1', routes);
+
+app.use('/',function(req,res) {
+  return res.send('{}');
+});
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
