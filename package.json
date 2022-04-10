@@ -10,6 +10,7 @@
     "start": "cross-env NODE_ENV=development nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "original-git": "https://github.com/hagopj13/node-express-boilerplate",
   "author": "",
   "license": "ISC",
   "dependencies": {
