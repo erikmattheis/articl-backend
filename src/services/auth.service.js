@@ -83,6 +83,7 @@ const verifyEmail = async (verifyEmailToken) => {
     if (!user) {
       throw new Error('no user');
     }
+    console.log('user id is',user.id);
     await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
     await userService.updateUserById(user.id, { isEmailVerified: true });
   } catch (error) {
