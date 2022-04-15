@@ -1,9 +1,9 @@
 /* eslint-disable no-restricted-syntax */
-const httpStatus = require('http-status');
-const passport = require('passport');
-const pick = require('../utils/pick');
-const catchAsync = require('../utils/catchAsync');
-const { userService } = require('../services');
+const httpStatus = require("http-status");
+const passport = require("passport");
+const pick = require("../utils/pick");
+const catchAsync = require("../utils/catchAsync");
+const { userService } = require("../services");
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -11,21 +11,21 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getUsers = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['nameLast', 'role']);
-  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const filter = pick(req.query, ["nameLast", "role"]);
+  const options = pick(req.query, ["sortBy", "limit", "page"]);
   const result = await userService.queryUsers(filter, options);
   res.send(result);
 });
 
 const getUser = catchAsync(async (req, res) => {
   const i = await passport.serializeUser(function (user, done) {
-    console.log('i', i);
     done(null, user.id);
   });
+});
 
-  if (res.session) {
-    console.log('session?', req.session);
-  }
+const returnUser = catchAsync(async (req, res) => {
+  const user = req?.user;
+  res.send(user);
 });
 
 const updateUser = catchAsync(async (req, res) => {
@@ -44,4 +44,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  returnUser,
 };

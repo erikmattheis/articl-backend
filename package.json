@@ -7,6 +7,7 @@
     "node": "14.x"
   },
   "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon --delay 500ms src/index.js",
     "start": "cross-env NODE_ENV=development nodemon src/index.js"
   },
   "original-git": "https://github.com/hagopj13/node-express-boilerplate",
@@ -19,6 +20,7 @@
     "cors": "^2.8.5",
     "cross-env": "^7.0.0",
     "dotenv": "^10.0.0",
+    "eslint-config-airbnb": "^19.0.4",
     "express": "^4.17.1",
     "express-mongo-sanitize": "^2.0.0",
     "express-rate-limit": "^5.0.0",
@@ -56,5 +58,26 @@
     "node-mocks-http": "^1.8.0",
     "prettier": "^2.0.5",
     "supertest": "^6.0.1"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "airbnb",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {},
+    "overrides": [
+      {
+        "files": [
+          "src/**/**/*.js"
+        ]
+      }
+    ]
   }
 }

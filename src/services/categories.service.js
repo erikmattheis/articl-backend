@@ -1,6 +1,6 @@
-const httpStatus = require('http-status');
-const { Categories } = require('../models');
-const ApiError = require('../utils/ApiError');
+const httpStatus = require("http-status");
+const { Categories } = require("../models");
+const ApiError = require("../utils/ApiError");
 
 /**
  * Create a category
@@ -9,7 +9,10 @@ const ApiError = require('../utils/ApiError');
  */
 const createCategory = async (categoriesBody) => {
   if (await Categories.isCategorySlug(categoriesBody.slug)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, `Slug "${categoriesBody.slug}" already exists.`);
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `Slug "${categoriesBody.slug}" already exists.`
+    );
   }
   return Categories.create(categoriesBody);
 };
@@ -30,7 +33,6 @@ const queryCategories = async (filter, options) => {
 
 const getCategoriesByparentSlug = async (parentSlug) => {
   const filter = { parentSlug };
-
   const categories = await queryCategories(filter, {});
   return categories;
 };
@@ -40,8 +42,19 @@ const getCategoriesByparentSlug = async (parentSlug) => {
  * @param {ObjectId} slug
  * @returns {Promise<Categories>}
  */
-const getCategoryBySlug = async (val) => {
-  return Categories.find({ slug: { $eq: val } });
+const getCategoryBySlug = async (slug) => {
+  if (slug === "0" || slug === 0) {
+    return [
+      {
+        title: "Specialties",
+        description:
+          "Diagnostic Radiology, Interventional Radiology, Endovascular Surgical Neuroradiology, Nuclear medicine, Ultrasound articles, conferences, journals, societies, books, websites and much more.",
+      },
+    ];
+  }
+  const filter = { slug };
+  const category = await queryCategories(filter, {});
+  return category;
 };
 
 /**
@@ -54,6 +67,20 @@ const getCategoryById = async (id) => {
 };
 
 /**
+ * Get category by id
+ * @param {Number} id
+ * @returns {Promise<Categories>}
+ */
+const getCurrentCategorySlugByOldId = async (id) => {
+  try {
+    const result = await Categories.findOne({ oldId: id });
+    return result?.slug;
+  } catch (error) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error + " yy ");
+  }
+};
+
+/**
  * Update category by id
  * @param {ObjectId} categoryId
  * @param {Object} updateBody
@@ -62,10 +89,10 @@ const getCategoryById = async (id) => {
 const updateCategoryById = async (categoryId, updateBody) => {
   const category = await getCategoryById(categoryId);
   if (!category) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Categories not found');
+    throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
   }
   if (updateBody.slug && (await Categories.isCategorySlug(updateBody.slug))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Slug already taken');
+    throw new ApiError(httpStatus.BAD_REQUEST, "Slug already taken");
   }
   Object.assign(category, updateBody);
   await category.save();
@@ -80,7 +107,7 @@ const updateCategoryById = async (categoryId, updateBody) => {
 const deleteCategoryById = async (categoryId) => {
   const category = await getCategoryById(categoryId);
   if (!category) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Categories not found');
+    throw new ApiError(httpStatus.NOT_FOUND, "Categories not found");
   }
   await category.remove();
   return category;
@@ -92,6 +119,7 @@ module.exports = {
   getCategoryBySlug,
   queryCategories,
   getCategoryById,
+  getCurrentCategorySlugByOldId,
   updateCategoryById,
   deleteCategoryById,
 };

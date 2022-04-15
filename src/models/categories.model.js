@@ -1,24 +1,43 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 // const validator = require('validator');
-const bcrypt = require('bcryptjs');
-const { toJSON, paginate } = require('./plugins');
+const bcrypt = require("bcryptjs");
+const { toJSON, paginate } = require("./plugins");
 
 const categoriesSchema = mongoose.Schema(
   {
+    oldId: {
+      type: Number,
+      required: false,
+      trim: true,
+    },
     title: {
       type: String,
       required: true,
       trim: true,
     },
+    titleHtml: {
+      type: String,
+      required: false,
+      trim: true,
+    },
     slug: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
       lowercase: true,
     },
-    desc: {
+    parent: {
+      type: Number,
+      required: false,
+      trim: true,
+    },
+    description: {
       type: String,
+      required: false,
+      trim: true,
+    },
+    oldParentId: {
+      type: Number,
       required: false,
       trim: true,
     },
@@ -26,6 +45,18 @@ const categoriesSchema = mongoose.Schema(
       type: String,
       required: false,
       trim: true,
+      lowercase: true,
+    },
+    image: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    order: {
+      type: Number,
+      required: true,
+      trim: true,
+      default: 0,
     },
   },
   {
@@ -51,14 +82,16 @@ categoriesSchema.statics.isCategorySlug = async function (val) {
  * @param {val} ObjectId
  * @returns {Promise<boolean>}
  */
-categoriesSchema.methods.getCategoriesByparentSlug = async function (val) {
-  const categories = await this.find({ parentSlug: val });
+categoriesSchema.methods.getCategoriesByparentSlug = async function (
+  parentSlug
+) {
+  const categories = await this.find({ parentSlug });
   return categories;
 };
 
-categoriesSchema.pre('save', async function (next) {
+categoriesSchema.pre("save", async function (next) {
   const category = this;
-  if (category.isModified('password')) {
+  if (category.isModified("password")) {
     category.password = await bcrypt.hash(category.password, 8);
   }
   next();
@@ -67,6 +100,6 @@ categoriesSchema.pre('save', async function (next) {
 /**
  * @typedef Category
  */
-const Category = mongoose.model('Category', categoriesSchema);
+const Category = mongoose.model("Category", categoriesSchema);
 
 module.exports = Category;
