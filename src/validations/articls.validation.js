@@ -21,19 +21,19 @@ const createArticl = {
     fullText: Joi.string(),
     type: Joi.string(),
     year: Joi.number(),
-    thumbnailImage: Joi.string.uri(),
-    url: Joi.string.uri(),
+    thumbnailImage: Joi.string().uri(),
+    url: Joi.string().uri(),
     venue: Joi.string(),
     imageCaption: Joi.string(),
     imageLocalPath: Joi.string(),
-    imageOriginalUrl: Joi.string.uri(),
+    imageOriginalUrl: Joi.string().uri(),
     imageRemotePath: Joi.string(),
     institution: Joi.string(),
     journal: Joi.string(),
     month: Joi.string(),
     resourceType: Joi.string(),
     reviewSource: Joi.string(),
-    reviewUrl: Joi.string.uri(),
+    reviewUrl: Joi.string().uri(),
     shortTitle: Joi.string(),
     source: Joi.string(),
     sourceId: Joi.string(),
@@ -59,17 +59,6 @@ const updateArticl = {
   params: Joi.object().keys({
     id: Joi.required().custom(objectId),
   }),
-  body: Joi.object()
-    .keys({
-      institution: Joi.string(),
-      email: Joi.string().email(),
-      education: Joi.string(),
-      password: Joi.string().custom(password),
-      nameFirst: Joi.string(),
-      nameLast: Joi.string(),
-      role: Joi.string().required().valid("articl", "admin"),
-    })
-    .min(1),
 };
 
 const deleteArticl = {

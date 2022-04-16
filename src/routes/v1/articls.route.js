@@ -17,12 +17,12 @@ router.patch(
   "/:id",
   auth("manageUsers"),
   validate(articlsValidation.updateArticl),
-  articlController.updateArticl
+  articlsController.updateArticl
 );
 router.delete(
   "/:id",
   auth("manageUsers"),
   validate(articlsValidation.deleteArticl),
-  articlController.deleteArticl
+  articlsController.deleteArticl
 );
 module.exports = router;

@@ -50,16 +50,16 @@ const articlsSchema = mongoose.Schema(
       trim: true,
     },
     authors: { type: String, required: false, trim: true },
-    city: { String, required: false, trim: true },
-    country: { String, required: false, trim: true },
-    dateEnd: { String, required: false, trim: true },
-    dateStart: { String, required: false, trim: true },
+    city: { type: String, required: false, trim: true },
+    country: { type: String, required: false, trim: true },
+    dateEnd: { type: String, required: false, trim: true },
+    dateStart: { type: String, required: false, trim: true },
     description: {
       type: String,
       required: false,
       trim: true,
     },
-    fullText: { String, required: false, trim: true },
+    fullText: { type: String, required: false, trim: true },
     type: {
       type: String,
       required: false,
@@ -125,7 +125,6 @@ const articlsSchema = mongoose.Schema(
       required: false,
       trim: true,
     },
-
     reviewSource: {
       type: String,
       required: false,
