@@ -37,6 +37,17 @@ app.use(mongoSanitize());
 // gzip compression
 app.use(compression());
 
+var corsOptions = {
+  origin: [
+    "https://articl-vue-2022.herokuapp.com",
+    "https://www.articl.net",
+    "https://articl.net",
+    "http://192.168.1.130:8080/",
+    "http://localhost:8080/",
+  ],
+};
+
+app.use(cors(corsOptions));
 // enable cors
 app.use(cors());
 app.options("*", cors());
@@ -46,9 +57,7 @@ app.use(passport.initialize());
 passport.use("jwt", jwtStrategy);
 
 // limit repeated failed requests to auth endpoints
-if (config.env === "production") {
-  app.use("/v1/auth", authLimiter);
-}
+app.use("/v1/auth", authLimiter);
 
 // serve static frontend files
 const path = __dirname + "/frontend/dist/";
