@@ -38,18 +38,11 @@ app.use(mongoSanitize());
 app.use(compression());
 
 var corsOptions = {
-  origin: [
-    "https://articl-vue-2022.herokuapp.com",
-    "https://www.articl.net",
-    "https://articl.net",
-    "http://192.168.1.130:8080/",
-    "http://localhost:8080/",
-  ],
+  origin: "http://192.168.1.130:8080",
 };
 
-app.use(cors(corsOptions));
 // enable cors
-app.use(cors());
+app.use(cors(corsOptions));
 app.options("*", cors());
 
 // jwt authentication
