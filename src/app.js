@@ -13,6 +13,7 @@ const { authLimiter } = require("./middlewares/rateLimiter");
 const routes = require("./routes/v1");
 const { errorConverter, errorHandler } = require("./middlewares/error");
 const ApiError = require("./utils/ApiError");
+const { Console } = require("winston/lib/winston/transports");
 
 const app = express();
 
@@ -38,8 +39,10 @@ app.use(mongoSanitize());
 app.use(compression());
 
 var corsOptions = {
-  origin: "http://192.168.1.130:8080",
+  origin: `${config.frontendUrl}`,
 };
+
+console.log("onfig.FRONTEND_URL", config.frontendUrl);
 
 // enable cors
 app.use(cors(corsOptions));
