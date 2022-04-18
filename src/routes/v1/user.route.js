@@ -7,31 +7,30 @@ const userController = require("../../controllers/user.controller");
 const router = express.Router();
 
 router.get("/", validate(userValidation.getUsers), userController.getUsers);
+
+router.get("/me", auth(), userController.getMe);
+
+router.get(
+  "/:userId",
+  auth("manageUsers"),
+  validate(userValidation.getUser),
+  userController.getUser
+);
+
 router.post(
   "/",
   auth("manageUsers"),
   validate(userValidation.createUser),
   userController.createUser
 );
-router.get(
-  "/me",
-  auth(),
-  validate(userValidation.getUser),
-  userController.getUser,
-  userController.returnUser
-);
-router.get(
-  "/:userId",
-  auth(),
-  validate(userValidation.getUser),
-  userController.getUser
-);
+
 router.patch(
   "/:userId",
   auth("manageUsers"),
   validate(userValidation.updateUser),
   userController.updateUser
 );
+
 router.delete(
   "/:userId",
   auth("manageUsers"),

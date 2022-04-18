@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 const httpStatus = require("http-status");
 const passport = require("passport");
+const ApiError = require("../utils/ApiError");
 const pick = require("../utils/pick");
 const catchAsync = require("../utils/catchAsync");
 const { userService } = require("../services");
@@ -17,14 +18,17 @@ const getUsers = catchAsync(async (req, res) => {
   res.send(result);
 });
 
-const getUser = catchAsync(async (req, res) => {
-  const i = await passport.serializeUser(function (user, done) {
-    done(null, user.id);
-  });
+const getMe = catchAsync(async (req, res) => {
+  if (req.isAuthenticated() && req.user) {
+    res.send(req.user);
+  }
 });
 
-const returnUser = catchAsync(async (req, res) => {
-  const user = req?.user;
+const getUser = catchAsync(async (req, res) => {
+  const user = await userService.getUserById(req.params.id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
   res.send(user);
 });
 
@@ -41,8 +45,8 @@ const deleteUser = catchAsync(async (req, res) => {
 module.exports = {
   createUser,
   getUsers,
+  getMe,
   getUser,
   updateUser,
   deleteUser,
-  returnUser,
 };

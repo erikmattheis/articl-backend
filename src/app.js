@@ -42,8 +42,6 @@ var corsOptions = {
   origin: `${config.frontendUrl}`,
 };
 
-console.log("onfig.FRONTEND_URL", config.frontendUrl);
-
 // enable cors
 app.use(cors(corsOptions));
 app.options("*", cors());

@@ -31,7 +31,7 @@ const auth =
     return new Promise((resolve, reject) => {
       passport.authenticate(
         "jwt",
-        { session: false },
+        { session: true },
         verifyCallback(req, resolve, reject, requiredRights)
       )(req, res, next);
     })

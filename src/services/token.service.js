@@ -104,7 +104,7 @@ const generateAuthTokens = async (user) => {
       expires: accessTokenExpires.toDate(),
     },
     refresh: {
-      token: refreshToken,
+      token: refreshsession,
       expires: refreshTokenExpires.toDate(),
     },
   };
