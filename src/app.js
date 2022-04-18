@@ -53,21 +53,17 @@ passport.use("jwt", jwtStrategy);
 // limit repeated failed requests to auth endpoints
 app.use("/v1/auth", authLimiter);
 
-// serve static frontend files
-const path = __dirname + "/frontend/dist/";
-app.use(express.static(path));
-
 // v1 api routes
 app.use("/v1", routes);
-
-app.use("/", function (req, res) {
-  return res.send("{}");
-});
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, "File not found"));
 });
+
+// serve static frontend files
+const path = __dirname + "/frontend/dist/";
+app.use(express.static(path));
 
 // convert error to ApiError, if needed
 app.use(errorConverter);

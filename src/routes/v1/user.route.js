@@ -25,6 +25,13 @@ router.post(
 );
 
 router.patch(
+  "/me",
+  auth(),
+  validate(userValidation.updateMe),
+  userController.updateMe
+);
+
+router.patch(
   "/:userId",
   auth("manageUsers"),
   validate(userValidation.updateUser),

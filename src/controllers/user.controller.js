@@ -21,6 +21,8 @@ const getUsers = catchAsync(async (req, res) => {
 const getMe = catchAsync(async (req, res) => {
   if (req.isAuthenticated() && req.user) {
     res.send(req.user);
+  } else {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
   }
 });
 
@@ -30,6 +32,15 @@ const getUser = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
   res.send(user);
+});
+
+const updateMe = catchAsync(async (req, res) => {
+  if (req.isAuthenticated() && req.user) {
+    const user = await userService.updateUserById(req.user.id, req.body);
+    res.send(user);
+  } else {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
+  }
 });
 
 const updateUser = catchAsync(async (req, res) => {
@@ -47,6 +58,7 @@ module.exports = {
   getUsers,
   getMe,
   getUser,
+  updateMe,
   updateUser,
   deleteUser,
 };

@@ -43,6 +43,12 @@ const userSchema = mongoose.Schema(
       trim: true,
       lowercase: false,
     },
+    theme: {
+      type: String,
+      required: false,
+      unique: false,
+      trim: true,
+    },
     password: {
       type: String,
       required: true,
