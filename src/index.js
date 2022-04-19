@@ -38,15 +38,6 @@ process.on("SIGTERM", () => {
   process.kill(process.pid, "SIGINT");
 });
 
-process.once("SIGUSR2", function () {
-  logger.info("SIGUSR2 once");
-  process.kill(process.pid, "SIGUSR2");
-});
-
-process.once("SIGUSR1", function () {
-  process.kill(process.pid, "SIGUSR1");
-});
-
 process.on("SIGINT", function () {
   // this is only called on ctrl+c, not restart
   process.kill(process.pid, "SIGINT");

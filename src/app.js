@@ -39,7 +39,7 @@ app.use(mongoSanitize());
 app.use(compression());
 
 var corsOptions = {
-  origin: `${config.frontendUrl}`,
+  origin: process.env.FRONTEND_URL,
 };
 
 // enable cors
