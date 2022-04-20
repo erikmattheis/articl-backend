@@ -91,6 +91,7 @@ const loopThroughOldAndCreateNew = async (categories, reallySave = false) => {
       const categorySlug = category.slug;
 
       const slugExists = await Categories.isCategorySlug(categorySlug);
+
       if (!slugExists || categorySlug === 0 || categorySlug === "0") {
         if (reallySave) {
           await categoriesService.createCategory(category);
@@ -148,9 +149,11 @@ const importCategories = async () => {
     const stop = new Date();
 
     const time = (stop - start) / 1000;
+
     if (existingSlugs.length) {
       fs.writeFileSync(SLUG_ERROR_FILE, JSON.stringify(existingSlugs));
     }
+
     return {
       updateNum,
       time,

@@ -89,14 +89,6 @@ categoriesSchema.methods.getCategoriesByparentSlug = async function (
   return categories;
 };
 
-categoriesSchema.pre("save", async function (next) {
-  const category = this;
-  if (category.isModified("password")) {
-    category.password = await bcrypt.hash(category.password, 8);
-  }
-  next();
-});
-
 /**
  * @typedef Category
  */
