@@ -126,11 +126,13 @@ const loopThroughAndChangeParentSlug = async (categories) => {
     const slug = await categoriesService.getCurrentCategorySlugByOldId(
       category.oldId
     );
-
-    await Categories.updateMany(
-      { oldParentId: category.oldId, parentSlug: null },
+    console.log("oldId", category.oldId);
+    console.log("slug", slug);
+    const num = await Categories.updateMany(
+      { oldParentId: category.oldId },
       { parentSlug: slug }
     );
+    console.log("num", num);
   }
 
   let result = await Categories.find();
@@ -143,6 +145,7 @@ const importCategories = async () => {
     let categories = await getCategoriesFromExportedJSON();
     categories = await loopThroughOldAndCreateNew(categories, true);
     categories = await Categories.find();
+    console.log("categories", categories.length);
     categories = await loopThroughAndChangeParentSlug(categories);
     const updateNum = categories.length;
 
