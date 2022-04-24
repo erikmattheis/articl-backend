@@ -3,16 +3,18 @@ const { objectId } = require("./custom.validation");
 
 const createArticl = {
   body: Joi.object().keys({
-    author: Joi.string().required(),
-    category: Joi.string().required(),
+    articlUrl: Joi.string(),
+    author: Joi.string(),
+    category: Joi.string(),
     categorySlug: Joi.string().required(),
-    order: Joi.number().required(),
-    oldId: Joi.string().required(),
+    order: Joi.number(),
+    oldId: Joi.string(),
     status: Joi.string().required(),
     title: Joi.string().required(),
     type: Joi.string().required(),
     abstract: Joi.string(),
     authors: Joi.string(),
+    affiliation: Joi.string(),
     city: Joi.string(),
     country: Joi.string(),
     dateEnd: Joi.date(),

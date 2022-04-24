@@ -59,7 +59,7 @@ const articlsSchema = mongoose.Schema(
     description: {
       type: String,
       required: false,
-      trim: true,
+      trim: false,
     },
     fullText: { type: String, required: false, trim: true },
     type: {

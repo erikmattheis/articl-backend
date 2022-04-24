@@ -3,10 +3,10 @@ const httpStatus = require("http-status");
 const passport = require("passport");
 const pick = require("../utils/pick");
 const catchAsync = require("../utils/catchAsync");
-const { articlService } = require("../services");
+const { articlsService } = require("../services");
 
 const createArticl = catchAsync(async (req, res) => {
-  const articl = await articlService.createArticl(req.body);
+  const articl = await articlsService.createArticl(req.body);
   res.status(httpStatus.CREATED).send(articl);
 });
 
