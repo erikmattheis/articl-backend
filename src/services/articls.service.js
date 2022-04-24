@@ -34,6 +34,10 @@ const getArticlById = async (id) => {
   return Articl.findById(id);
 };
 
+const getArticlsBySlug = async (slug) => {
+  return Articl.find({ categorySlug: slug });
+};
+
 /**
  * Update articl by id
  * @param {ObjectId} articlId
@@ -67,6 +71,7 @@ const deleteArticlById = async (id) => {
 module.exports = {
   createArticl,
   queryArticls,
+  getArticlsBySlug,
   getArticlById,
   updateArticlById,
   deleteArticlById,
