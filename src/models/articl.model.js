@@ -10,7 +10,7 @@ const articlsSchema = mongoose.Schema(
     },
     category: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     categorySlug: {
@@ -24,22 +24,23 @@ const articlsSchema = mongoose.Schema(
       trim: true,
       default: 0,
     },
-    postId: {
+    oldId: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    status: {
+      type: String,
+      required: true,
+      trim: true,
+      default: "published",
+    },
+    title: {
       type: String,
       required: true,
       trim: true,
     },
-    postStatus: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    postTitle: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    postType: {
+    type: {
       type: String,
       required: false,
       trim: true,
