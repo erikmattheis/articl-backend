@@ -18,6 +18,11 @@ router.post(
   categoriesController.createCategory
 );
 router.get(
+  "/titles",
+  validate(categoriesValidation.getCategorySlugs),
+  categoriesController.getCategorySlugs
+);
+router.get(
   "/:slug",
   validate(categoriesValidation.getCategoryPage),
   categoriesController.getCategoryPage

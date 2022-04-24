@@ -35,6 +35,11 @@ const getCategory = catchAsync(async (req, res) => {
   res.send(category);
 });
 
+const getCategorySlugs = catchAsync(async (req, res) => {
+  const slugs = await categoriesService.getCategorySlugs(req.query.q);
+  res.send(slugs);
+});
+
 const updateCategory = catchAsync(async (req, res) => {
   const user = await categoriesService.updateCategoryById(
     req.params.id,
@@ -52,6 +57,7 @@ module.exports = {
   importCategories,
   createCategory,
   getCategoryPage,
+  getCategorySlugs,
   getCategories,
   getCategory,
   updateCategory,

@@ -5,7 +5,7 @@ const articlsSchema = mongoose.Schema(
   {
     author: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     category: {
@@ -42,7 +42,7 @@ const articlsSchema = mongoose.Schema(
     },
     type: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
     },
     abstract: {
@@ -51,6 +51,7 @@ const articlsSchema = mongoose.Schema(
       trim: true,
     },
     authors: { type: String, required: false, trim: true },
+    affiliation: { type: String, required: false, trim: true },
     city: { type: String, required: false, trim: true },
     country: { type: String, required: false, trim: true },
     dateEnd: { type: String, required: false, trim: true },
@@ -166,6 +167,7 @@ const articlsSchema = mongoose.Schema(
       required: false,
       trim: true,
     },
+    articlUrl: "",
   },
   {
     timestamps: true,

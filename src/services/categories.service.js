@@ -57,6 +57,23 @@ const getCategoryBySlug = async (slug) => {
   return category;
 };
 
+const prepareForTypeahead = async (categories) => {
+  return categories.map((category) => category.slug);
+};
+
+const getCategorySlugs = async (q) => {
+  const slugs = await Categories.find(
+    { slug: { $regex: `^${q}`, $options: "i" } },
+    { slug: 1 }
+  );
+
+  const result = slugs.map(({ id, slug }) => ({ id, title: slug }));
+
+  // output
+  //slugs = prepareForTypeahead(slugs);
+  return Promise.resolve(result);
+};
+
 /**
  * Get category by id
  * @param {ObjectId} id
@@ -117,6 +134,7 @@ module.exports = {
   createCategory,
   getCategoriesByparentSlug,
   getCategoryBySlug,
+  getCategorySlugs,
   queryCategories,
   getCategoryById,
   getCurrentCategorySlugByOldId,

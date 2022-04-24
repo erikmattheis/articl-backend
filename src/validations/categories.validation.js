@@ -31,6 +31,12 @@ const getCategory = {
   }),
 };
 
+const getCategorySlugs = {
+  query: Joi.object().keys({
+    q: Joi.string().required(),
+  }),
+};
+
 const updateCategory = {
   body: Joi.object()
     .keys({
@@ -52,6 +58,7 @@ module.exports = {
   createCategory,
   getCategories,
   getCategoryPage,
+  getCategorySlugs,
   getCategory,
   updateCategory,
   deleteCategory,
