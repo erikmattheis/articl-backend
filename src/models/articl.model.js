@@ -62,11 +62,6 @@ const articlsSchema = mongoose.Schema(
       trim: false,
     },
     fullText: { type: String, required: false, trim: true },
-    type: {
-      type: String,
-      required: false,
-      trim: true,
-    },
     year: {
       type: Number,
       required: false,
