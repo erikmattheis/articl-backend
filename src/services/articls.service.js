@@ -1,5 +1,5 @@
 const httpStatus = require("http-status");
-const { Articl } = require("../models");
+const { Articls } = require("../models");
 const ApiError = require("../utils/ApiError");
 
 /**
@@ -21,10 +21,35 @@ const createArticl = async (articlBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryArticls = async (filter, options) => {
-  const articls = await Articl.paginate(filter, options);
+  const articls = await Articls.paginate(filter, options);
   return articls;
 };
 
+const getArticlFields = async (field, value) => {
+  const arg = { [field]: { $regex: `^${value}`, $options: "i" } };
+  //{ [field]: 1 }
+  console.log("look", arg);
+  const fields = await Articls.find(arg);
+  console.log(fields);
+  const result = fields.map(({ id, [field]: value }) => ({ id, title: value }));
+
+  // output
+  //slugs = prepareForTypeahead(slugs);
+  return Promise.resolve(result);
+};
+
+const getCategorySlugs = async (q) => {
+  const slugs = await Categories.find(
+    { slug: { $regex: `^${q}`, $options: "i" } },
+    { slug: 1 }
+  );
+
+  const result = slugs.map(({ id, slug }) => ({ id, title: slug }));
+
+  // output
+  //slugs = prepareForTypeahead(slugs);
+  return Promise.resolve(result);
+};
 /**
  * Get articl by id
  * @param {ObjectId} id
@@ -71,7 +96,7 @@ const deleteArticlById = async (id) => {
 module.exports = {
   createArticl,
   queryArticls,
-  getArticlsBySlug,
+  getArticlFields,
   getArticlById,
   updateArticlById,
   deleteArticlById,

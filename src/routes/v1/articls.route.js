@@ -12,7 +12,10 @@ router.post(
   validate(articlsValidation.createArticl),
   articlsController.createArticl
 );
-router.get("/:id", articlsController.getArticl);
+
+router.get("/:field", articlsController.getArticlFields);
+router.get("/", articlsController.getArticls);
+
 router.patch(
   "/:id",
   auth("manageUsers"),
