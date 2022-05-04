@@ -3,6 +3,7 @@ const httpStatus = require("http-status");
 const passport = require("passport");
 const pick = require("../utils/pick");
 const catchAsync = require("../utils/catchAsync");
+const { prepareYearFilter } = require("../utils/prepareYearFilter");
 const { articlsService } = require("../services");
 
 const createArticl = catchAsync(async (req, res) => {
@@ -10,19 +11,22 @@ const createArticl = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(articl);
 });
 
-const getArticlFields = catchAsync(async (req, res) => {
-  const options = pick(req.query, ["sortBy", "limit", "page"]);
-  const result = await articlsService.getArticlFields(
-    req.params.field,
-    req.query.q,
-    options
-  );
-  res.send(result);
-});
-
 const getArticls = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ["author", "date", "title"]);
-  const options = pick(req.query, ["sortBy", "limit", "page"]);
+  let filter = pick(req.query, [
+    "title",
+    "journal",
+    "authors",
+    "yearComparison",
+    "year",
+    "source",
+    "type",
+    "status",
+  ]);
+  if (filter.year && filter.yearComparison) {
+    filter = prepareYearFilter(filter);
+  }
+  console.log(filter);
+  const options = pick(req.query, [`"sortBy", "limit", "page"`]);
   const result = await articlsService.queryArticls(filter, options);
   res.send(result);
 });
@@ -174,5 +178,4 @@ module.exports = {
   getArticls,
   updateArticl,
   deleteArticl,
-  getArticlFields,
 };
