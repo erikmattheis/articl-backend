@@ -11,6 +11,16 @@ const createArticl = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(articl);
 });
 
+const getArticlFields = catchAsync(async (req, res) => {
+  const options = pick(req.query, ["sortBy", "limit", "page"]);
+  const result = await articlsService.getArticlFields(
+    req.params.field,
+    req.query.q,
+    options
+  );
+  res.send(result);
+});
+
 const getArticls = catchAsync(async (req, res) => {
   let filter = pick(req.query, [
     "title",
@@ -175,6 +185,7 @@ const deleteArticl = catchAsync(async (req, res) => {
 
 module.exports = {
   createArticl,
+  getArticlFields,
   getArticls,
   updateArticl,
   deleteArticl,

@@ -36,6 +36,19 @@ const getArticlById = async (id) => {
   return Articl.findById(id);
 };
 
+const getArticlFields = async (field, value) => {
+  const arg = { [field]: { $regex: `^${value}`, $options: "i" } };
+  //{ [field]: 1 }
+  console.log("look", arg);
+  const fields = await Articls.find(arg);
+  console.log(fields);
+  const result = fields.map(({ id, [field]: value }) => ({ id, title: value }));
+
+  // output
+  //slugs = prepareForTypeahead(slugs);
+  return Promise.resolve(result);
+};
+
 const getArticlsBySlug = async (slug) => {
   return Articl.find({ categorySlug: slug });
 };
@@ -73,6 +86,7 @@ const deleteArticlById = async (id) => {
 module.exports = {
   createArticl,
   queryArticls,
+  getArticlFields,
   getArticlById,
   updateArticlById,
   deleteArticlById,
