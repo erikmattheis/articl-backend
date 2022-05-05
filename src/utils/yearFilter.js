@@ -6,7 +6,6 @@ const { object } = require("joi");
  * @returns {Object}
  */
 const yearFilter = (obj) => {
-  console.log("obj", obj);
   if (obj.year && obj.yearComparison) {
     switch (obj.yearComparison) {
       case "after":
@@ -20,7 +19,6 @@ const yearFilter = (obj) => {
         break;
     }
   }
-  console.log("obj2", obj);
   return obj;
 };
 

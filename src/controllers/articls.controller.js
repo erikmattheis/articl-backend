@@ -35,6 +35,8 @@ const getArticls = catchAsync(async (req, res) => {
   if (filter.year && filter.yearComparison) {
     filter = yearFilter(filter);
   }
+  delete filter.yearComparison;
+  console.log("filer", filter);
   const options = pick(req.query, [`"sortBy", "limit", "page"`]);
   const result = await articlsService.queryArticls(filter, options);
   res.send(result);
