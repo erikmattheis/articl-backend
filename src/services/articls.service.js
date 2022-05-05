@@ -23,8 +23,7 @@ const createArticl = async (articlBody) => {
 const queryArticls = async (filter, options) => {
   console.log("filter", filter);
   console.log("options", options);
-  const result = await Articls.paginate(filter, options);
-  return Promise.resolve(result);
+  return Articls.paginate(filter, options);
 };
 
 /**
@@ -39,9 +38,7 @@ const getArticlById = async (id) => {
 const getArticlFields = async (field, value) => {
   const arg = { [field]: { $regex: `^${value}`, $options: "i" } };
   //{ [field]: 1 }
-  console.log("look", arg);
   const fields = await Articls.find(arg);
-  console.log(fields);
   const result = fields.map(({ id, [field]: value }) => ({ id, title: value }));
 
   // output
@@ -50,7 +47,7 @@ const getArticlFields = async (field, value) => {
 };
 
 const getArticlsBySlug = async (slug) => {
-  return Articl.find({ categorySlug: slug });
+  return Articls.find({ categorySlug: slug });
 };
 
 /**
@@ -88,6 +85,7 @@ module.exports = {
   queryArticls,
   getArticlFields,
   getArticlById,
+  getArticlsBySlug,
   updateArticlById,
   deleteArticlById,
 };

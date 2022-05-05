@@ -3,7 +3,7 @@ const httpStatus = require("http-status");
 const passport = require("passport");
 const pick = require("../utils/pick");
 const catchAsync = require("../utils/catchAsync");
-const { prepareYearFilter } = require("../utils/prepareYearFilter");
+const { yearFilter } = require("../utils/yearFilter");
 const { articlsService } = require("../services");
 
 const createArticl = catchAsync(async (req, res) => {
@@ -33,9 +33,8 @@ const getArticls = catchAsync(async (req, res) => {
     "status",
   ]);
   if (filter.year && filter.yearComparison) {
-    filter = prepareYearFilter(filter);
+    filter = yearFilter(filter);
   }
-  console.log(filter);
   const options = pick(req.query, [`"sortBy", "limit", "page"`]);
   const result = await articlsService.queryArticls(filter, options);
   res.send(result);

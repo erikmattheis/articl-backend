@@ -6,16 +6,21 @@ const { object } = require("joi");
  * @returns {Object}
  */
 const yearFilter = (obj) => {
+  console.log("obj", obj);
   if (obj.year && obj.yearComparison) {
     switch (obj.yearComparison) {
       case "after":
-        obj.year = { $gte: Number(obj.year };
+        obj.year = { $gte: Number(obj.year) };
+        break;
       case "before":
-        obj.yearNumber = { $lte: obj.year };
+        obj.year = { $lte: Number(obj.year) };
+        break;
       case "exactly":
-        obj.year = { $eq: obj.year };
+        obj.year = { $eq: Number(obj.year) };
+        break;
     }
   }
+  console.log("obj2", obj);
   return obj;
 };
 
