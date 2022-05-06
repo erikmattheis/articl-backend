@@ -38,6 +38,7 @@ const getArticls = catchAsync(async (req, res) => {
   delete filter.yearComparison;
   console.log("filer", filter);
   const options = pick(req.query, [`"sortBy", "limit", "page"`]);
+  console.log("options", options);
   const result = await articlsService.queryArticls(filter, options);
   res.send(result);
 });

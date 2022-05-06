@@ -8,7 +8,7 @@ const ApiError = require("../utils/ApiError");
  * @returns {Promise<Articl>}
  */
 const createArticl = async (articlBody) => {
-  return Articl.create(articlBody);
+  return Articls.create(articlBody);
 };
 
 /**
@@ -30,7 +30,7 @@ const queryArticls = async (filter, options) => {
  * @returns {Promise<Articl>}
  */
 const getArticlById = async (id) => {
-  return Articl.findById(id);
+  return Articls.findById(id);
 };
 
 const getArticlFields = async (field, value) => {
