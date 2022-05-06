@@ -36,14 +36,13 @@ const getArticls = catchAsync(async (req, res) => {
     filter = yearFilter(filter);
   }
   delete filter.yearComparison;
-  console.log("filer", filter);
-  let options = pick(req.query, [`"sortBy", "limit", "page"`]);
-  console.log("options", options);
-  options.sortBy = options.sortBy ? options.sortBy : { createdAt: "desc" };
-  options.limit = options.limit ? options.limit : 10;
-  options.page = options.page ? options.page : 1;
-  options = Object.entries(options);
+  let options = pick(req.query, ["sortBy", "limit", "page"]);
 
+  options.sortBy = options.sortBy ? options.sortBy : { createdAt: "desc" };
+  options.limit = options.limit ? Number(options.limit) : 10;
+  options.page = options.page ? Number(options.page) : 1;
+  options = Object.entries(options);
+  console.log("options", options.sortBy);
   const result = await articlsService.queryArticls(filter, options);
   res.send(result);
 });
