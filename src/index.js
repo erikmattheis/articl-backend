@@ -29,16 +29,3 @@ const unexpectedErrorHandler = (error) => {
 
 process.on("uncaughtException", unexpectedErrorHandler);
 process.on("unhandledRejection", unexpectedErrorHandler);
-
-process.on("SIGTERM", () => {
-  logger.info("SIGTERM received");
-  if (server) {
-    server.close();
-  }
-  process.kill(process.pid, "SIGINT");
-});
-
-process.on("SIGINT", function () {
-  // this is only called on ctrl+c, not restart
-  process.kill(process.pid, "SIGINT");
-});
