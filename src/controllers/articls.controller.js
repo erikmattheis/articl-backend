@@ -3,7 +3,7 @@ const httpStatus = require("http-status");
 const passport = require("passport");
 const pick = require("../utils/pick");
 const catchAsync = require("../utils/catchAsync");
-const { yearFilter } = require("../utils/yearFilter");
+const { yearFilter, titleFilter } = require("../utils/searchFilters");
 const { articlsService } = require("../services");
 
 const createArticl = catchAsync(async (req, res) => {
@@ -35,14 +35,17 @@ const getArticls = catchAsync(async (req, res) => {
   if (filter.year && filter.yearComparison) {
     filter = yearFilter(filter);
   }
-  delete filter.yearComparison;
+  if (filter.title) {
+    filter = titleFilter(filter);
+  }
+
   let options = pick(req.query, ["sortBy", "limit", "page"]);
 
   options.sortBy = options.sortBy ? options.sortBy : { createdAt: "desc" };
   options.limit = options.limit ? Number(options.limit) : 10;
   options.page = options.page ? Number(options.page) : 1;
   options = Object.entries(options);
-  console.log("options", options.sortBy);
+
   const result = await articlsService.queryArticls(filter, options);
   res.send(result);
 });

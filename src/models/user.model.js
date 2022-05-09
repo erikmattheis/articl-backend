@@ -3,7 +3,6 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const { toJSON, paginate } = require("./plugins");
 const { roles } = require("../config/roles");
-const { Console } = require("winston/lib/winston/transports");
 
 const userSchema = mongoose.Schema(
   {

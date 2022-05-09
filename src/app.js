@@ -13,7 +13,6 @@ const { authLimiter } = require("./middlewares/rateLimiter");
 const routes = require("./routes/v1");
 const { errorConverter, errorHandler } = require("./middlewares/error");
 const ApiError = require("./utils/ApiError");
-const { Console } = require("winston/lib/winston/transports");
 
 const app = express();
 

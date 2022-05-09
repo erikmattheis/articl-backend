@@ -19,9 +19,17 @@ const yearFilter = (obj) => {
         break;
     }
   }
+  delete obj.yearComparison;
+  return obj;
+};
+
+const titleFilter = (obj) => {
+  let regex = new RegExp(obj.title, "i");
+  obj.title = { $regex: regex };
   return obj;
 };
 
 module.exports = {
   yearFilter,
+  titleFilter,
 };
