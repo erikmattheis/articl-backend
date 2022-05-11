@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const { toJSON, paginate } = require("./plugins");
 
+mongoose.set("debug", true);
+
 const articlsSchema = mongoose.Schema(
   {
     author: {
@@ -168,6 +170,8 @@ const articlsSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+articlsSchema.index({ title: "text" }, { default_language: "english" });
 
 // add plugin that converts mongoose to json
 articlsSchema.plugin(toJSON);
