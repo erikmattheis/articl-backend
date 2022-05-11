@@ -13,7 +13,7 @@ router.post(
   articlsController.createArticl
 );
 
-router.get("/:field", articlsController.getArticlFields);
+router.get("/:field", articlsController.getAnyArticlFieldValue);
 router.get("/", articlsController.getArticls);
 
 router.patch(

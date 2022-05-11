@@ -33,12 +33,16 @@ const getArticlById = async (id) => {
   return Articls.findById(id);
 };
 
-const getArticlFields = async (field, value) => {
-  const arg = { [field]: { $regex: `^${value}`, $options: "i" } };
-  //{ [field]: 1 }
-  const fields = await Articls.find(arg);
-  const result = fields.map(({ id, [field]: value }) => ({ id, title: value }));
+const getAnyArticlFieldValue = async (field, value) => {
+  //let regex = new RegExp(value, "i");
+  //const arg = { [field]: { $regex: regex } };
 
+  const regex = new RegExp(value, "i");
+  const arg = { [field]: { $regex: regex } };
+  console.log("field,vvalue", field, value);
+  const result = await Articls.distinct(field, arg);
+  //const result = fields.map(({ id, [field]: value }) => ({ id, value }));
+  console.log("result", result);
   // output
   //slugs = prepareForTypeahead(slugs);
   return Promise.resolve(result);
@@ -81,7 +85,7 @@ const deleteArticlById = async (id) => {
 module.exports = {
   createArticl,
   queryArticls,
-  getArticlFields,
+  getAnyArticlFieldValue,
   getArticlById,
   getArticlsBySlug,
   updateArticlById,

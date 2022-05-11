@@ -11,9 +11,9 @@ const createArticl = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(articl);
 });
 
-const getArticlFields = catchAsync(async (req, res) => {
+const getAnyArticlFieldValue = catchAsync(async (req, res) => {
   const options = pick(req.query, ["sortBy", "limit", "page"]);
-  const result = await articlsService.getArticlFields(
+  const result = await articlsService.getAnyArticlFieldValue(
     req.params.field,
     req.query.q,
     options
@@ -194,7 +194,7 @@ const deleteArticl = catchAsync(async (req, res) => {
 
 module.exports = {
   createArticl,
-  getArticlFields,
+  getAnyArticlFieldValue,
   getArticls,
   updateArticl,
   deleteArticl,
