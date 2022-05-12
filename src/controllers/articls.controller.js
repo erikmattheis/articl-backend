@@ -38,6 +38,9 @@ const getArticls = catchAsync(async (req, res) => {
   if (filter.title) {
     filter = titleFilter(filter);
   }
+  if (filter.authors) {
+    filter = regexFilter(filter.authors);
+  }
 
   let options = pick(req.query, ["sortBy", "limit", "page"]);
 
