@@ -46,12 +46,12 @@ const getArticls = catchAsync(async (req, res) => {
   }
 
   let options = pick(req.query, ["sortBy", "limit", "page"]);
-  console.log("options", options);
-  options.sortBy = options.sortBy ? options.sortBy : { createdAt: "desc" };
+  console.log("options1", options);
+  options.sortBy = options.sortBy ? options.sortBy : "createdAt=desc";
   options.limit = options.limit ? Number(options.limit) : 10;
   options.page = options.page ? Number(options.page) : 1;
-  options = Object.entries(options);
 
+  console.log("options2", options);
   const result = await articlsService.queryArticls(filter, options);
   res.send(result);
 });
