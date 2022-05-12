@@ -30,10 +30,9 @@ const titleFilter = (obj) => {
   return obj;
 };
 
-const regexFilter = (obj, name) => {
-  let regex = new RegExp(regexEscape(obj[name]), "i");
-  obj[name] = { $regex: regex };
-  return obj;
+const regexFilter = (str, name) => {
+  let regex = new RegExp(regexEscape(str), "i");
+  return { $regex: regex };
 };
 
 module.exports = {

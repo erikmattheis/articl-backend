@@ -3,7 +3,7 @@ const httpStatus = require("http-status");
 const passport = require("passport");
 const pick = require("../utils/pick");
 const catchAsync = require("../utils/catchAsync");
-const { yearFilter, titleFilter } = require("../utils/searchFilters");
+const { yearFilter, regexFilter } = require("../utils/searchFilters");
 const { articlsService } = require("../services");
 
 const createArticl = catchAsync(async (req, res) => {
@@ -36,10 +36,10 @@ const getArticls = catchAsync(async (req, res) => {
     filter = yearFilter(filter);
   }
   if (filter.title) {
-    filter = titleFilter(filter);
+    filter.title = regexFilter(filter.title);
   }
   if (filter.authors) {
-    filter = regexFilter(filter.authors);
+    filter.authors = regexFilter(filter.authors);
   }
 
   let options = pick(req.query, ["sortBy", "limit", "page"]);
