@@ -62,10 +62,8 @@ const prepareForTypeahead = async (categories) => {
 };
 
 const getCategorySlugs = async (q) => {
-  const slugs = await Categories.find(
-    { slug: { $regex: `^${q}`, $options: "i" } },
-    { slug: 1 }
-  );
+  const regex = new RegExp(regexEscape(`^${q}`), "i");
+  const slugs = await Categories.find({ slug: { $regex: regex } }, { slug: 1 });
 
   const result = slugs.map(({ id, slug }) => ({ id, title: slug }));
 

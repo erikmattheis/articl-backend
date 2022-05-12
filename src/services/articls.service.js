@@ -1,4 +1,5 @@
 const httpStatus = require("http-status");
+const regexEscape = require("regex-escape");
 const { Articls } = require("../models");
 const ApiError = require("../utils/ApiError");
 
@@ -34,7 +35,7 @@ const getArticlById = async (id) => {
 };
 
 const getAnyArticlFieldValue = async (field, value) => {
-  const regex = new RegExp(value, "i");
+  const regex = new RegExp(regexEscape(value), "i");
   const arg = { [field]: { $regex: regex } };
 
   const result = await Articls.distinct(field, arg);

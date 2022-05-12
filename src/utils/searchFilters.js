@@ -1,4 +1,5 @@
 const { object } = require("joi");
+const regexEscape = require("regex-escape");
 
 /**
  * Create an object composed of the picked object properties
@@ -24,12 +25,19 @@ const yearFilter = (obj) => {
 };
 
 const titleFilter = (obj) => {
-  let regex = new RegExp(obj.title, "i");
+  let regex = new RegExp(regexEscape(obj.title), "i");
   obj.title = { $regex: regex };
+  return obj;
+};
+
+const regexFilter = (obj, name) => {
+  let regex = new RegExp(regexEscape(obj[name]), "i");
+  obj[name] = { $regex: regex };
   return obj;
 };
 
 module.exports = {
   yearFilter,
   titleFilter,
+  regexFilter,
 };
