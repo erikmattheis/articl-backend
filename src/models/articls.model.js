@@ -9,16 +9,19 @@ const articlsSchema = mongoose.Schema(
       type: String,
       required: false,
       trim: true,
+      index: true,
     },
     category: {
       type: String,
       required: false,
       trim: true,
+      index: true,
     },
     categorySlug: {
       type: String,
       required: true,
       trim: true,
+      index: true,
     },
     order: {
       type: Number,
@@ -35,17 +38,20 @@ const articlsSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      default: "published",
+      default: "Published",
+      index: true,
     },
     title: {
       type: String,
       required: true,
       trim: true,
+      index: true,
     },
     type: {
       type: String,
       required: true,
       trim: true,
+      index: true,
     },
     abstract: {
       type: String,
@@ -68,6 +74,7 @@ const articlsSchema = mongoose.Schema(
       type: Number,
       required: false,
       trim: true,
+      index: true,
     },
     thumbnailImage: {
       type: String,
@@ -108,11 +115,13 @@ const articlsSchema = mongoose.Schema(
       type: String,
       required: false,
       trim: true,
+      index: true,
     },
     journal: {
       type: String,
       required: false,
       trim: true,
+      index: true,
     },
     month: {
       type: String,

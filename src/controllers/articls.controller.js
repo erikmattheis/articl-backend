@@ -3,7 +3,11 @@ const httpStatus = require("http-status");
 const passport = require("passport");
 const pick = require("../utils/pick");
 const catchAsync = require("../utils/catchAsync");
-const { yearFilter, regexFilter } = require("../utils/searchFilters");
+const {
+  yearFilter,
+  regexFilter,
+  stringToArrayFilter,
+} = require("../utils/searchFilters");
 const { articlsService } = require("../services");
 
 const createArticl = catchAsync(async (req, res) => {
@@ -28,9 +32,8 @@ const getArticls = catchAsync(async (req, res) => {
     "authors",
     "yearComparison",
     "year",
-    "source",
-    "type",
-    "status",
+    "types",
+    "statuses",
   ]);
   if (filter.year && filter.yearComparison) {
     filter = yearFilter(filter);
@@ -44,14 +47,18 @@ const getArticls = catchAsync(async (req, res) => {
   if (filter.journal) {
     filter.journal = regexFilter(filter.journal);
   }
-
+  if (filter.types) {
+    filter.type = stringToArrayFilter(filter.types, ",");
+    delete filter.types;
+  }
+  if (filter.statuses) {
+    filter.status = stringToArrayFilter(filter.statuses, ",");
+    delete filter.statuses;
+  }
   let options = pick(req.query, ["sortBy", "limit", "page"]);
-  console.log("options1", options);
   options.sortBy = options.sortBy ? options.sortBy : "createdAt:desc";
   options.limit = options.limit ? Number(options.limit) : 10;
   options.page = options.page ? Number(options.page) : 1;
-
-  console.log("options2", options);
   const result = await articlsService.queryArticls(filter, options);
   res.send(result);
 });

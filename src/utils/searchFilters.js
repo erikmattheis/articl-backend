@@ -1,4 +1,4 @@
-const { object } = require("joi");
+const { object, string } = require("joi");
 const regexEscape = require("regex-escape");
 
 /**
@@ -35,8 +35,16 @@ const regexFilter = (str, name) => {
   return { $regex: regex };
 };
 
+const stringToArrayFilter = (str, delim) => {
+  if (!str || !delim) {
+    return {};
+  }
+  return { $in: str.split(delim) };
+};
+
 module.exports = {
   yearFilter,
   titleFilter,
   regexFilter,
+  stringToArrayFilter,
 };
