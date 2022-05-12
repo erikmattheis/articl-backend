@@ -41,9 +41,12 @@ const getArticls = catchAsync(async (req, res) => {
   if (filter.authors) {
     filter.authors = regexFilter(filter.authors);
   }
+  if (filter.journal) {
+    filter.journal = regexFilter(filter.journal);
+  }
 
   let options = pick(req.query, ["sortBy", "limit", "page"]);
-
+  console.log("options", options);
   options.sortBy = options.sortBy ? options.sortBy : { createdAt: "desc" };
   options.limit = options.limit ? Number(options.limit) : 10;
   options.page = options.page ? Number(options.page) : 1;
