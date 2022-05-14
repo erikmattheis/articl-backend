@@ -35,6 +35,7 @@ const getArticls = catchAsync(async (req, res) => {
     "types",
     "statuses",
   ]);
+  const titleValue = filter.title;
   if (filter.year && filter.yearComparison) {
     filter = yearFilter(filter);
   }
@@ -59,9 +60,32 @@ const getArticls = catchAsync(async (req, res) => {
   options.sortBy = options.sortBy ? options.sortBy : "createdAt:desc";
   options.limit = options.limit ? Number(options.limit) : 10;
   options.page = options.page ? Number(options.page) : 1;
+
   const result = await articlsService.queryArticls(filter, options);
+  if (titleValue) {
+    result.results = result.results.map(function (obj) {
+      obj.titleExcerpt = chopValue(obj.title, titleValue, 10);
+      return obj;
+    });
+  }
+
   res.send(result);
 });
+
+function chopValue(str, subStr, len) {
+  return str.substring(0, 10);
+  /*
+  const position = str.toLowerCase().indexOf(subStr.toLowerCase());
+  let result =
+    position < len
+      ? str.substring(str.length - Math.ceil(len / 2), str.length - 3) + "..."
+      : str;
+  result =
+    result.length < len
+      ? "..." + str.substring(Math.floor(len / 2) + 3)
+      : result;
+   */
+}
 
 /*
 const articlsSchema = mongoose.Schema(
