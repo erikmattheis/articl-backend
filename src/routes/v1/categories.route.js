@@ -18,7 +18,7 @@ router.post(
   categoriesController.createCategory
 );
 router.get(
-  "/titles",
+  "/gtitles",
   validate(categoriesValidation.getCategorySlugs),
   categoriesController.getCategorySlugs
 );

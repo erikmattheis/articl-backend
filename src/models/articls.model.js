@@ -180,7 +180,7 @@ const articlsSchema = mongoose.Schema(
   }
 );
 
-articlsSchema.index({ title: "text" }, { default_language: "english" });
+articlsSchema;
 
 // add plugin that converts mongoose to json
 articlsSchema.plugin(toJSON);

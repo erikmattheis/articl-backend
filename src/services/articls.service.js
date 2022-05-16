@@ -21,8 +21,8 @@ const createArticl = async (articlBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryArticls = async (filter, options) => {
-  return Articls.paginate(filter, options);
+const queryArticls = async (filter, options, projection) => {
+  return Articls.paginate(filter, options, projection);
 };
 
 /**

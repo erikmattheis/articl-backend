@@ -8,6 +8,7 @@ const {
   regexFilter,
   stringToArrayFilter,
 } = require("../utils/searchFilters");
+const { stringNearSubstring } = require("../utils/stringFunctions");
 const { articlsService } = require("../services");
 
 const createArticl = catchAsync(async (req, res) => {
@@ -60,11 +61,12 @@ const getArticls = catchAsync(async (req, res) => {
   options.sortBy = options.sortBy ? options.sortBy : "createdAt:desc";
   options.limit = options.limit ? Number(options.limit) : 10;
   options.page = options.page ? Number(options.page) : 1;
+  projection = { title: 1, authors: 1, createdAt: 1 };
+  const result = await articlsService.queryArticls(filter, options, projection);
 
-  const result = await articlsService.queryArticls(filter, options);
   if (titleValue) {
     result.results = result.results.map(function (obj) {
-      obj.titleExcerpt = chopValue(obj.title, titleValue, 10);
+      obj.title = stringNearSubstring(obj.title, titleValue, 72);
       return obj;
     });
   }
@@ -73,18 +75,14 @@ const getArticls = catchAsync(async (req, res) => {
 });
 
 function chopValue(str, subStr, len) {
-  return str.substring(0, 10);
-  /*
   const position = str.toLowerCase().indexOf(subStr.toLowerCase());
-  let result =
-    position < len
-      ? str.substring(str.length - Math.ceil(len / 2), str.length - 3) + "..."
-      : str;
-  result =
-    result.length < len
-      ? "..." + str.substring(Math.floor(len / 2) + 3)
-      : result;
-   */
+  if (position + subStr.length < len) {
+    return str.substring(0, len);
+  }
+  return str.substring(
+    position - Math.floor(len / 2),
+    position + Math.ceil(len / 2)
+  );
 }
 
 /*

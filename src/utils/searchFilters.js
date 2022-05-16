@@ -24,12 +24,6 @@ const yearFilter = (obj) => {
   return obj;
 };
 
-const titleFilter = (obj) => {
-  let regex = new RegExp(regexEscape(obj.title), "i");
-  obj.title = { $regex: regex };
-  return obj;
-};
-
 const regexFilter = (str, name) => {
   let regex = new RegExp(regexEscape(str), "i");
   return { $regex: regex };
@@ -44,7 +38,6 @@ const stringToArrayFilter = (str, delim) => {
 
 module.exports = {
   yearFilter,
-  titleFilter,
   regexFilter,
   stringToArrayFilter,
 };
