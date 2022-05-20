@@ -24,12 +24,20 @@ const yearFilter = (obj) => {
   return obj;
 };
 
-const regexFilter = (str, name) => {
+const regexFilter = (str) => {
   let regex = new RegExp(regexEscape(str), "i");
   return { $regex: regex };
 };
 
+const textFilter = (str) => {
+  let regex = new RegExp(regexEscape(str), "i");
+  return { $search: regex };
+};
+
 const stringToArrayFilter = (str, delim) => {
+  if (Array.isArray(str)) {
+    return str.slice();
+  }
   if (!str || !delim) {
     return {};
   }
@@ -38,6 +46,7 @@ const stringToArrayFilter = (str, delim) => {
 
 module.exports = {
   yearFilter,
+  textFilter,
   regexFilter,
   stringToArrayFilter,
 };

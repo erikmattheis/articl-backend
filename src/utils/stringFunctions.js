@@ -7,7 +7,6 @@ const stringNearSubstring = function (str, subStr, len = 36) {
   }
   const position = str.toLowerCase().indexOf(subStr.toLowerCase());
 
-  ("1234567801234567890123456789");
   if (position < Math.floor(len / 2)) {
     return `${str.substring(0, len - 3)}...`;
   }

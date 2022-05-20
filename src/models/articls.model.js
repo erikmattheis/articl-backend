@@ -5,6 +5,12 @@ mongoose.set("debug", true);
 
 const articlsSchema = mongoose.Schema(
   {
+    doi: {
+      type: String,
+      required: false,
+      trim: true,
+      index: true,
+    },
     author: {
       type: String,
       required: false,
@@ -180,7 +186,33 @@ const articlsSchema = mongoose.Schema(
   }
 );
 
-articlsSchema;
+const weights = {
+  author: 2,
+  categorySlug: 9,
+  title: 10,
+  abstract: 7,
+  authors: 5,
+  affiliation: 5,
+  description: 9,
+  fullText: 6,
+  url: 1,
+  imageCaption: 10,
+  institution: 5,
+  journal: 5,
+  shortTitle: 1,
+  source: 2,
+};
+
+const fields = {};
+
+for (i in weights) {
+  fields[i] = "text";
+}
+
+articlsSchema.index(fields, {
+  name: "Search Many Firlds",
+  weights: weights,
+});
 
 // add plugin that converts mongoose to json
 articlsSchema.plugin(toJSON);

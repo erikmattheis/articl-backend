@@ -4,6 +4,7 @@ const passport = require("passport");
 const pick = require("../utils/pick");
 const catchAsync = require("../utils/catchAsync");
 const {
+  textFilter,
   yearFilter,
   regexFilter,
   stringToArrayFilter,
@@ -28,6 +29,7 @@ const getAnyArticlFieldValue = catchAsync(async (req, res) => {
 
 const getArticls = catchAsync(async (req, res) => {
   let filter = pick(req.query, [
+    "text",
     "title",
     "journal",
     "authors",
@@ -36,7 +38,12 @@ const getArticls = catchAsync(async (req, res) => {
     "types",
     "statuses",
   ]);
+
   const titleValue = filter.title;
+  if (filter.text) {
+    filter.$text = textFilter(filter.text);
+    delete filter.text;
+  }
   if (filter.year && filter.yearComparison) {
     filter = yearFilter(filter);
   }
@@ -57,11 +64,12 @@ const getArticls = catchAsync(async (req, res) => {
     filter.status = stringToArrayFilter(filter.statuses, ",");
     delete filter.statuses;
   }
+
   let options = pick(req.query, ["sortBy", "limit", "page"]);
   options.sortBy = options.sortBy ? options.sortBy : "createdAt:desc";
   options.limit = options.limit ? Number(options.limit) : 10;
   options.page = options.page ? Number(options.page) : 1;
-  projection = { title: 1, authors: 1, createdAt: 1 };
+  projection = { title: 1, authors: 1, createdAt: 1, score: 1 };
   const result = await articlsService.queryArticls(filter, options, projection);
 
   if (titleValue) {

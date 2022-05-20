@@ -67,19 +67,27 @@
       "node": true
     },
     "extends": [
-      "airbnb",
+      "plugin:vue/vue3-essential",
       "eslint:recommended"
     ],
     "parserOptions": {
       "parser": "@babel/eslint-parser"
     },
-    "rules": {},
     "overrides": [
       {
         "files": [
-          "src/**/**/*.js"
+          "src/**/*.js",
+          "src/**/*.vue"
         ]
       }
-    ]
-  }
+    ],
+    "rules": {
+      "max-len": "off"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "not ie 11",
+    "not op_mini all"
+  ]
 }
