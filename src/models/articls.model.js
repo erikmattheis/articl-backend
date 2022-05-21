@@ -210,7 +210,7 @@ for (i in weights) {
 }
 
 articlsSchema.index(fields, {
-  name: "Search Many Firlds",
+  name: "Search Many Fields",
   weights: weights,
 });
 

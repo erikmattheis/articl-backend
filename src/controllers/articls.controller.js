@@ -69,7 +69,7 @@ const getArticls = catchAsync(async (req, res) => {
   options.sortBy = options.sortBy ? options.sortBy : "createdAt:desc";
   options.limit = options.limit ? Number(options.limit) : 10;
   options.page = options.page ? Number(options.page) : 1;
-  projection = { title: 1, authors: 1, createdAt: 1, score: 1 };
+  projection = { id: 1, title: 1, authors: 1, createdAt: 1, score: 1 };
   const result = await articlsService.queryArticls(filter, options, projection);
 
   if (titleValue) {
