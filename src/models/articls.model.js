@@ -214,6 +214,14 @@ articlsSchema.index(fields, {
   weights: weights,
 });
 
+articlsSchema.set("toJSON", {
+  virtuals: true,
+});
+
+articlsSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
+
 // add plugin that converts mongoose to json
 articlsSchema.plugin(toJSON);
 articlsSchema.plugin(paginate);

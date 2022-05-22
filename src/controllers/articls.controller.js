@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 const httpStatus = require("http-status");
 const passport = require("passport");
+const config = require("../config/config");
 const pick = require("../utils/pick");
 const catchAsync = require("../utils/catchAsync");
 const {
@@ -39,7 +40,53 @@ const getArticls = catchAsync(async (req, res) => {
     "statuses",
   ]);
 
-  const titleValue = filter.title;
+  let originalFilterValues = Object.assign({ ...filter });
+
+  filter = makeArticlsFilter(filter);
+
+  let options = pick(req.query, ["sortBy", "limit", "page"]);
+
+  options = makeArticlsOptions(options);
+
+  const projection = Object.assign({}, filter);
+
+  for (var prop in projection) {
+    projection[prop] = 1;
+  }
+
+  projection.id = 1;
+  projection.title = 1;
+
+  const result = await articlsService.queryArticls(filter, options, projection);
+
+  for (let i = 0; i < result.results.length; i++) {
+    ["title", "journal", "authors"].forEach((prop) => {
+      if (
+        result.results[i][prop] &&
+        result.results[i][prop].length > config.shortResultMaxLength &&
+        originalFilterValues[prop]
+      ) {
+        result.results[i].title = stringNearSubstring(
+          result.results[i][prop],
+          originalFilterValues[prop],
+          config.shortResultMaxLength
+        );
+      }
+    });
+  }
+
+  res.send(result);
+});
+
+function makeArticlsOptions(options) {
+  options.sortBy = options.sortBy ? options.sortBy : "createdAt:desc";
+  options.limit = options.limit ? Number(options.limit) : 10;
+  options.page = options.page ? Number(options.page) : 1;
+
+  return options;
+}
+
+function makeArticlsFilter(filter) {
   if (filter.text) {
     filter.$text = textFilter(filter.text);
     delete filter.text;
@@ -64,23 +111,8 @@ const getArticls = catchAsync(async (req, res) => {
     filter.status = stringToArrayFilter(filter.statuses, ",");
     delete filter.statuses;
   }
-
-  let options = pick(req.query, ["sortBy", "limit", "page"]);
-  options.sortBy = options.sortBy ? options.sortBy : "createdAt:desc";
-  options.limit = options.limit ? Number(options.limit) : 10;
-  options.page = options.page ? Number(options.page) : 1;
-  projection = { id: 1, title: 1, authors: 1, createdAt: 1, score: 1 };
-  const result = await articlsService.queryArticls(filter, options, projection);
-
-  if (titleValue) {
-    result.results = result.results.map(function (obj) {
-      obj.title = stringNearSubstring(obj.title, titleValue, 72);
-      return obj;
-    });
-  }
-
-  res.send(result);
-});
+  return filter;
+}
 
 function chopValue(str, subStr, len) {
   const position = str.toLowerCase().indexOf(subStr.toLowerCase());
