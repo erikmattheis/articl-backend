@@ -64,7 +64,7 @@ module.exports = {
       envVars.JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
     verifyEmailExpirationMinutes: envVars.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
   },
-  shortResultMaxLength: 64,
+  shortResultMaxLength: 44,
   email: {
     smtp: {
       host: envVars.SMTP_HOST,
