@@ -55,6 +55,7 @@ const getArticls = catchAsync(async (req, res) => {
   }
 
   projection.id = 1;
+  projection.order = 1;
   projection.title = 1;
 
   const result = await articlsService.queryArticls(filter, options, projection);
@@ -119,6 +120,11 @@ const getArticlById = catchAsync(async (req, res) => {
   res.send(articl);
 });
 
+const updateArticlsOrder = catchAsync(async (req, res) => {
+  const result = await articlsService.updateArticlsOrder(req.body.order);
+  res.send(result);
+});
+
 const updateArticl = catchAsync(async (req, res) => {
   const articl = await articlsService.updateArticlById(req.params.id, req.body);
   res.send(articl);
@@ -135,5 +141,6 @@ module.exports = {
   getArticls,
   getArticlById,
   updateArticl,
+  updateArticlsOrder,
   deleteArticl,
 };

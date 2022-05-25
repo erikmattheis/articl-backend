@@ -1,5 +1,6 @@
 const httpStatus = require("http-status");
 const regexEscape = require("regex-escape");
+const { articlsService } = require(".");
 const { Articls } = require("../models");
 const ApiError = require("../utils/ApiError");
 
@@ -58,8 +59,16 @@ const updateArticlById = async (articlId, updateBody) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Articl not found");
   }
   Object.assign(articl, updateBody);
-  await articl.save();
+  await Articl.save();
   return articl;
+};
+
+const updateArticlsOrder = async function (arr) {
+  let result;
+  for (const { id, order } of arr) {
+    result = await Articls.findByIdAndUpdate(id, { $set: { order } }).exec();
+  }
+  return true;
 };
 
 /**
@@ -83,5 +92,6 @@ module.exports = {
   getArticlById,
   getArticlsBySlug,
   updateArticlById,
+  updateArticlsOrder,
   deleteArticlById,
 };

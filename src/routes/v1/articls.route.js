@@ -13,9 +13,15 @@ router.post(
   articlsController.createArticl
 );
 
-router.get("/:id", articlsController.getArticlById);
 router.get("/:field", articlsController.getAnyArticlFieldValue);
 router.get("/", articlsController.getArticls);
+
+router.post(
+  "/order",
+  auth("manageUsers"),
+  validate(articlsValidation.updateArticlsOrder),
+  articlsController.updateArticlsOrder
+);
 
 router.patch(
   "/:id",
@@ -23,6 +29,7 @@ router.patch(
   validate(articlsValidation.updateArticl),
   articlsController.updateArticl
 );
+
 router.delete(
   "/:id",
   auth("manageUsers"),

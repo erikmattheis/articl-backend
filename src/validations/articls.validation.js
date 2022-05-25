@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { min } = require("moment");
 const { objectId } = require("./custom.validation");
 
 const createArticl = {
@@ -62,6 +63,17 @@ const updateArticl = {
   }),
 };
 
+const updateArticlsOrder = {
+  body: Joi.object().keys({
+    order: Joi.array()
+      .min(1)
+      .items({
+        id: Joi.string().custom(objectId),
+        order: Joi.number().required(),
+      }),
+  }),
+};
+
 const deleteArticl = {
   params: Joi.object().keys({
     id: Joi.string().custom(objectId),
@@ -73,5 +85,6 @@ module.exports = {
   getArticls,
   getArticl,
   updateArticl,
+  updateArticlsOrder,
   deleteArticl,
 };
