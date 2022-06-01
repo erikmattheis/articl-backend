@@ -59,7 +59,7 @@ const updateArticlById = async (articlId, updateBody) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Articl not found");
   }
   Object.assign(articl, updateBody);
-  await Articl.save();
+  await articl.save();
   return articl;
 };
 

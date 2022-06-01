@@ -6,6 +6,8 @@ const articlsController = require("../../controllers/articls.controller");
 
 const router = express.Router();
 
+router.get("/", articlsController.getArticls);
+
 router.post(
   "/",
   auth("manageUsers"),
@@ -13,8 +15,12 @@ router.post(
   articlsController.createArticl
 );
 
-router.get("/:field", articlsController.getAnyArticlFieldValue);
-router.get("/", articlsController.getArticls);
+router.get(
+  "/:id",
+  auth("manageUsers"),
+  validate(articlsValidation.getArticlById),
+  articlsController.updateArticl
+);
 
 router.post(
   "/order",
@@ -23,7 +29,7 @@ router.post(
   articlsController.updateArticlsOrder
 );
 
-router.patch(
+router.put(
   "/:id",
   auth("manageUsers"),
   validate(articlsValidation.updateArticl),
@@ -31,9 +37,12 @@ router.patch(
 );
 
 router.delete(
-  "/:id",
+  "/",
   auth("manageUsers"),
   validate(articlsValidation.deleteArticl),
   articlsController.deleteArticl
 );
+
+router.get("/values/:field", articlsController.getAnyArticlFieldValue);
+
 module.exports = router;

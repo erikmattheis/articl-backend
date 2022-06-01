@@ -26,7 +26,7 @@ router.post(
 
 router.patch(
   "/me",
-  auth(),
+  auth("manageUsers"),
   validate(userValidation.updateMe),
   userController.updateMe
 );

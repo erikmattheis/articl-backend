@@ -75,7 +75,7 @@ const updateArticlsOrder = {
 };
 
 const deleteArticl = {
-  params: Joi.object().keys({
+  body: Joi.object().keys({
     id: Joi.string().custom(objectId),
   }),
 };
