@@ -17,6 +17,12 @@ router.post(
   validate(categoriesValidation.createCategories),
   categoriesController.createCategory
 );
+router.post(
+  "/order",
+  auth("manageUsers"),
+  validate(categoriesValidation.updateCategoriesOrder),
+  categoriesController.updateCategoriesOrder
+);
 router.get(
   "/gtitles",
   validate(categoriesValidation.getCategorySlugs),

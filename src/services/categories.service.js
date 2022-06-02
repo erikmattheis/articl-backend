@@ -95,6 +95,15 @@ const getCurrentCategorySlugByOldId = async (id) => {
   }
 };
 
+const updateCategoriesOrder = async function (arr) {
+  let result;
+  for (const { id, order } of arr) {
+    console.log("updateCategoriesOrder", id, order);
+    result = await Categories.findByIdAndUpdate(id, { $set: { order } }).exec();
+  }
+  return true;
+};
+
 /**
  * Update category by id
  * @param {ObjectId} categoryId
@@ -135,6 +144,7 @@ module.exports = {
   getCategorySlugs,
   queryCategories,
   getCategoryById,
+  updateCategoriesOrder,
   getCurrentCategorySlugByOldId,
   updateCategoryById,
   deleteCategoryById,

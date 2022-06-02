@@ -48,6 +48,17 @@ const updateCategory = {
     .min(1),
 };
 
+const updateCategoriesOrder = {
+  body: Joi.object().keys({
+    order: Joi.array()
+      .min(1)
+      .items({
+        id: Joi.string().custom(objectId),
+        order: Joi.number().required(),
+      }),
+  }),
+};
+
 const deleteCategory = {
   params: Joi.object().keys({
     id: Joi.string().custom(objectId),
@@ -61,5 +72,6 @@ module.exports = {
   getCategorySlugs,
   getCategory,
   updateCategory,
+  updateCategoriesOrder,
   deleteCategory,
 };

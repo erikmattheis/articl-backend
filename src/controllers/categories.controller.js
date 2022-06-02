@@ -40,6 +40,12 @@ const getCategorySlugs = catchAsync(async (req, res) => {
   res.send(slugs);
 });
 
+const updateCategoriesOrder = catchAsync(async (req, res) => {
+  console.log("updateCategoriesOrder");
+  const result = await categoriesService.updateCategoriesOrder(req.body.order);
+  res.send(result);
+});
+
 const updateCategory = catchAsync(async (req, res) => {
   const user = await categoriesService.updateCategoryById(
     req.params.id,
@@ -60,6 +66,7 @@ module.exports = {
   getCategorySlugs,
   getCategories,
   getCategory,
+  updateCategoriesOrder,
   updateCategory,
   deleteCategory,
 };
