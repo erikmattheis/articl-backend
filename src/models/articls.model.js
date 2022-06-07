@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { toJSON, paginate } = require("./plugins");
 
 mongoose.set("debug", true);
+mongoose.set('useFindAndModify', false);
 
 const articlsSchema = mongoose.Schema(
   {

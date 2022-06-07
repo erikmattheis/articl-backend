@@ -82,7 +82,7 @@ categoriesSchema.statics.isCategorySlug = async function (val) {
  * @param {val} ObjectId
  * @returns {Promise<boolean>}
  */
-categoriesSchema.methods.getCategoriesByparentSlug = async function (
+categoriesSchema.methods.getCategoriesByParentSlug = async function (
   parentSlug
 ) {
   const categories = await this.find({ parentSlug });

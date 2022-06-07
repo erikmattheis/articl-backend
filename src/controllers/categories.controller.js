@@ -15,9 +15,10 @@ const createCategory = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(category);
 });
 
+
 const getCategoryPage = catchAsync(async (req, res) => {
   const category = await categoriesService.getCategoryBySlug(req.query.slug);
-  const categories = await categoriesService.getCategoriesByparentSlug(
+  const categories = await categoriesService.getCategoriesByParentSlug(
     req.query.slug
   );
   res.send({ category, categories });
@@ -25,8 +26,7 @@ const getCategoryPage = catchAsync(async (req, res) => {
 
 const getCategories = catchAsync(async (req, res) => {
   const filter = pick(req.query, ["title", "slug", "description"]);
-  const options = pick(req.query, ["sortBy", "limit", "page"]);
-  const result = await categoriesService.queryCategories(filter, options);
+  const result = await categoriesService.queryCategories(filter);
   res.send(result);
 });
 
@@ -41,7 +41,6 @@ const getCategorySlugs = catchAsync(async (req, res) => {
 });
 
 const updateCategoriesOrder = catchAsync(async (req, res) => {
-  console.log("updateCategoriesOrder");
   const result = await categoriesService.updateCategoriesOrder(req.body.order);
   res.send(result);
 });

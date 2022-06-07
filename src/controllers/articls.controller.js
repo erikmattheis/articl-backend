@@ -81,7 +81,7 @@ const getArticls = catchAsync(async (req, res) => {
 });
 
 function makeArticlsOptions(options) {
-  options.sortBy = options.sortBy ? options.sortBy : "createdAt:desc";
+  options.sortBy = options.sortBy ? options.sortBy : "order:asc";
   options.limit = options.limit ? Number(options.limit) : 10;
   options.page = options.page ? Number(options.page) : 1;
 
@@ -117,7 +117,6 @@ function makeArticlsFilter(filter) {
 }
 
 const getArticlById = catchAsync(async (req, res) => {
-  console.log("id", id);
   const articl = await articlsService.getArticlById(id);
   res.send(articl);
 });

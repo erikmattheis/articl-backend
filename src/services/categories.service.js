@@ -27,14 +27,23 @@ const createCategory = async (categoriesBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryCategories = async (filter, options) => {
-  const categories = await Categories.find(filter, options);
+const queryCategories = async (filter) => {
+  const categories = await Categories.find(filter).sort([['order', 1]]);
   return categories;
 };
 
-const getCategoriesByparentSlug = async (parentSlug) => {
+function makeCategoriesOptions(options) {
+  options.sortBy = options.sortBy ? options.sortBy : "order:asc";
+  options.limit = options.limit ? Number(options.limit) : 10;
+  options.page = options.page ? Number(options.page) : 1;
+
+  return options;
+}
+
+const getCategoriesByParentSlug = async (parentSlug) => {
   const filter = { parentSlug };
-  const categories = await queryCategories(filter, {});
+  const options = makeCategoriesOptions({})
+  const categories = await queryCategories(filter, options,{});
   return categories;
 };
 
@@ -142,7 +151,7 @@ const deleteCategoryById = async (categoryId) => {
 
 module.exports = {
   createCategory,
-  getCategoriesByparentSlug,
+  getCategoriesByParentSlug,
   getCategoryBySlug,
   getCategorySlugs,
   queryCategories,

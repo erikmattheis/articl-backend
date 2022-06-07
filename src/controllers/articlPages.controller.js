@@ -7,13 +7,13 @@ const { categoriesService, articlsService } = require("../services");
 
 const getHomePage = catchAsync(async (req, res) => {
   const category = await categoriesService.getCategoryBySlug("0");
-  const categories = await categoriesService.getCategoriesByparentSlug("0");
+  const categories = await categoriesService.getCategoriesByParentSlug("0");
   res.send({ category, categories });
 });
 
 const getArticlPage = catchAsync(async (req, res) => {
   const category = await categoriesService.getCategoryBySlug(req.params.slug);
-  const categories = await categoriesService.getCategoriesByparentSlug(
+  const categories = await categoriesService.getCategoriesByParentSlug(
     req.params.slug
   );
   const articls = await articlsService.getArticlsBySlug(req.params.slug);
