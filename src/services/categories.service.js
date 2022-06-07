@@ -43,7 +43,7 @@ function makeCategoriesOptions(options) {
 const getCategoriesByParentSlug = async (parentSlug) => {
   const filter = { parentSlug };
   const options = makeCategoriesOptions({})
-  const categories = await queryCategories(filter, options,{});
+  const categories = await queryCategories(filter, options, {});
   return categories;
 };
 

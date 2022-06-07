@@ -44,7 +44,9 @@ const getAnyArticlFieldValue = async (field, value) => {
 };
 
 const getArticlsBySlug = async (slug) => {
-  return Articls.find({ categorySlug: slug });
+
+  return Articls.find({ categorySlug: slug }).sort([['order', 1]]);
+
 };
 
 /**
