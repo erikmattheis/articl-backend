@@ -1,6 +1,7 @@
 const httpStatus = require("http-status");
 const { Categories } = require("../models");
 const ApiError = require("../utils/ApiError");
+const regexEscape = require("regex-escape");
 
 /**
  * Create a category
@@ -62,10 +63,12 @@ const prepareForTypeahead = async (categories) => {
 };
 
 const getCategorySlugs = async (q) => {
-  const regex = new RegExp(regexEscape(`^${q}`), "i");
+
+  const regex = new RegExp(regexEscape(`${q}`), "i");
+
   const slugs = await Categories.find({ slug: { $regex: regex } }, { slug: 1 });
 
-  const result = slugs.map(({ id, slug }) => ({ id, title: slug }));
+  const result = slugs.map(({ id, slug }) => slug);
 
   // output
   //slugs = prepareForTypeahead(slugs);

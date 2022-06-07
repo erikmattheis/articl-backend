@@ -34,6 +34,7 @@ const articlsSchema = mongoose.Schema(
       required: true,
       trim: true,
       default: 0,
+      index: true,
     },
     oldId: {
       type: String,

@@ -24,7 +24,7 @@ router.post(
   categoriesController.updateCategoriesOrder
 );
 router.get(
-  "/gtitles",
+  "/titles",
   validate(categoriesValidation.getCategorySlugs),
   categoriesController.getCategorySlugs
 );
