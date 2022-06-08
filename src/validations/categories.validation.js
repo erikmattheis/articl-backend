@@ -5,7 +5,7 @@ const createCategory = {
   body: Joi.object().keys({
     title: Joi.string().required(),
     slug: Joi.string().required(),
-    parentSlug: Joi.string().required().custom(password),
+    parentSlug: Joi.string().required(),
     description: Joi.string(),
   }),
 };
@@ -38,12 +38,15 @@ const getCategorySlugs = {
 };
 
 const updateCategory = {
+  params: Joi.object().keys({
+    id: Joi.string().required(),
+  }),
   body: Joi.object()
     .keys({
       title: Joi.string().required(),
       slug: Joi.string().required(),
-      parentSlug: Joi.string().required().custom(password),
-      description: Joi.string(),
+      parentSlug: Joi.string().required(),
+      description: Joi.string().allow(null,''),
     })
     .min(1),
 };

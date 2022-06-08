@@ -18,9 +18,9 @@ router.post(
   categoriesController.createCategory
 );
 router.put(
-  "/",
+  "/:id",
   auth("manageUsers"),
-  validate(categoriesValidation.createCategories),
+  validate(categoriesValidation.updateCategory),
   categoriesController.updateCategory
 );
 router.post(
