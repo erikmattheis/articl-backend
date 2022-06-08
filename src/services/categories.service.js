@@ -47,6 +47,10 @@ const getCategoriesByParentSlug = async (parentSlug) => {
   return categories;
 };
 
+const updateParentSlugs = async (slug,parentSlug) => {
+  const result = await Categories.updateMany({parentSlug},{$set:{parentSlug:slug}})
+}
+
 /**
  * Get category by slug
  * @param {ObjectId} slug
@@ -157,6 +161,7 @@ module.exports = {
   queryCategories,
   getCategoryById,
   updateCategoriesOrder,
+  updateParentSlugs,
   getCurrentCategorySlugByOldId,
   updateCategoryById,
   deleteCategoryById,

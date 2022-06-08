@@ -3,7 +3,7 @@ const httpStatus = require("http-status");
 const pick = require("../utils/pick");
 // const ApiError = require('../utils/ApiError');
 const catchAsync = require("../utils/catchAsync");
-const { categoriesService, importService } = require("../services");
+const { articlsService, categoriesService, importService } = require("../services");
 
 const importCategories = catchAsync(async (req, res) => {
   const result = await importService.importCategories();
@@ -46,11 +46,21 @@ const updateCategoriesOrder = catchAsync(async (req, res) => {
 });
 
 const updateCategory = catchAsync(async (req, res) => {
-  const user = await categoriesService.updateCategoryById(
+  const result = await categoriesService.updateCategoryById(
     req.params.id,
     req.body
   );
-  res.send(user);
+  if (req.body.slug!==req.body.parentSlug) {
+    const slug = await categoriesService.updateParentSlugs(
+      req.body.slug,
+      req.body.parentSlug
+    );
+    const articls = await articlsService.updateSlugs(
+      req.params.id,
+      req.body
+    );  
+  }
+  res.send({result,slug});
 });
 
 const deleteCategory = catchAsync(async (req, res) => {

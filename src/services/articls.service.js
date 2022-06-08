@@ -34,6 +34,10 @@ const getArticlById = async (id) => {
   return Articls.findById(id);
 };
 
+const updateSlugs = async (slug,parentSlug) => {
+  const result = await Articls.updateMany({slug},{$set:{slug:parentSlug}})
+}
+
 const getAnyArticlFieldValue = async (field, value) => {
   const regex = new RegExp(regexEscape(value), "i");
   const arg = { [field]: { $regex: regex } };
@@ -89,6 +93,7 @@ const deleteArticlById = async (id) => {
 module.exports = {
   createArticl,
   queryArticls,
+  updateSlugs,
   getAnyArticlFieldValue,
   getArticlById,
   getArticlsBySlug,
