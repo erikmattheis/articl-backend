@@ -27,7 +27,7 @@ const getCategoryPage = {
 
 const getCategory = {
   params: Joi.object().keys({
-    slug: Joi.string().required(),
+    id: Joi.string().required(),
   }),
 };
 

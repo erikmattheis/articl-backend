@@ -17,6 +17,12 @@ router.post(
   validate(categoriesValidation.createCategories),
   categoriesController.createCategory
 );
+router.put(
+  "/",
+  auth("manageUsers"),
+  validate(categoriesValidation.createCategories),
+  categoriesController.updateCategory
+);
 router.post(
   "/order",
   auth("manageUsers"),
@@ -29,9 +35,9 @@ router.get(
   categoriesController.getCategorySlugs
 );
 router.get(
-  "/:slug",
-  validate(categoriesValidation.getCategoryPage),
-  categoriesController.getCategoryPage
+  "/:id",
+  validate(categoriesValidation.getCategory),
+  categoriesController.getCategory
 );
 // router.get('/:id', auth(), validate(categoriesValidation.getUser), categoriesController.getCategory);
 

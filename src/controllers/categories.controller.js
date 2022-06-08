@@ -31,7 +31,9 @@ const getCategories = catchAsync(async (req, res) => {
 });
 
 const getCategory = catchAsync(async (req, res) => {
-  const category = categoriesService.getCategoryById(req.query.id);
+  const category = await categoriesService.getCategoryById(req.params.id);
+  console.log('req.params.id',req.params.id)
+  console.log('category',category)
   res.send(category);
 });
 
