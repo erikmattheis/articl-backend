@@ -5,6 +5,7 @@ const userRoute = require("./user.route");
 const categoriesRoute = require("./categories.route");
 const articlPages = require("./articlPages.route");
 const docsRoute = require("./docs.route");
+const notesRoute = require("./notes.route");
 const config = require("../../config/config");
 
 const router = express.Router();
@@ -30,6 +31,11 @@ const defaultRoutes = [
     path: "/categories",
     route: categoriesRoute,
   },
+  {
+    path: "/notes",
+    route: notesRoute,
+  },
+  
 ];
 
 defaultRoutes.forEach((route) => {

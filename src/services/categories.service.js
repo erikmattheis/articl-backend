@@ -47,8 +47,8 @@ const getCategoriesByParentSlug = async (parentSlug) => {
   return categories;
 };
 
-const updateParentSlugs = async (slug,parentSlug) => {
-  const result = await Categories.updateMany({parentSlug},{$set:{parentSlug:slug}})
+const updateParentSlugs = async (oldParentSlug,newParentarentSlug) => {
+  const result = await Categories.updateMany({parentSlug:oldParentSlug},{$set:{parentSlug:newParentarentSlug}})
 }
 
 /**
@@ -114,7 +114,6 @@ const getCurrentCategorySlugByOldId = async (id) => {
 const updateCategoriesOrder = async function (arr) {
   let result;
   for (const { id, order } of arr) {
-    console.log("updateCategoriesOrder", id, order);
     result = await Categories.findByIdAndUpdate(id, { $set: { order } }).exec();
   }
   return true;

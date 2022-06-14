@@ -47,9 +47,10 @@ const refreshAuth = async (refreshToken) => {
       refreshToken,
       tokenTypes.REFRESH
     );
+    
     const user = await userService.getUserById(refreshTokenDoc.user);
     if (!user) {
-      throw new Error("Token did not resulve to user.");
+      throw new Error("Token did not match user.");
     }
     await refreshTokenDoc.remove();
     const result = await tokenService.generateAuthTokens(user);

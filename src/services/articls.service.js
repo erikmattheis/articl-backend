@@ -34,8 +34,8 @@ const getArticlById = async (id) => {
   return Articls.findById(id);
 };
 
-const updateSlugs = async (slug,parentSlug) => {
-  const result = await Articls.updateMany({slug},{$set:{slug:parentSlug}})
+const updateSlugs = async (oldSlug, newSlug) => {
+  const result = await Articls.updateMany({slug:oldSlug},{$set:{slug:newSlug}})
 }
 
 const getAnyArticlFieldValue = async (field, value) => {

@@ -50,14 +50,15 @@ const updateCategory = catchAsync(async (req, res) => {
     req.params.id,
     req.body
   );
+
   if (req.body.slug!==req.body.parentSlug) {
     const slug = await categoriesService.updateParentSlugs(
-      req.body.slug,
+      req.body.oldSlug,
       req.body.parentSlug
     );
     const articls = await articlsService.updateSlugs(
-      req.params.id,
-      req.body
+      req.body.oldSlug,
+      req.body.parentSlug
     );  
   }
   res.send({result,slug});
