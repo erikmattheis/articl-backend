@@ -9,7 +9,7 @@ const createArticl = {
     articlUrl: Joi.string(),
     authors: Joi.string(),
     category: Joi.string(),
-    categorySlug: Joi.string().required(),
+    slug: Joi.string().required(),
     city: Joi.string(),
     country: Joi.string(),
     dateEnd: Joi.date(),
@@ -47,7 +47,7 @@ const createArticl = {
 
 const getArticls = {
   body: Joi.object().keys({
-    categorySlug: Joi.string().required(),
+    slug: Joi.string().required(),
   }),
 };
 

@@ -40,7 +40,7 @@ const updateSlugs = async (slug,parentSlug) => {
 
 const getNotesBySlug = async (slug) => {
 
-  return Notes.find({ categorySlug: slug });
+  return Notes.find({ slug: slug });
 
 };
 

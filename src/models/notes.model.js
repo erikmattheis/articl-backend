@@ -3,7 +3,7 @@ const { toJSON, paginate } = require("./plugins");
 
 const notesSchema = mongoose.Schema(
   {
-    categorySlug: {
+    slug: {
       type: String,
       required: true,
       trim: true,

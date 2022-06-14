@@ -11,7 +11,7 @@ const questionSchema = new mongoose.Schema(
       },
     ],
     author: String,
-    categorySlug: String,
+    slug: String,
     question: String,
   },
   {

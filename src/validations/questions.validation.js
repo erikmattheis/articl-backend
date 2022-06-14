@@ -12,7 +12,7 @@ const createQuestion = {
       })
       .min(2),
     question: Joi.string().required(),
-    categorySlug: Joi.string().required(),
+    slug: Joi.string().required(),
     author: Joi.string(),
     order: Joi.intiger(),
   }),
@@ -21,7 +21,7 @@ const createQuestion = {
 const getQuestions = {
   query: Joi.object().keys({
     question: Joi.string(),
-    categorySlug: Joi.string(),
+    slug: Joi.string(),
     author: Joi.string(),
     answer: Joi.string(),
     explanation: Joi.string(),
@@ -49,7 +49,7 @@ const updateQuestion = {
       order: Joi.intiger(),
     }),
     question: Joi.string().required(),
-    categorySlug: Joi.string().required(),
+    slug: Joi.string().required(),
     author: Joi.string(),
     order: Joi.intiger(),
   }),
@@ -66,7 +66,7 @@ const updateMe = {
       })
       .min(2),
     question: Joi.string().required(),
-    categorySlug: Joi.string().required(),
+    slug: Joi.string().required(),
     author: Joi.string(),
     order: Joi.intiger(),
   }),

@@ -20,7 +20,7 @@ const createNote = catchAsync(async (req, res) => {
 
 const getNotes = catchAsync(async (req, res) => {
   let filter = pick(req.query, [
-    "categorySlug",
+    "slug",
     "author",
     "status",
   ]);

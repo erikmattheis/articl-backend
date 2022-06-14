@@ -88,11 +88,11 @@ const loopThroughOldAndCreateNew = async (categories, reallySave = false) => {
     for (let n = 0, i = 0; i < categories.length; i += 1) {
       const category = wpCategoryToNodeCategory(categories[i]);
 
-      const categorySlug = category.slug;
+      const slug = category.slug;
 
-      const slugExists = await Categories.isCategorySlug(categorySlug);
+      const slugExists = await Categories.isCategorySlug(slug);
 
-      if (!slugExists || categorySlug === 0 || categorySlug === "0") {
+      if (!slugExists || slug === 0 || slug === "0") {
         if (reallySave) {
           await categoriesService.createCategory(category);
           n += 1;

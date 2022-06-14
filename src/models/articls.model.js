@@ -24,7 +24,7 @@ const articlsSchema = mongoose.Schema(
       trim: true,
       index: true,
     },
-    categorySlug: {
+    slug: {
       type: String,
       required: true,
       trim: true,
@@ -190,7 +190,7 @@ const articlsSchema = mongoose.Schema(
 
 const weights = {
   author: 2,
-  categorySlug: 9,
+  slug: 9,
   title: 10,
   abstract: 7,
   authors: 5,
