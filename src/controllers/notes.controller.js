@@ -14,6 +14,7 @@ const { stringNearSubstring } = require("../utils/stringFunctions");
 const { notesService } = require("../services");
 
 const createNote = catchAsync(async (req, res) => {
+  req.body.author = req.user.id;
   const note = await notesService.createNote(req.body);
   res.status(httpStatus.CREATED).send(note);
 });

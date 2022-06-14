@@ -32,6 +32,13 @@ const notesSchema = mongoose.Schema(
       trim: true,
       index: true,
     },
+    author: {
+      type: mongoose.SchemaTypes.ObjectId,
+      required: true,
+      trim: true,
+      index: true,
+      ref: "User",
+    },
   },
   {
     timestamps: true,

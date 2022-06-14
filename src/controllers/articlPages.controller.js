@@ -3,7 +3,7 @@
 // const pick = require('../utils/pick');
 // const ApiError = require('../utils/ApiError');
 const catchAsync = require("../utils/catchAsync");
-const { categoriesService, articlsService } = require("../services");
+const { categoriesService, articlsService, notesService } = require("../services");
 
 const getHomePage = catchAsync(async (req, res) => {
   const category = await categoriesService.getCategoryBySlug("0");
@@ -17,7 +17,8 @@ const getArticlPage = catchAsync(async (req, res) => {
     req.params.slug
   );
   const articls = await articlsService.getArticlsBySlug(req.params.slug);
-  res.send({ category, categories, articls });
+  const notes = await notesService.getNotesBySlug(req.params.slug);
+  res.send({ notes, category, categories, articls });
 });
 
 module.exports = {

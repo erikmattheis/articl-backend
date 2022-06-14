@@ -22,6 +22,7 @@ const createNote = async (noteBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryNotes = async (filter, options) => {
+  options.populate = 'author';
   return Notes.paginate(filter, options);
 };
 
@@ -31,17 +32,15 @@ const queryNotes = async (filter, options) => {
  * @returns {Promise<Note>}
  */
 const getNoteById = async (id) => {
-  return Notes.findById(id);
+  return Notes.findById(id,{projection: { id: 1, fullText:1, createdAt:1, author:1 }}).populate('author');
 };
 
-const updateSlugs = async (slug,parentSlug) => {
-  const result = await Notes.updateMany({slug},{$set:{slug:parentSlug}})
+const updateSlugs = async (oldSlug,newSlug) => {
+  const result = await Notes.updateMany({slug:oldSlug},{$set:{slug:newSlug}})
 }
 
 const getNotesBySlug = async (slug) => {
-
-  return Notes.find({ slug: slug });
-
+  return Notes.paginate({ slug },{populate:'author'},{id:1,fullText:1,author:1,createdAt:1})
 };
 
 /**
