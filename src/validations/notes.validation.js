@@ -20,7 +20,7 @@ const getNotes = {
 
 const getNote = {
   params: Joi.object().keys({
-    noteId: Joi.string().custom(objectId),
+   id: Joi.string().custom(objectId),
   }),
 };
 

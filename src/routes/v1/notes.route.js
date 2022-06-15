@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get("/", notesController.getNotes);
 
+
 router.post(
   "/",
   auth("manageUsers"),
@@ -17,10 +18,10 @@ router.post(
 
 router.get(
   "/:id",
-  auth("manageUsers"),
   validate(notesValidation.getNoteById),
-  notesController.updateNote
+  notesController.getNoteById
 );
+
 
 router.put(
   "/:id",

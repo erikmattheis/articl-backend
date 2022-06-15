@@ -32,7 +32,7 @@ const queryNotes = async (filter, options, projection = {}) => {
  * @returns {Promise<Note>}
  */
 const getNoteById = async (id) => {
-  return Notes.findById(id,{populate:'author'})
+  return Notes.findById(id)
 };
 
 const updateSlugs = async (oldSlug,newSlug) => {

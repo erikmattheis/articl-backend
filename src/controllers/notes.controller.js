@@ -35,7 +35,7 @@ const getNotes = catchAsync(async (req, res) => {
   options = makeNotesOptions(options);
   options.populate = 'author';
   const project={'nameFirst':true,'fullText':true};
-  console.log('trying notes service');
+
   const result = await notesService.queryNotes(filter, options, project);
 
   res.send(result);
@@ -66,7 +66,7 @@ function makeNotesFilter(filter) {
 }
 
 const getNoteById = catchAsync(async (req, res) => {
-  const note = await notesService.getNoteById(id);
+  const note = await notesService.getNoteById(req.params.id);
   res.send(note);
 });
 
