@@ -21,9 +21,9 @@ const createNote = async (noteBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryNotes = async (filter, options) => {
-  options.populate = 'author';
-  return Notes.paginate(filter, options);
+const queryNotes = async (filter, options, projection = {}) => {
+  console.log('am gerying notes')
+  return Notes.paginate(filter, options,projection);
 };
 
 /**
@@ -32,7 +32,7 @@ const queryNotes = async (filter, options) => {
  * @returns {Promise<Note>}
  */
 const getNoteById = async (id) => {
-  return Notes.findById(id,{projection: { id: 1, fullText:1, createdAt:1, author:1 }}).populate('author');
+  return Notes.findById(id,{populate:'author'})
 };
 
 const updateSlugs = async (oldSlug,newSlug) => {
@@ -40,7 +40,7 @@ const updateSlugs = async (oldSlug,newSlug) => {
 }
 
 const getNotesBySlug = async (slug) => {
-  return Notes.paginate({ slug },{populate:'author'},{id:1,fullText:1,author:1,createdAt:1})
+  return Notes.paginate({ slug },{populate:'author'}).project('fullText')
 };
 
 /**
