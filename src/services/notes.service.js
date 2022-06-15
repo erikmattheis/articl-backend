@@ -23,7 +23,7 @@ const createNote = async (noteBody) => {
  */
 const queryNotes = async (filter, options, projection = {}) => {
   console.log('am gerying notes')
-  return Notes.paginate(filter, options,projection);
+  return Notes.paginate(filter, options, projection);
 };
 
 /**

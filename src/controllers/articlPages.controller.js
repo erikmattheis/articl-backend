@@ -17,7 +17,7 @@ const getArticlPage = catchAsync(async (req, res) => {
     req.params.slug
   );
   const articls = await articlsService.getArticlsBySlug(req.params.slug);
-  const notes = await notesService.queryNotes({slug:req.params.slug},{populate:'author'});
+  const notes = await notesService.queryNotes({slug:req.params.slug},{ populate:'author' }, { fullText: 1,  createdAt: 1, nameFirst:1 });
   res.send({ notes, category, categories, articls });
 });
 
