@@ -49,11 +49,13 @@ const getNotesBySlug = async (slug) => {
  * @param {Object} updateBody
  * @returns {Promise<Note>}
  */
-const updateNoteById = async (noteId, updateBody) => {
-  const note = await getNoteById(noteId);
+const updateNoteById = async (id, updateBody) => {
+  console.log('the id',id)
+  const note = await getNoteById(id);
   if (!note) {
     throw new ApiError(httpStatus.NOT_FOUND, "Note not found");
   }
+  console.log('note is', note);
   Object.assign(note, updateBody);
   await note.save();
   return note;

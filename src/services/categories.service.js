@@ -60,7 +60,7 @@ const getCategoryBySlug = async (slug) => {
   if (slug === "0" || slug === 0) {
     return [
       {
-        title: "Specialties",
+        title: "Articl.net - Radiology Database",
         description:
           "Diagnostic Radiology, Interventional Radiology, Endovascular Surgical Neuroradiology, Nuclear medicine, Ultrasound articles, conferences, journals, societies, books, websites and much more.",
       },
