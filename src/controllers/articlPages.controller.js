@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
-// const httpStatus = require('http-status');
+const httpStatus = require('http-status');
 // const pick = require('../utils/pick');
-// const ApiError = require('../utils/ApiError');
+const ApiError = require('../utils/ApiError');
 const catchAsync = require("../utils/catchAsync");
 const { categoriesService, articlsService, notesService } = require("../services");
 
@@ -13,6 +13,9 @@ const getHomePage = catchAsync(async (req, res) => {
 
 const getArticlPage = catchAsync(async (req, res) => {
   const category = await categoriesService.getCategoryBySlug(req.params.slug);
+  if (Object.keys(category).length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Category not found.");
+  }
   const categories = await categoriesService.getCategoriesByParentSlug(
     req.params.slug
   );
