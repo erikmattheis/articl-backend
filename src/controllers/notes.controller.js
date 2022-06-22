@@ -77,7 +77,7 @@ const updateNote = catchAsync(async (req, res) => {
 
 const deleteNote = catchAsync(async (req, res) => {
   await notesService.deleteNoteById(req.body.id);
-  res.status({ id: req.body.id }).send();
+  res.send();
 });
 
 module.exports = {

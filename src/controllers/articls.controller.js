@@ -133,7 +133,7 @@ const updateArticl = catchAsync(async (req, res) => {
 
 const deleteArticl = catchAsync(async (req, res) => {
   await articlsService.deleteArticlById(req.body.id);
-  res.status({ id: req.body.id }).send();
+  res.send();
 });
 
 module.exports = {

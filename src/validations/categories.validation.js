@@ -46,7 +46,7 @@ const updateCategory = {
       title: Joi.string().required(),
       slug: Joi.string().required(),
       parentSlug: Joi.string().required(),
-      oldParentSlug: Joi.string().optional(),
+      oldSlug: Joi.string().optional(),
       description: Joi.string().allow(null,''),
     })
     .min(1),
