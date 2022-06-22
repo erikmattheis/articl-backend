@@ -35,8 +35,8 @@ const getNoteById = async (id) => {
   return Notes.findById(id)
 };
 
-const updateSlugs = async (oldSlug,newSlug) => {
-  const result = await Notes.updateMany({slug:oldSlug},{$set:{slug:newSlug}})
+const updateSlugs = async (slug,oldSlug) => {
+  return Notes.updateMany({slug:oldSlug},{$set:{slug:slug}})
 }
 
 const getNotesBySlug = async (slug) => {

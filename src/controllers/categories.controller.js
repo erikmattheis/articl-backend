@@ -51,17 +51,17 @@ const updateCategory = catchAsync(async (req, res) => {
     req.body
   );
 
-  if (req.body.slug!==req.body.parentSlug) {
+  if (req.body.slug !== req.body.parentSlug) {
     const slug = await categoriesService.updateParentSlugs(
-      req.body.oldSlug,
-      req.body.parentSlug
+      req.body.slug,
+      req.body.oldSlug
     );
     const articls = await articlsService.updateSlugs(
-      req.body.oldSlug,
-      req.body.parentSlug
+      req.body.slug,
+      req.body.oldSlug
     );  
   }
-  res.send({result,slug});
+  res.send({result, articls, slug});
 });
 
 const deleteCategory = catchAsync(async (req, res) => {

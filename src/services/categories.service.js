@@ -47,8 +47,8 @@ const getCategoriesByParentSlug = async (parentSlug) => {
   return categories;
 };
 
-const updateParentSlugs = async (oldParentSlug,newParentarentSlug) => {
-  const result = await Categories.updateMany({parentSlug:oldParentSlug},{$set:{parentSlug:newParentarentSlug}})
+const updateParentSlugs = async (slug,oldSlug) => {
+  const result = await Categories.updateMany({parentSlug:oldSlug},{$set:{parentSlug:slug}})
 }
 
 /**
