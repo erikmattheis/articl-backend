@@ -30,6 +30,11 @@ router.post(
   categoriesController.updateCategoriesOrder
 );
 router.get(
+  "/breadcrumbs",
+  validate(categoriesValidation.getSlugAncestry),
+  categoriesController.getSlugAncestry
+);
+router.get(
   "/titles",
   validate(categoriesValidation.getCategorySlugs),
   categoriesController.getCategorySlugs

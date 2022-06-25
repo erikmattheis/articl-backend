@@ -15,7 +15,6 @@ const createCategory = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(category);
 });
 
-
 const getCategoryPage = catchAsync(async (req, res) => {
   const category = await categoriesService.getCategoryBySlug(req.query.slug);
   const categories = await categoriesService.getCategoriesByParentSlug(
@@ -37,6 +36,11 @@ const getCategory = catchAsync(async (req, res) => {
 
 const getCategorySlugs = catchAsync(async (req, res) => {
   const slugs = await categoriesService.getCategorySlugs(req.query.q);
+  res.send(slugs);
+});
+
+const getSlugAncestry = catchAsync(async (req, res) => {
+  const slugs = await categoriesService.getSlugAncestry(req.query.slug, []);
   res.send(slugs);
 });
 
@@ -78,6 +82,7 @@ module.exports = {
   createCategory,
   getCategoryPage,
   getCategorySlugs,
+  getSlugAncestry,
   getCategories,
   getCategory,
   updateCategoriesOrder,

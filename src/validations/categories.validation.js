@@ -37,6 +37,12 @@ const getCategorySlugs = {
   }),
 };
 
+const getSlugAncestry  = {
+  query: Joi.object().keys({
+    slug: Joi.string().required(),
+  }),
+}
+
 const updateCategory = {
   params: Joi.object().keys({
     id: Joi.string().required(),
@@ -74,6 +80,7 @@ module.exports = {
   getCategories,
   getCategoryPage,
   getCategorySlugs,
+  getSlugAncestry,
   getCategory,
   updateCategory,
   updateCategoriesOrder,

@@ -88,6 +88,20 @@ const getCategorySlugs = async (q) => {
   return Promise.resolve(result);
 };
 
+const getSlugAncestry = async (slug,breadcrumbs) => {
+  let item = Categories.findOne({slug});
+  breadcrumbs.push(item);
+
+  if (item?.parentSlug + "" !== "0") {
+    getSlugAncestry(item.parentSlug,breadcrumbs)
+  }
+  else {
+    return breadcrumbs.reverse();
+  }
+}
+
+
+
 /**
  * Get category by id
  * @param {ObjectId} id
