@@ -100,7 +100,7 @@ const getSlugAncestry = async (slug, breadcrumbs) => {
   if (!item[0] || item[0]?.parentSlug + "" === "0") {
     breadcrumbs.push(item[0]);
     console.log('returning breadcrumbs',breadcrumbs)
-    return Promise.resolve(breadcrumbs);
+    return Promise.resolve(breadcrumbs.reverse());
   }
   else {
     breadcrumbs.push(item[0]);
