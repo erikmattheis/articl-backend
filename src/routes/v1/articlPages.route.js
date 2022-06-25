@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", articlPagesController.getHomePage);
 router.get(
   "/:slug",
-  validate(articlPagesValidation.getCategoryPage),
+  validate(articlPagesValidation.getArticlPage),
   articlPagesController.getArticlPage
 );
 

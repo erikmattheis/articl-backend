@@ -88,18 +88,34 @@ const getCategorySlugs = async (q) => {
   return Promise.resolve(result);
 };
 
-const getSlugAncestry = async (slug,breadcrumbs) => {
-  let item = Categories.findOne({slug});
-  breadcrumbs.push(item);
-
-  if (item?.parentSlug + "" !== "0") {
-    getSlugAncestry(item.parentSlug,breadcrumbs)
+const getSlugAncestry = async (slug, breadcrumbs) => {
+  console.log('slug is', slug);
+  console.log('breadcrumbs is', breadcrumbs);
+  if (!slug) {
+    return Promise.reject(new Error(`Slug category ${slug} not found.`))
+  }
+  const item = await Categories.find({ slug }, { title: 1, slug: 1, parentSlug: 1 }).exec();
+  console.log('found', item[0]);
+  
+  if (!item[0] || item[0]?.slug + "" === "0") {
+    breadcrumbs.push(item[0]);
+    console.log('returning breadcrumbs',breadcrumbs)
+    return Promise.resolve(breadcrumbs);
   }
   else {
-    return breadcrumbs.reverse();
+    breadcrumbs.push(item[0]);
+    console.log('not zero', item[0]?.title, item?.parentSlug)
+    console.log('getting', item[0].parentSlug, "parent")
+    return getSlugAncestry(item[0].parentSlug, breadcrumbs);
+
   }
 }
 
+const getBreadcrumbs = async (slug) => {
+  const result = await getSlugAncestry(slug, [])
+  console.log('found', result);
+  return result;
+}
 
 
 /**
@@ -171,6 +187,7 @@ module.exports = {
   getCategoriesByParentSlug,
   getCategoryBySlug,
   getCategorySlugs,
+  getBreadcrumbs,
   queryCategories,
   getCategoryById,
   updateCategoriesOrder,

@@ -12,6 +12,9 @@ const getHomePage = catchAsync(async (req, res) => {
 });
 
 const getArticlPage = catchAsync(async (req, res) => {
+  console.log('in f', req.params.slug);
+  const breadcrumbs = await categoriesService.getBreadcrumbs(req.params.slug);
+  console.log('breadcrumbs are finally', breadcrumbs)
   const category = await categoriesService.getCategoryBySlug(req.params.slug);
   if (Object.keys(category).length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, "Category not found.");
@@ -21,7 +24,7 @@ const getArticlPage = catchAsync(async (req, res) => {
   );
   const articls = await articlsService.getArticlsBySlug(req.params.slug);
   const notes = await notesService.getNotesBySlug(req.params.slug); // queryNotes({slug:req.params.slug},{ populate:'author' }, { fullText: 1,  slug: 1, createdAt: 1});
-  res.send({ notes, category, categories, articls });
+  res.send({ breadcrumbs, notes, category, categories, articls });
 });
 
 module.exports = {
