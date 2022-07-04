@@ -14,7 +14,7 @@ const { stringNearSubstring } = require("../utils/stringFunctions");
 const { articlsService } = require("../services");
 
 const createArticl = catchAsync(async (req, res) => {
-  const articl = await articlsService.createArticl(req.body);
+  const articl = await articlsService.createArticl(req.body, req.user);
   res.status(httpStatus.CREATED).send(articl);
 });
 

@@ -4,7 +4,6 @@ const { toJSON, paginate } = require("./plugins");
 mongoose.set("debug", true);
 mongoose.set('useFindAndModify', false);
 
-
 const articlsSchema = mongoose.Schema(
   {
     doi: {
@@ -186,6 +185,13 @@ const articlsSchema = mongoose.Schema(
       trim: true,
     },
     articlUrl: "",
+    user: {
+      type: mongoose.SchemaTypes.ObjectId,
+      required: true,
+      trim: true,
+      index: true,
+      ref: "User",
+    },
   },
   {
     timestamps: true,

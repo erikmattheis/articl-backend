@@ -8,7 +8,9 @@ const ApiError = require("../utils/ApiError");
  * @param {Object} articlBody
  * @returns {Promise<Articl>}
  */
-const createArticl = async (articlBody) => {
+const createArticl = async (articlBody, user) => {
+  articlBody.user = user.id;
+  console.log('creating for', user.id);
   return Articls.create(articlBody);
 };
 
@@ -35,7 +37,7 @@ const getArticlById = async (id) => {
 };
 
 const updateSlugs = async (slug, oldSlug) => {
-  return Articls.updateMany({slug:oldSlug},{$set:{slug:slug}})
+  return Articls.updateMany({ slug: oldSlug }, { $set: { slug: slug } })
 }
 
 const getAnyArticlFieldValue = async (field, value) => {
@@ -47,9 +49,7 @@ const getAnyArticlFieldValue = async (field, value) => {
 };
 
 const getArticlsBySlug = async (slug) => {
-
   return Articls.find({ slug: slug }).sort([['order', 1]]);
-
 };
 
 /**

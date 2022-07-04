@@ -46,6 +46,7 @@ const createArticl = {
     type: Joi.string(),
     type: Joi.string().required(),
     url: Joi.string().uri(),
+    user: Joi.string().custom(objectId),
     venue: Joi.string(),
     year: Joi.number(),
   }),
