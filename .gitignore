@@ -12,3 +12,5 @@ yarn-error.log
 coverage
 node_modules
 .VSCodeCounter
+
+*.DS_Store
