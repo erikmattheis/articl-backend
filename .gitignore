@@ -13,4 +13,5 @@ coverage
 node_modules
 .VSCodeCounter
 
-*.DS_Store
+.DS_Store
+DS_Store
