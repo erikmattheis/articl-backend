@@ -24,7 +24,7 @@ const defaultRoutes = [
     route: userRoute,
   },
   {
-    path: "/d",
+    path: "/resource",
     route: articlPages,
   },
   {
@@ -35,7 +35,7 @@ const defaultRoutes = [
     path: "/notes",
     route: notesRoute,
   },
-  
+
 ];
 
 defaultRoutes.forEach((route) => {
