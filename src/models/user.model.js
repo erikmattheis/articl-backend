@@ -30,7 +30,7 @@ const userSchema = mongoose.Schema(
     },
     institution: {
       type: String,
-      required: false,
+      required: true,
       unique: false,
       trim: true,
       lowercase: false,
