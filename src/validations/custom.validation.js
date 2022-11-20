@@ -16,7 +16,7 @@ function password(value, helpers) {
 
   } else if (value && value.length < 8) {
 
-    helpers.message("Please choose a password. with at least eight characters");
+    helpers.message("Please choose a password with at least eight characters");
 
     passed = false;
 

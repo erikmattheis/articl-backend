@@ -47,13 +47,6 @@ const articlsSchema = mongoose.Schema(
       required: false,
       trim: true,
     },
-    status: {
-      type: String,
-      required: true,
-      trim: true,
-      default: "Published",
-      index: true,
-    },
     title: {
       type: String,
       required: true,

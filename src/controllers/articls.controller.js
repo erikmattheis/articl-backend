@@ -37,7 +37,6 @@ const getArticls = catchAsync(async (req, res) => {
     "yearComparison",
     "year",
     "types",
-    "statuses",
   ]);
 
   let originalFilterValues = Object.assign({ ...filter });
@@ -108,10 +107,6 @@ function makeArticlsFilter(filter) {
   if (filter.types) {
     filter.type = stringToArrayFilter(filter.types, ",");
     delete filter.types;
-  }
-  if (filter.statuses) {
-    filter.status = stringToArrayFilter(filter.statuses, ",");
-    delete filter.statuses;
   }
   return filter;
 }

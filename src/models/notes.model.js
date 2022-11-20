@@ -10,21 +10,14 @@ const notesSchema = mongoose.Schema(
       index: true,
     },
     oldCategory: {
-        type: String,
-        required: false,
-        trim: true
+      type: String,
+      required: false,
+      trim: true
     },
     oldId: {
       type: String,
       required: false,
       trim: true,
-    },
-    status: {
-      type: String,
-      required: true,
-      trim: true,
-      default: "Published",
-      index: true,
     },
     fullText: {
       type: String,

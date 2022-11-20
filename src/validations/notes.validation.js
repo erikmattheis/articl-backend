@@ -4,11 +4,10 @@ const { objectId } = require("./custom.validation");
 const createNote = {
   body: Joi.object().keys({
     slug: Joi.string().required(),
-      oldCategory: Joi.string(),
-      oldId: Joi.string(),
-      status: Joi.string().required(),
-      fullText: Joi.string().required(),
-      author: Joi.object().keys({nameFirst:Joi.string(),nameLast:Joi.string(),id:Joi.string().custom(objectId)})
+    oldCategory: Joi.string(),
+    oldId: Joi.string(),
+    fullText: Joi.string().required(),
+    author: Joi.object().keys({ nameFirst: Joi.string(), nameLast: Joi.string(), id: Joi.string().custom(objectId) })
   }),
 };
 
@@ -20,7 +19,7 @@ const getNotes = {
 
 const getNote = {
   params: Joi.object().keys({
-   id: Joi.string().custom(objectId),
+    id: Joi.string().custom(objectId),
   }),
 };
 

@@ -23,7 +23,6 @@ const getNotes = catchAsync(async (req, res) => {
   let filter = pick(req.query, [
     "slug",
     "author",
-    "status",
   ]);
 
   let originalFilterValues = Object.assign({ ...filter });
@@ -34,7 +33,7 @@ const getNotes = catchAsync(async (req, res) => {
   options.sortBy = options.sortBy ? options.sortBy : "createdAt:desc"
   options = makeNotesOptions(options);
   options.populate = 'author';
-  const project={'nameFirst':true,'fullText':true};
+  const project = { 'nameFirst': true, 'fullText': true };
 
   const result = await notesService.queryNotes(filter, options, project);
 
@@ -45,7 +44,7 @@ function makeNotesOptions(options) {
   options.sortBy = options.sortBy ? options.sortBy : "createdAt:desc";
   options.limit = options.limit ? Number(options.limit) : 10;
   options.page = options.page ? Number(options.page) : 1;
-  options.populate = {path:'author'};
+  options.populate = { path: 'author' };
 
   return options;
 }
@@ -57,10 +56,6 @@ function makeNotesFilter(filter) {
   }
   if (filter.author) {
     filter.authors = regexFilter(filter.author);
-  }
-  if (filter.statuses) {
-    filter.status = stringToArrayFilter(filter.statuses, ",");
-    delete filter.statuses;
   }
   return filter;
 }

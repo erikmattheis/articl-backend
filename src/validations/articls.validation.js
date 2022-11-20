@@ -40,7 +40,6 @@ const createArticl = {
     sourceIdType: Joi.string(),
     startDate: Joi.date(),
     state: Joi.string(),
-    status: Joi.string().required(),
     thumbnailImage: Joi.string().uri(),
     title: Joi.string().required(),
     type: Joi.string(),
