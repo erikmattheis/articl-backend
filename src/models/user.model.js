@@ -8,12 +8,12 @@ const userSchema = mongoose.Schema(
   {
     nameFirst: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
     },
     nameLast: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
     },
     email: {
@@ -35,9 +35,23 @@ const userSchema = mongoose.Schema(
       trim: true,
       lowercase: false,
     },
-    education: {
+    city: {
       type: String,
-      required: false,
+      required: true,
+      unique: false,
+      trim: true,
+      lowercase: false,
+    },
+    state: {
+      type: String,
+      required: true,
+      unique: false,
+      trim: true,
+      lowercase: false,
+    },
+    country: {
+      type: String,
+      required: true,
       unique: false,
       trim: true,
       lowercase: false,

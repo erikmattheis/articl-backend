@@ -1,19 +1,6 @@
 const Joi = require("joi");
 const { password, objectId } = require("./custom.validation");
 
-const createUser = {
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
-    institution: Joi.string(),
-    education: Joi.string(),
-    nameFirst: Joi.string(),
-    nameLast: Joi.string(),
-    theme: Joi.string(),
-    role: Joi.string().required().valid("user", "admin"),
-  }),
-};
-
 const getUsers = {
   query: Joi.object().keys({
     nameFirst: Joi.string(),
@@ -33,6 +20,22 @@ const getUser = {
   }),
 };
 
+const createUser = {
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().custom(password),
+    nameFirst: Joi.string().required(),
+    nameLast: Joi.string().required(),
+    position: Joi.string().required(),
+    institution: Joi.string().required(),
+    city: Joi.string().required(),
+    country: Joi.string().required(),
+    nation: Joi.string().required(),
+    theme: Joi.string(),
+    role: Joi.string().required().valid("user", "admin"),
+  }),
+};
+
 const updateUser = {
   params: Joi.object().keys({
     userId: Joi.required().custom(objectId),
@@ -40,10 +43,14 @@ const updateUser = {
   body: Joi.object()
     .keys({
       email: Joi.string().required().email(),
-      institution: Joi.string().allow(null, ""),
-      education: Joi.string().allow(null, ""),
-      nameFirst: Joi.string().allow(null, ""),
-      nameLast: Joi.string().allow(null, ""),
+      nameFirst: Joi.string().required(),
+      nameLast: Joi.string().required(),
+      position: Joi.string().required(),
+      institution: Joi.string().required(),
+      city: Joi.string().required(),
+      country: Joi.string().required(),
+      nation: Joi.string().required(),
+      theme: Joi.string(),
       theme: Joi.string().allow(null, ""),
     })
     .min(1),
@@ -53,10 +60,14 @@ const updateMe = {
   body: Joi.object()
     .keys({
       email: Joi.string().required().email(),
-      institution: Joi.string().allow(null, ""),
-      education: Joi.string().allow(null, ""),
-      nameFirst: Joi.string().allow(null, ""),
-      nameLast: Joi.string().allow(null, ""),
+      nameFirst: Joi.string().required(),
+      nameLast: Joi.string().required(),
+      position: Joi.string().required(),
+      institution: Joi.string().required(),
+      city: Joi.string().required(),
+      country: Joi.string().required(),
+      nation: Joi.string().required(),
+      theme: Joi.string(),
       theme: Joi.string().allow(null, ""),
     })
     .min(1),
