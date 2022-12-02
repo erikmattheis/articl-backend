@@ -32,14 +32,13 @@ const logout = async (refreshToken) => {
   })
   const refreshTokenDoc = await Token.findOne({
     token: refreshToken,
-    type: tokenTypes.REFRESH,
-    blacklisted: false,
+    type: tokenTypes.REFRESH
   });
-  /*
+
   if (!refreshTokenDoc) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "User Not found");
   }
-  */
+
   return refreshTokenDoc.remove();
 };
 
@@ -54,7 +53,7 @@ const refreshAuth = async (refreshToken) => {
       refreshToken,
       tokenTypes.REFRESH
     );
-    
+
     const user = await userService.getUserById(refreshTokenDoc.user);
     if (!user) {
       throw new Error("Token did not match user.");
