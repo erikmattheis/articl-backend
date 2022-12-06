@@ -28,6 +28,13 @@ const userSchema = mongoose.Schema(
         }
       },
     },
+    position: {
+      type: String,
+      required: true,
+      unique: false,
+      trim: true,
+      lowercase: false,
+    },
     institution: {
       type: String,
       required: true,
