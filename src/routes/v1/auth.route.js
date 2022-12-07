@@ -25,7 +25,7 @@ router.post(
   authController.forgotPassword
 );
 router.post(
-  "/reset-password",
+  "/change-password",
   validate(authValidation.resetPassword),
   authController.resetPassword
 );
@@ -230,7 +230,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /auth/reset-password:
+ * /auth/change-password:
  *   post:
  *     summary: Reset password
  *     tags: [Auth]
