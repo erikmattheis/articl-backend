@@ -42,6 +42,12 @@ const resetPassword = {
   }),
 };
 
+const getEmailFromResetPassword = {
+  query: Joi.object().keys({
+    token: Joi.string().required(),
+  }),
+};
+
 const verifyEmail = {
   query: Joi.object().keys({
     token: Joi.string().required(),
@@ -55,5 +61,6 @@ module.exports = {
   refreshTokens,
   forgotPassword,
   resetPassword,
+  getEmailFromResetPassword,
   verifyEmail,
 };

@@ -44,6 +44,12 @@ const resetPassword = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const getEmailFromResetPassword = catchAsync(async (req, res) => {
+  const result = await authService.getEmailFromResetPassword(req.query.token);
+  res.send(result);
+});
+
+
 const sendVerificationEmail = catchAsync(async (req, res) => {
   const verifyEmailToken = await tokenService.generateVerifyEmailToken(
     req.user.id
@@ -64,6 +70,7 @@ module.exports = {
   refreshTokens,
   forgotPassword,
   resetPassword,
+  getEmailFromResetPassword,
   sendVerificationEmail,
   verifyEmail,
 };

@@ -89,6 +89,22 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
   }
 };
 
+const getEmailFromResetPassword = async (resetPasswordToken) => {
+  try {
+    const resetPasswordTokenDoc = await tokenService.verifyToken(
+      resetPasswordToken,
+      tokenTypes.RESET_PASSWORD
+    );
+    const user = await userService.getUserById(resetPasswordTokenDoc.user);
+    if (!user) {
+      throw new Error("User not found.");
+    }
+    return User.findById(id);
+  } catch (error) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, error);
+  }
+};
+
 /**
  * Verify email
  * @param {string} verifyEmailToken
@@ -116,5 +132,6 @@ module.exports = {
   logout,
   refreshAuth,
   resetPassword,
+  getEmailFromResetPassword,
   verifyEmail,
 };

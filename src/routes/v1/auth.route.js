@@ -24,6 +24,9 @@ router.post(
   validate(authValidation.forgotPassword),
   authController.forgotPassword
 );
+/*
+router.get("/change-password-get-email", validate(authValidation.getEmailFromResetPassword), authController.login);
+*/
 router.post(
   "/change-password",
   validate(authValidation.resetPassword),
