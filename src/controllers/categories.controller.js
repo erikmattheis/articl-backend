@@ -58,13 +58,13 @@ const updateCategory = catchAsync(async (req, res) => {
     await articlsService.updateSlugs(
       req.body.slug,
       req.body.oldSlug
-    );  
+    );
     await notesService.updateSlugs(
       req.body.slug,
       req.body.oldSlug
-    );  
+    );
   }
-  res.send({result});
+  res.send({ result });
 });
 
 const deleteCategory = catchAsync(async (req, res) => {

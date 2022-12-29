@@ -6,9 +6,8 @@ const categoriesController = require("../../controllers/categories.controller");
 
 const router = express.Router();
 
-router.post(
+router.get(
   "/import-categories",
-  auth(),
   categoriesController.importCategories
 );
 router.post(

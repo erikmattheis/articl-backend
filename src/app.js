@@ -57,7 +57,15 @@ app.use("/v1", routes);
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
+
+  if (req.url === '/v1/d/0') {
+    //res.redirect('/v1/categories/import-categories');
+  }
+  else {
+    next(new ApiError(httpStatus.NOT_FOUND, "File not found"));
+  }
   next(new ApiError(httpStatus.NOT_FOUND, "File not found"));
+
 });
 
 // convert error to ApiError, if needed
