@@ -35,6 +35,13 @@ const userSchema = mongoose.Schema(
       trim: true,
       lowercase: false,
     },
+    education: {
+      type: String,
+      required: false,
+      unique: false,
+      trim: true,
+      lowercase: false,
+    },
     institution: {
       type: String,
       required: false,
