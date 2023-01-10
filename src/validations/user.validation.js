@@ -3,6 +3,7 @@ const { password, objectId } = require("./custom.validation");
 
 const getUsers = {
   query: Joi.object().keys({
+    username: Joi.string(),
     nameFirst: Joi.string(),
     nameLast: Joi.string(),
     role: Joi.string(),
@@ -23,6 +24,7 @@ const getUser = {
 
 const createUser = {
   body: Joi.object().keys({
+    username: Joi.string().min(3).required(),
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     nameFirst: Joi.string().required(),
@@ -32,9 +34,8 @@ const createUser = {
     institution: Joi.string().required(),
     city: Joi.string().required(),
     country: Joi.string().required(),
-    nation: Joi.string().required(),
     theme: Joi.string(),
-    role: Joi.string().required().valid("user", "admin"),
+    // role: Joi.string().required().valid("user", "admin"),
   }),
 };
 
@@ -52,7 +53,6 @@ const updateUser = {
       institution: Joi.string().required(),
       city: Joi.string().required(),
       country: Joi.string().required(),
-      nation: Joi.string().required(),
       theme: Joi.string(),
       theme: Joi.string().allow(null, ""),
     })
@@ -71,7 +71,6 @@ const updateMe = {
       institution: Joi.string().required(),
       city: Joi.string().required(),
       country: Joi.string().required(),
-      nation: Joi.string().required(),
       theme: Joi.string(),
       theme: Joi.string().allow(null, ""),
     })

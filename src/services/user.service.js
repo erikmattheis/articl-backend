@@ -37,6 +37,10 @@ const getUserById = async (id) => {
   return User.findById(id);
 };
 
+const getUserByUsername = async (id) => {
+  return User.findById(id);
+};
+
 /**
  * Get user by email
  * @param {string} email
@@ -83,6 +87,7 @@ module.exports = {
   createUser,
   queryUsers,
   getUserById,
+  getUserByUsername,
   getUserByEmail,
   updateUserById,
   deleteUserById,
