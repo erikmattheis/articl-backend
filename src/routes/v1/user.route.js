@@ -19,28 +19,31 @@ router.get(
 
 router.post(
   "/",
-  auth("manageUsers"),
+  validate(userValidation.createUser),
+  userController.createUser
+);
+
+router.post(
+  "/me",
   validate(userValidation.createUser),
   userController.createUser
 );
 
 router.patch(
   "/me",
-  auth("manageUsers"),
+
   validate(userValidation.updateMe),
   userController.updateMe
 );
 
 router.patch(
   "/:userId",
-  auth("manageUsers"),
   validate(userValidation.updateUser),
   userController.updateUser
 );
 
 router.delete(
   "/:userId",
-  auth("manageUsers"),
   validate(userValidation.deleteUser),
   userController.deleteUser
 );
