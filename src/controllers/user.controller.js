@@ -37,6 +37,7 @@ const getUser = catchAsync(async (req, res) => {
 const updateMe = catchAsync(async (req, res) => {
   if (req.isAuthenticated() && req.user) {
     const user = await userService.updateUserById(req.user.id, req.body);
+    console.log('user', user);
     res.send(user);
   } else {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");

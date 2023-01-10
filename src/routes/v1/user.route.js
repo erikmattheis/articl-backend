@@ -31,7 +31,6 @@ router.post(
 
 router.patch(
   "/me",
-
   validate(userValidation.updateMe),
   userController.updateMe
 );
