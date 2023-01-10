@@ -37,8 +37,8 @@ const getUserById = async (id) => {
   return User.findById(id);
 };
 
-const getUserByUsername = async (id) => {
-  return User.findById(id);
+const getUserByUsername = async (username) => {
+  return User.findOne({ 'username': username });
 };
 
 /**
