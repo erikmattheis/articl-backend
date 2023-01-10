@@ -63,6 +63,7 @@ const updateQuestionById = async (questionId, updateBody) => {
   ) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
+
   Object.assign(question, updateBody);
   await question.save();
   return question;

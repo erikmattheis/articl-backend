@@ -11,6 +11,9 @@ const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
+  if (await User.isUsernameTaken(updateBody.username)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Username already taken");
+  }
   return User.create(userBody);
 };
 
@@ -57,15 +60,18 @@ const getUserByEmail = async (email) => {
  * @returns {Promise<User>}
  */
 const updateUserById = async (userId, updateBody) => {
-  const user = await getUserById(userId);
+  let user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
-  Object.assign(user, updateBody);
-  await user.save();
+  if (updateBody.username && (await User.isUsernameTaken(updateBody.username, userId))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Username already taken");
+  }
+
+  user = await User.findByIdAndUpdate(userId, updateBody);
   return user;
 };
 
