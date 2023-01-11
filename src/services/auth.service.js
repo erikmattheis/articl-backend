@@ -72,18 +72,20 @@ const refreshAuth = async (refreshToken) => {
  * @param {string} newPassword
  * @returns {Promise}
  */
-const resetPassword = async (resetPasswordToken, newPassword) => {
+const resetPassword = async (user, newPassword, password) => {
   try {
-    const resetPasswordTokenDoc = await tokenService.verifyToken(
-      resetPasswordToken,
-      tokenTypes.RESET_PASSWORD
-    );
-    const user = await userService.getUserById(resetPasswordTokenDoc.user);
+
+    //const user = await userService.getUserById(resetPasswordTokenDoc.user);
     if (!user) {
       throw new Error("User not found.");
     }
-    await userService.updateUserById(user.id, { password: newPassword });
-    await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
+    if (await user.isPasswordMatch(password)) {
+      await userService.updateUserById(user.id, { password: newPassword });
+      await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
+    }
+    else {
+      throw new ApiError(httpStatus.UNAUTHORIZED, "Password incorrect.");
+    }
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, error);
   }
