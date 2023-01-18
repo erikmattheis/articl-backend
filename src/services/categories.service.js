@@ -161,7 +161,7 @@ const updateCategoryById = async (categoryId, updateBody) => {
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
   }
-  if (updateBody.slug && (await Categories.isCategorySlug(updateBody.slug))) {
+  if (updateBody.slug && (await Categories.isCategorySlug(updateBody.slug, categoryId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Slug already taken");
   }
   Object.assign(category, updateBody);

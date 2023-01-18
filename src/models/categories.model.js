@@ -72,8 +72,8 @@ categoriesSchema.plugin(paginate);
 category slug * @param {string} val
  * @returns {Promise<boolean>}
  */
-categoriesSchema.statics.isCategorySlug = async function (val) {
-  const category = await this.findOne({ slug: val });
+categoriesSchema.statics.isCategorySlug = async function (val, excludeId) {
+  const category = await this.findOne({ slug: val, _id: { $ne: excludeId } });
   return !!category;
 };
 
