@@ -68,7 +68,8 @@ const updateCategory = catchAsync(async (req, res) => {
 });
 
 const deleteCategory = catchAsync(async (req, res) => {
-  const result = await categoriesService.deleteUserById(req.params.id);
+  console.log('req.body.id',req.body.id);
+  const result = await categoriesService.deleteCategoryById(req.body.id);
   res.status(httpStatus.NO_CONTENT).send(result);
 });
 

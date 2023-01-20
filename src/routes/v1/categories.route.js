@@ -38,6 +38,13 @@ router.get(
   validate(categoriesValidation.getCategory),
   categoriesController.getCategory
 );
+router.delete(
+  "/",
+  auth("manageUsers"),
+  validate(categoriesValidation.deleteCategory),
+  categoriesController.deleteCategory
+);
+
 // router.get('/:id', auth(), validate(categoriesValidation.getUser), categoriesController.getCategory);
 
 module.exports = router;

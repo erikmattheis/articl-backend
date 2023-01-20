@@ -174,10 +174,11 @@ const updateCategoryById = async (categoryId, updateBody) => {
  * @param {ObjectId} categoryId
  * @returns {Promise<Categories>}
  */
-const deleteCategoryById = async (categoryId) => {
-  const category = await getCategoryById(categoryId);
+const deleteCategoryById = async (id) => {
+  console.log('id', id);
+  const category = await getCategoryById(id);
   if (!category) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Categories not found");
+    throw new ApiError(httpStatus.NOT_FOUND, `Category ${id} not found`);
   }
   await category.remove();
   return category;

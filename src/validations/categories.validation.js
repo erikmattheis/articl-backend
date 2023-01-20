@@ -70,8 +70,8 @@ const updateCategoriesOrder = {
 };
 
 const deleteCategory = {
-  params: Joi.object().keys({
-    id: Joi.string().custom(objectId),
+  body: Joi.object().keys({
+    id: Joi.string().custom(objectId).required(),
   }),
 };
 
