@@ -30,7 +30,6 @@ router.get("/change-password-get-email", validate(authValidation.getEmailFromRes
 router.post(
   "/change-password",
   validate(authValidation.resetPassword),
-  auth("manageUsers"),
   authController.resetPassword
 );
 router.post("/send-verification-email", authController.sendVerificationEmail);

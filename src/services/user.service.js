@@ -75,6 +75,24 @@ const updateUserById = async (userId, updateBody) => {
   return user;
 };
 
+
+/**
+ * Update user by id
+ * @param {ObjectId} userId
+ * @param {Object} updateBody
+ * @returns {Promise<User>}
+ */
+const updatePasswordById = async (userId, updateBody) => {
+  let user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+  Object.assign(user, updateBody);
+  await user.save();
+  return user;
+};
+
+
 /**
  * Delete user by id
  * @param {ObjectId} userId
@@ -96,5 +114,6 @@ module.exports = {
   getUserByUsername,
   getUserByEmail,
   updateUserById,
+  updatePasswordById,
   deleteUserById,
 };
