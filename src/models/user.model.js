@@ -87,9 +87,9 @@ const userSchema = mongoose.Schema(
       trim: true,
       minlength: 8,
       validate(value) {
-        if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+        if (!value.match(/[0-9]/) || !value.match(/[a-z]/) || !value.match(/[A-Z]/) || value.length < 8 || value.length > 64) {
           throw new Error(
-            "Password must contain at least one letter and one number"
+            "Password must be between 8 and 64 characters long and contain at least one uppercase letter, one lowercase letter and a digit."
           );
         }
       },
@@ -144,7 +144,7 @@ userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
  */
 userSchema.methods.isPasswordMatch = async function (password) {
   const user = this;
-  return bcrypt.compare(password, user.password);
+  return await bcrypt.compare(password, user.password);
 };
 
 userSchema.pre("save", async function (next) {

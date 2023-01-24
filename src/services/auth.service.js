@@ -25,11 +25,6 @@ const loginUserWithUsernameAndPassword = async (username, password) => {
  * @returns {Promise}
  */
 const logout = async (refreshToken) => {
-  console.log({
-    token: refreshToken,
-    type: tokenTypes.REFRESH,
-    blacklisted: false,
-  })
   const refreshTokenDoc = await Token.findOne({
     token: refreshToken,
     type: tokenTypes.REFRESH
