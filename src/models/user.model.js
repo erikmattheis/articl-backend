@@ -126,7 +126,7 @@ userSchema.statics.isUsernameTaken = async function (username, excludeUserId) {
   return !!user;
 };
 
-/**
+/**ed 
  * Check if email is taken
  * @param {string} email - The user's email
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
