@@ -56,6 +56,7 @@ app.use("/v1/auth", authLimiter);
 app.use("/v1", routes);
 
 // send back a 404 error for any unknown api request
+/*
 app.use((req, res, next) => {
 
   // if site was just deployed
@@ -64,10 +65,11 @@ app.use((req, res, next) => {
     res.redirect('/v1/categories/import-categories');
   }
   else {
-    next(new ApiError(httpStatus.NOT_FOUND, "File not found"));
+    //next(new ApiError(httpStatus.NOT_FOUND, "File not found"));
   }
 
 });
+*/
 
 // convert error to ApiError, if needed
 app.use(errorConverter);

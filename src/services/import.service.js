@@ -158,7 +158,7 @@ const importCategories = async () => {
       time,
     };
   } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error + " ccc ");
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error);
   }
 };
 
