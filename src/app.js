@@ -17,8 +17,10 @@ const ApiError = require("./utils/ApiError");
 const app = express();
 
 if (config.env !== "test") {
+
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
+
 }
 
 // set security HTTP headers
@@ -60,13 +62,17 @@ app.use("/v1", routes);
 app.use((req, res, next) => {
 
   // if site was just deployed
-  if (req.url === '/v1/d/0') {
+  if (req.url === "/v1/d/0") {
+
     next();
-    res.redirect('/v1/categories/import-categories');
-  }
+    res.redirect("/v1/categories/import-categories");
+  
+}
   else {
+
     next(new ApiError(httpStatus.NOT_FOUND, "File not found"));
-  }
+  
+}
 
 });
 
