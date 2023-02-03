@@ -10,7 +10,6 @@ const ApiError = require("../utils/ApiError");
  */
 const createArticl = async (articlBody, user) => {
   articlBody.user = user.id;
-  console.log('creating for', user.id);
   return Articls.create(articlBody);
 };
 

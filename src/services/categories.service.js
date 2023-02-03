@@ -57,7 +57,6 @@ const updateParentSlugs = async (slug, oldSlug) => {
  * @returns {Promise<Categories>}
  */
 const getCategoryBySlug = async (slug) => {
-  console.log('wtf here')
   if (slug === "0" || slug === 0) {
     return [
       {
@@ -90,23 +89,17 @@ const getCategorySlugs = async (q) => {
 };
 
 const getSlugAncestry = async (slug, breadcrumbs) => {
-  console.log('slug is', slug);
-  console.log('breadcrumbs is', breadcrumbs);
   if (!slug) {
     return Promise.reject(new Error(`Slug category ${slug} not found.`))
   }
   const item = await Categories.find({ slug }, { title: 1, slug: 1, parentSlug: 1 }).exec();
-  console.log('found', item[0]);
 
   if (!item[0] || item[0]?.parentSlug + "" === "0") {
     breadcrumbs.push(item[0]);
-    console.log('returning breadcrumbs', breadcrumbs)
     return Promise.resolve(breadcrumbs.reverse());
   }
   else {
     breadcrumbs.push(item[0]);
-    console.log('not zero', item[0]?.title, item?.parentSlug)
-    console.log('getting', item[0].parentSlug, "parent")
     return getSlugAncestry(item[0].parentSlug, breadcrumbs);
 
   }
@@ -114,7 +107,6 @@ const getSlugAncestry = async (slug, breadcrumbs) => {
 
 const getBreadcrumbs = async (slug) => {
   const result = await getSlugAncestry(slug, [])
-  console.log('found', result);
   return result;
 }
 
@@ -175,7 +167,6 @@ const updateCategoryById = async (categoryId, updateBody) => {
  * @returns {Promise<Categories>}
  */
 const deleteCategoryById = async (id) => {
-  console.log('id', id);
   const category = await getCategoryById(id);
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, `Category ${id} not found`);

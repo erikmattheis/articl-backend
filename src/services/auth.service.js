@@ -21,20 +21,20 @@ const loginUserWithUsernameAndPassword = async (username, password) => {
 
 /**
  * Logout
- * @param {string} refreshToken
+ * @param {string} accessToken
  * @returns {Promise}
  */
-const logout = async (refreshToken) => {
-  const refreshTokenDoc = await Token.findOne({
-    token: refreshToken,
-    type: tokenTypes.REFRESH
+const logout = async (accessToken) => {
+  const accessTokenDoc = await Token.findOne({
+    token: accessToken,
+    type: tokenTypes.ACCESS
   });
 
-  if (!refreshTokenDoc) {
+  if (!accessTokenDoc) {
     throw new ApiError(httpStatus.NOT_FOUND, "User Not found");
   }
 
-  return refreshTokenDoc.remove();
+  return accessTokenDoc.remove();
 };
 
 /**
@@ -42,7 +42,8 @@ const logout = async (refreshToken) => {
  * @param {string} refreshToken
  * @returns {Promise<Object>}
  */
-const refreshAuth = async (refreshToken) => {
+const refreshAuth = async (refreshToken) => {console.log('refresh', refreshToken)
+
   try {
     const refreshTokenDoc = await tokenService.verifyToken(
       refreshToken,
@@ -71,7 +72,6 @@ const resetPassword = async (username, newPassword) => {
   try {
 
     const user = await userService.getUserByUsername(username);
-    console.log('username', user)
     if (!user) {
       throw new Error("User not found.");
     }

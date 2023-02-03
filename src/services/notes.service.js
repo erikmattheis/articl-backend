@@ -22,7 +22,6 @@ const createNote = async (noteBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryNotes = async (filter, options, projection = {}) => {
-  console.log('am gerying notes')
   return Notes.paginate(filter, options, projection);
 };
 
@@ -53,12 +52,10 @@ const getNotesBySlug = async (slug) => {
  * @returns {Promise<Note>}
  */
 const updateNoteById = async (id, updateBody) => {
-  console.log('the id',id)
   const note = await getNoteById(id);
   if (!note) {
     throw new ApiError(httpStatus.NOT_FOUND, "Note not found");
   }
-  console.log('note is', note);
   Object.assign(note, updateBody);
   await note.save();
   return note;

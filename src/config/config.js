@@ -3,7 +3,6 @@ const path = require("path");
 const Joi = require("joi");
 
 dotenv.config();
-console.log(process.env);
 
 const envVarsSchema = Joi.object()
   .keys({
