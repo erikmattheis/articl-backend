@@ -1,5 +1,6 @@
 const httpStatus = require("http-status");
 const regexEscape = require("regex-escape");
+const { articlsService } = require('.');
 const { Articls } = require("../models");
 const ApiError = require("../utils/ApiError");
 
@@ -47,9 +48,107 @@ const getAnyArticlFieldValue = async (field, value) => {
   return Promise.resolve(result);
 };
 
-const getArticlsBySlug = async (slug) => {
-  return Articls.find({ slug: slug }).sort([['order', 1]]);
+const orderArray = ['Review (OA)', 'Review (PA)', 'Research (OA)', 'Research (PA)', 'Web', 'Images', 'Videos', 'Presentations', 'Podcast'];
+
+const sortArticls = (a, b) => {
+  const aIndex = orderArray.indexOf(a.type);
+  const bIndex = orderArray.indexOf(b.type);
+
+  if (aIndex !== bIndex) {
+    return aIndex - bIndex;
+  }
+
+  return a.order - b.order;
 };
+
+const getArticlsBySlug = async (slug) => {
+  const articls = await Articls.find({ slug: slug });
+  return articls.sort(sortArticls);
+}
+
+/*
+const orderArray = ['Review (OA)', 'Review (PA)', 'Research (OA)', 'Research (PA)', 'Web', 'Images', 'Videos'];
+
+const sortArticls = (a, b) => {
+  const aIndex = orderArray.indexOf(a.type);
+  const bIndex = orderArray.indexOf(b.type);
+
+  if (aIndex !== bIndex) {
+    return aIndex - bIndex;
+  }
+
+  return a.order - b.order;
+}
+
+without the ording:
+
+articls = [{
+  order:2,
+  title: 'Images title 2',
+  type:'Images',
+},
+{
+  order:1,
+  title: 'Images title 1',
+  type:'Images',
+},
+{
+  order:2,
+  title: 'Web title 2',
+  type:'Web',
+},
+{
+  order:1,
+  title: 'Web title 1',
+  type:'Web',
+}]
+
+Ordered:
+
+[{
+order:1,
+title: 'Web title 1',
+type:'Web',
+},
+{
+  order:2,
+  title: 'Web title 2',
+  type:'Web',
+},
+{
+  order:1,
+  title: 'Images title 1',
+  type:'Images',
+},
+{
+  order:2,
+  title: 'Images title 2',
+  type:'Images',
+}]
+
+const getArticlsBySlug = async (slug) => {
+  return Articls.find({ slug: slug }).sort(sortArticls);
+};
+
+
+  I have an array of articles. Each article is this object:
+  article: {
+    order,
+    title
+    type,
+  }
+
+  The type is one of the orderArray - ['Review (OA)', 'Review (PA)', 'Research (OA)', 'Research (PA)', 'Web', 'Images', 'Videos']
+
+  I wish to order the results first by their "type" in the order the appear in orderArray and then by their "order" property.
+
+  I am using Mongoose. I can use lodash if needed.
+
+  How can I accompliush this? So far, I have:
+
+  return Articls.find({ slug: slug }).sort([['order', 1]]);
+
+  */
 
 /**
  * Update articl by id
