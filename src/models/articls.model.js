@@ -11,6 +11,7 @@ const articlsSchema = mongoose.Schema(
       required: false,
       trim: true,
       index: true,
+      unique: true,
     },
     authorsOrig: {
       type: String,
