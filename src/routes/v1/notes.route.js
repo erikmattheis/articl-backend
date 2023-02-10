@@ -23,7 +23,7 @@ router.get(
 );
 
 
-router.put(
+router.patch(
   "/:id",
   auth("manageUsers"),
   validate(notesValidation.updateNote),
