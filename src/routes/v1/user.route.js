@@ -36,6 +36,7 @@ router.patch(
   userController.updateMe
 );
 
+
 router.patch(
   "/:userId",
   validate(userValidation.updateUser),
