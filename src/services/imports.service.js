@@ -1,13 +1,18 @@
 const httpStatus = require("http-status");
+const axios = require('axios');
 const fs = require("fs");
 const path = require("path");
 const { Categories } = require("../models");
 const categoriesService = require("./categories.service");
 const ApiError = require("../utils/ApiError");
-
 const SLUG_ERROR_FILE = "../category-errors.json";
 const CATEGORIES_JSON_FILE = "../models/categories.json";
+const articlsService = require("./articls.service");
 const existingSlugs = [];
+const Articls = require("../models/articls.model");
+
+const axiosThrottle = require('axios-request-throttle');
+axiosThrottle.use(axios, { requestsPerSecond: 1 });
 
 const slugify = (slug) => {
   let str = slug.replace(/\s/g, "-");
@@ -51,19 +56,6 @@ const wpCategoryToNodeCategory = (old) => {
     return newObj;
   } catch (error) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error + "6");
-  }
-};
-
-/**
- * Get category by id
- * @param {ObjectId} id
- * @returns {Promise<User>}
- */
-const getCategoryById = async (id) => {
-  try {
-    return Category.findById(id);
-  } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error + "5");
   }
 };
 
@@ -136,6 +128,60 @@ const loopThroughAndChangeParentSlug = async (categories) => {
   return result;
 };
 
+const importArticlsByChr = async (chr) => {
+  let n = 0;
+
+    let categories = await getCategoriesFromExportedJSON();
+    categories = categories.filter(cat => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
+
+    categories.forEach(async (category) => {
+      let articls = await getArticls(category.slug);
+      console.log('article',articls)
+      if (articls.length) {
+        n = n + articls.length;
+        let result = await Articls.bulkWrite(articls.map(doc => ({
+
+          updateOne: {
+            filter: { oldId: doc.ID },
+            update: doc,
+            upsert: true,
+          }
+  
+        })));
+      }
+    });
+    return n;
+  }
+
+  
+
+
+/*
+
+axios.get('https://jsonplaceholder.typicode.com/users')
+  .then(res => {
+    const headerDate = res.headers && res.headers.date ? res.headers.date : 'no response date';
+    console.log('Status Code:', res.status);
+    console.log('Date in Response header:', headerDate);
+
+    const users = res.data;
+
+    for(user of users) {
+      console.log(`Got user with id: ${user.id}, name: ${user.name}`);
+    }
+  })
+  .catch(err => {
+    console.log('Error: ', err.message);
+  });
+  */
+const getArticls = async (slug) => {
+
+  const articls = await axios.get(`https://articl.net/wp-json/articl/v1/articl_get_articls?category=${slug}`);
+
+  return articls.data;
+
+}
+
 const importCategories = async () => {
   const start = new Date();
   try {
@@ -143,6 +189,9 @@ const importCategories = async () => {
     categories = await loopThroughOldAndCreateNew(categories, true);
     categories = await Categories.find();
     categories = await loopThroughAndChangeParentSlug(categories);
+    let articls = await articlsService.getArticlsBySlug(categories[0].slug);
+    console.log('articls', articls);
+    console.log('categories', categories[0])
     const updateNum = categories.length;
 
     const stop = new Date();
@@ -164,4 +213,5 @@ const importCategories = async () => {
 
 module.exports = {
   importCategories,
+  importArticlsByChr
 };

@@ -3,10 +3,15 @@ const httpStatus = require("http-status");
 const pick = require("../utils/pick");
 // const ApiError = require('../utils/ApiError');
 const catchAsync = require("../utils/catchAsync");
-const { articlsService, categoriesService, importService, notesService } = require("../services");
+const { articlsService, categoriesService, importsService, notesService } = require("../services");
 
 const importCategories = catchAsync(async (req, res) => {
-  const result = await importService.importCategories();
+  const result = await importsService.importCategories();
+  res.status(httpStatus.CREATED).send(result);
+});
+
+const importCategoriesByChr = catchAsync(async (req, res) => {
+  const result = await importsService.importCategories(req.params.chr);
   res.status(httpStatus.CREATED).send(result);
 });
 

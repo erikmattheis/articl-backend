@@ -6,10 +6,6 @@ const categoriesController = require("../../controllers/categories.controller");
 
 const router = express.Router();
 
-router.get(
-  "/import-categories",
-  categoriesController.importCategories
-);
 router.post(
   "/",
   auth("manageUsers"),

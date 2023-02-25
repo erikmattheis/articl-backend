@@ -3,6 +3,7 @@ const authRoute = require("./auth.route");
 const articlsRoute = require("./articls.route");
 const userRoute = require("./user.route");
 const categoriesRoute = require("./categories.route");
+const importsRoute = require("./imports.route");
 const articlPages = require("./articlPages.route");
 const docsRoute = require("./docs.route");
 const notesRoute = require("./notes.route");
@@ -30,6 +31,10 @@ const defaultRoutes = [
   {
     path: "/categories",
     route: categoriesRoute,
+  },
+  {
+    path: "/imports",
+    route: importsRoute,
   },
   {
     path: "/notes",
