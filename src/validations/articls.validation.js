@@ -5,7 +5,6 @@ const { objectId } = require("./custom.validation");
 const createArticl = {
   body: Joi.object().keys({
     abstract: Joi.string(),
-    affiliation: Joi.string(),
     url: Joi.string(),
     authorsOrig: Joi.string(),
     authors: Joi.array().items(Joi.object({

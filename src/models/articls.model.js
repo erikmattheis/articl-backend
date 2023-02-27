@@ -192,7 +192,6 @@ const weights = {
   title: 10,
   abstract: 7,
   authors: 5,
-  affiliation: 5,
   description: 9,
   fullText: 6,
   url: 1,
