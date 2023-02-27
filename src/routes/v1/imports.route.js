@@ -14,4 +14,9 @@ router.get(
   importsController.importArticlsByChr
 );
 
+router.get(
+  "/import-notes/:chr",
+  importsController.importNotesByChr
+);
+
 module.exports = router;

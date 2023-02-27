@@ -10,11 +10,16 @@ const importCategories = catchAsync(async (req, res) => {
 
 const importArticlsByChr = catchAsync(async (req, res) => {
   const result = await importsService.importArticlsByChr(req.params.chr);
-  console.log('result',result)
-  res.status(httpStatus.CREATED).send('result');
+  res.status(httpStatus.CREATED).send('Imported ' + result + ' articls');
+});
+
+const importNotesByChr = catchAsync(async (req, res) => {
+  const result = await importsService.importNotesByChr(req.params.chr);
+  res.status(httpStatus.CREATED).send('Imported ' + result + ' notes');
 });
 
 module.exports = {
   importCategories,
   importArticlsByChr,
+  importNotesByChr,
 };

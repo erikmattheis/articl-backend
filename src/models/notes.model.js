@@ -32,6 +32,15 @@ const notesSchema = mongoose.Schema(
       index: true,
       ref: "User",
     },
+    authorHandle: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    wpNote: {
+      type: mongoose.Schema.Types.Mixed,
+      required: false,
+    }
   },
   {
     timestamps: true,

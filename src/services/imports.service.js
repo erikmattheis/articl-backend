@@ -10,9 +10,10 @@ const CATEGORIES_JSON_FILE = "../models/categories.json";
 const articlsService = require("./articls.service");
 const existingSlugs = [];
 const Articls = require("../models/articls.model");
-
+const Notes = require("../models/articls.model");
 const axiosThrottle = require('axios-request-throttle');
-axiosThrottle.use(axios, { requestsPerSecond: 1 });
+
+axiosThrottle.use(axios, { requestsPerSecond: 4 });
 
 const slugify = (slug) => {
   let str = slug.replace(/\s/g, "-");
@@ -129,56 +130,105 @@ const loopThroughAndChangeParentSlug = async (categories) => {
 };
 
 const importArticlsByChr = async (chr) => {
+
   let n = 0;
 
-    let categories = await getCategoriesFromExportedJSON();
-    categories = categories.filter(cat => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
+  let categories = await getCategoriesFromExportedJSON();
+  categories = categories.filter(cat => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
+  for (const category of categories) {
+    let articls = await getArticls(category.slug);
+    
+    if (articls.length) {
+      n = n + articls.length;
+      articls = articls.map((articl) => oldToNewArticl(articl));
+      let result = await Articls.bulkWrite(articls.map(doc => ({
 
-    categories.forEach(async (category) => {
-      let articls = await getArticls(category.slug);
-      console.log('article',articls)
-      if (articls.length) {
-        n = n + articls.length;
-        let result = await Articls.bulkWrite(articls.map(doc => ({
+        updateOne: {
+          filter: { oldId: doc.ID },
+          update: doc,
+          upsert: true,
+        }
 
-          updateOne: {
-            filter: { oldId: doc.ID },
-            update: doc,
-            upsert: true,
-          }
-  
-        })));
-      }
-    });
-    return n;
-  }
-
-  
-
-
-/*
-
-axios.get('https://jsonplaceholder.typicode.com/users')
-  .then(res => {
-    const headerDate = res.headers && res.headers.date ? res.headers.date : 'no response date';
-    console.log('Status Code:', res.status);
-    console.log('Date in Response header:', headerDate);
-
-    const users = res.data;
-
-    for(user of users) {
-      console.log(`Got user with id: ${user.id}, name: ${user.name}`);
+      })));
     }
-  })
-  .catch(err => {
-    console.log('Error: ', err.message);
-  });
-  */
+  }
+  return n;
+}
+
+const toAuthorsArray = (authors) => {
+  if (authors){
+
+  return authors.split(',').map(author => author.trim())}
+  else {
+  return [];
+}};
+
+const importNotesByChr = async (chr) => {
+
+  let n = 0;
+
+  let categories = await getCategoriesFromExportedJSON();
+  categories = categories.filter(cat => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
+  for (const category of categories) {
+    let notes = await getNotes(category.slug);
+    
+    if (notes.length) {
+      n = n + notes.length;
+      notes = notes.map((note) => oldToNewNote(note));
+      let result = await Notes.bulkWrite(notes.map(doc => ({
+
+        updateOne: {
+          filter: { oldId: doc.ID },
+          update: doc,
+          upsert: true,
+        }
+
+      })));
+    }
+  }
+  return n;
+}
+
+function oldToNewArticl(oldArticl) {
+
+  const newArticl = { ...oldArticl };
+  newArticl.authors = toAuthorsArray(oldArticl.authors);
+  newArticl.authorsOrig = oldArticl.authors;
+  newArticl.order = oldArticl.menu_order;
+  newArticl.order = oldArticl.menu_order;
+  newArticl.title = oldArticl.post_title;
+  newArticl.slug = oldArticl.directory_link_category[0].slug;
+  newArticl.type = oldArticl.directory_link_resource_type[0].name;
+  newArticl.oldId = oldArticl.ID;
+  newArticl.wpPost = oldArticl;
+
+  return newArticl;
+}
+
+function oldToNewNote(oldNote) {
+  const newNote = { ...oldNote };
+  newNote.fullText = oldNote.content.rendered;
+  newNote.title = oldNote.title.rendered;
+  newNote.excerpt = oldNote.excerpt.rendered;
+  newNote.oldId = oldNote.ID;
+  newNote.wpNote = oldNote;
+  newNote.authorHandle = oldNote.author_name.data.user_nicename;
+  return newNote;
+}
+
 const getArticls = async (slug) => {
 
   const articls = await axios.get(`https://articl.net/wp-json/articl/v1/articl_get_articls?category=${slug}`);
 
   return articls.data;
+
+}
+
+const getNotes = async (slug) => {
+
+  const notes = await axios.get(`https://articl.net/wp-json/articl/v1/articl_get_notes?category=${slug}`);
+
+  return notes.data;
 
 }
 
@@ -189,9 +239,7 @@ const importCategories = async () => {
     categories = await loopThroughOldAndCreateNew(categories, true);
     categories = await Categories.find();
     categories = await loopThroughAndChangeParentSlug(categories);
-    let articls = await articlsService.getArticlsBySlug(categories[0].slug);
-    console.log('articls', articls);
-    console.log('categories', categories[0])
+
     const updateNum = categories.length;
 
     const stop = new Date();
@@ -213,5 +261,6 @@ const importCategories = async () => {
 
 module.exports = {
   importCategories,
-  importArticlsByChr
+  importArticlsByChr,
+  importNotesByChr
 };
