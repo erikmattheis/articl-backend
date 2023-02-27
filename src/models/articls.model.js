@@ -1,29 +1,11 @@
 const mongoose = require("mongoose");
 const { toJSON, paginate } = require("./plugins");
 
-mongoose.set("debug", true);
 mongoose.set('useFindAndModify', false);
 
 const articlsSchema = mongoose.Schema(
   {
-    doi: {
-      type: String,
-      required: false,
-      trim: true,
-      index: true,
-      unique: true,
-    },
-    authorsOrig: {
-      type: String,
-      required: false,
-      trim: true,
-      index: true,
-    },
-    authors: [{
-      nameFirst: String,
-      nameLast: String,
-      affilliations: [String]
-    }],
+
     category: {
       type: String,
       required: false,
@@ -53,6 +35,9 @@ const articlsSchema = mongoose.Schema(
       required: true,
       trim: true,
       index: true,
+    },
+    authors: {
+      type: Array,
     },
     type: {
       type: String,
@@ -178,7 +163,7 @@ const articlsSchema = mongoose.Schema(
       required: false,
       trim: true,
     },
-    articlUrl: "",
+    url: "",
     user: {
       type: mongoose.SchemaTypes.ObjectId,
       required: true,
@@ -186,6 +171,15 @@ const articlsSchema = mongoose.Schema(
       index: true,
       ref: "User",
     },
+    oldUserId: {
+      type: String,
+      required: false,
+      trim: true
+    },
+    wpPost: {
+      type: mongoose.Schema.Types.Mixed,
+      required: false,
+    }
   },
   {
     timestamps: true,
