@@ -1,24 +1,29 @@
-const httpStatus = require("http-status");
+const httpStatus = require('http-status');
 const axios = require('axios');
-const fs = require("fs");
-const path = require("path");
-const { Categories } = require("../models");
-const categoriesService = require("./categories.service");
-const ApiError = require("../utils/ApiError");
-const SLUG_ERROR_FILE = "../category-errors.json";
-const CATEGORIES_JSON_FILE = "../models/categories.json";
-const articlsService = require("./articls.service");
-const existingSlugs = [];
-const Articls = require("../models/articls.model");
-const Notes = require("../models/articls.model");
+const moment = require('moment');
+const fs = require('fs');
+const path = require('path');
 const axiosThrottle = require('axios-request-throttle');
+const { Categories } = require('../models');
+const categoriesService = require('./categories.service');
+const ApiError = require('../utils/ApiError');
+
+const SLUG_ERROR_FILE = '../category-errors.json';
+const CATEGORIES_JSON_FILE = '../models/categories.json';
+
+const existingSlugs = [];
+const Articls = require('../models/articls.model');
+const Notes = require('../models/notes.model');
+
+let n = 0;
 
 axiosThrottle.use(axios, { requestsPerSecond: 4 });
 
 const slugify = (slug) => {
-  let str = slug.replace(/\s/g, "-");
+  let str = slug.replace(/\s/g, '-');
   str = str.toLowerCase();
   str = str.length ? str : 0;
+
   return encodeURIComponent(str);
 };
 
@@ -33,11 +38,11 @@ const toSlug = (slug, name) => {
     if (!slug) {
       throw new ApiError(
         httpStatus.INTERNAL_SERVER_ERROR,
-        "Could not convert to suitable slug."
+        'Could not convert to suitable slug.',
       );
     }
   } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error + "7");
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `${error}7`);
   }
 };
 
@@ -46,17 +51,17 @@ const wpCategoryToNodeCategory = (old) => {
     const newObj = {
       oldId: Number(old.term_id),
       title: old.name,
-      titleHtml: old.html_title ? old.html_title : "",
+      titleHtml: old.html_title ? old.html_title : '',
       slug: toSlug(old.slug, old.name),
-      description: old.description ? old.description : "",
+      description: old.description ? old.description : '',
       oldParentId: Number(old.parent) ? Number(old.parent) : 0,
-      parentSlug: "0",
-      image: old.category_image ? old.category_image : "",
+      parentSlug: '0',
+      image: old.category_image ? old.category_image : '',
       order: old.term_order ? Number(old.term_order) : 0,
     };
     return newObj;
   } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error + "6");
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `${error}6`);
   }
 };
 
@@ -67,12 +72,12 @@ const wpCategoryToNodeCategory = (old) => {
 const getCategoriesFromExportedJSON = async () => {
   try {
     const rawData = fs.readFileSync(
-      path.resolve(__dirname, CATEGORIES_JSON_FILE)
+      path.resolve(__dirname, CATEGORIES_JSON_FILE),
     );
-    let data = JSON.parse(rawData);
+    const data = JSON.parse(rawData);
     return data.categories;
   } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error + " 44    sx");
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `${error} 44    sx`);
   }
 };
 
@@ -81,11 +86,11 @@ const loopThroughOldAndCreateNew = async (categories, reallySave = false) => {
     for (let n = 0, i = 0; i < categories.length; i += 1) {
       const category = wpCategoryToNodeCategory(categories[i]);
 
-      const slug = category.slug;
+      const { slug } = category;
 
       const slugExists = await Categories.isCategorySlug(slug);
 
-      if (!slugExists || slug === 0 || slug === "0") {
+      if (!slugExists || slug === 0 || slug === '0') {
         if (reallySave) {
           await categoriesService.createCategory(category);
           n += 1;
@@ -97,109 +102,118 @@ const loopThroughOldAndCreateNew = async (categories, reallySave = false) => {
     const result = await Categories.find();
     return result;
   } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error + "3");
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `${error}3`);
   }
 };
 
 const oldIdToParentSlug = async (oldParentId) => {
   try {
-    const id = oldParentId ? oldParentId : 0;
+    const id = oldParentId || 0;
     const parent = await categoriesService.getCurrentCategorySlugByOldId(id);
     if (parent.slug) {
       return parent.slug;
     }
     return parent.title;
   } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error + " 22 ");
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `${error} 22 `);
   }
 };
 
 const loopThroughAndChangeParentSlug = async (categories) => {
   for (const category of categories) {
     const slug = await categoriesService.getCurrentCategorySlugByOldId(
-      category.oldId
+      category.oldId,
     );
     const num = await Categories.updateMany(
       { oldParentId: category.oldId },
-      { parentSlug: slug }
+      { parentSlug: slug },
     );
   }
 
-  let result = await Categories.find();
+  const result = await Categories.find();
   return result;
 };
 
 const importArticlsByChr = async (chr) => {
-
-  let n = 0;
-
+  
   let categories = await getCategoriesFromExportedJSON();
-  categories = categories.filter(cat => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
+
+  categories = categories.filter((cat) => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
+  console.log('importing articls in', categories.length, 'categories beginning with', chr);
+
   for (const category of categories) {
+
     let articls = await getArticls(category.slug);
-    
+
     if (articls.length) {
-      n = n + articls.length;
+      n += articls.length;
+
       articls = articls.map((articl) => oldToNewArticl(articl));
-      let result = await Articls.bulkWrite(articls.map(doc => ({
+
+      const result = await Articls.bulkWrite(articls.map((doc) => ({
 
         updateOne: {
           filter: { oldId: doc.ID },
           update: doc,
           upsert: true,
-        }
+        },
 
       })));
     }
   }
-  return n;
-}
+
+
+  const nextChr = chr.charCodeAt(0) + 1;
+  console.log('chr is', chr, 'nextChr is', nextChr, 'which is', String.fromCharCode(nextChr));
+  if (nextChr < 123) {
+    return String.fromCharCode(nextChr);
+  }
+  
+  return null;
+};
 
 const toAuthorsArray = (authors) => {
-  if (authors){
+  if (authors) {
+    return authors.split(',').map((author) => author.trim());
+  }
 
-  return authors.split(',').map(author => author.trim())}
-  else {
   return [];
-}};
+};
 
 const importNotesByChr = async (chr) => {
-
-  let n = 0;
-
   let categories = await getCategoriesFromExportedJSON();
-  categories = categories.filter(cat => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
+
+  categories = categories.filter((cat) => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
+
   for (const category of categories) {
     let notes = await getNotes(category.slug);
-    
-    if (notes.length) {
-      n = n + notes.length;
-      notes = notes.map((note) => oldToNewNote(note));
-      let result = await Notes.bulkWrite(notes.map(doc => ({
 
-        updateOne: {
-          filter: { oldId: doc.ID },
-          update: doc,
-          upsert: true,
-        }
+    n += notes.length;
+    notes = notes.map((note) => oldToNewNote(note));
 
-      })));
-    }
+    const result = await Notes.bulkWrite(notes.map((doc) => ({
+
+      updateOne: {
+        filter: { oldId: doc.ID },
+        update: doc,
+        upsert: true,
+      },
+
+    })));
   }
   return n;
-}
+};
 
 function oldToNewArticl(oldArticl) {
-
   const newArticl = { ...oldArticl };
   newArticl.authors = toAuthorsArray(oldArticl.authors);
   newArticl.authorsOrig = oldArticl.authors;
-  newArticl.order = oldArticl.menu_order;
-  newArticl.order = oldArticl.menu_order;
+  newArticl.order = oldArticl.term_order;
   newArticl.title = oldArticl.post_title;
   newArticl.slug = oldArticl.directory_link_category[0].slug;
-  newArticl.type = oldArticl.directory_link_resource_type[0].name;
+  newArticl.type = oldArticl?.directory_link_resource_type[0]?.name;
   newArticl.oldId = oldArticl.ID;
+  newArticl.updatedAt = moment(oldArticl.post_date_gmt, 'DD/MM/YYYY HH:mm:ss').toISOString();
   newArticl.wpPost = oldArticl;
 
   return newArticl;
@@ -217,20 +231,16 @@ function oldToNewNote(oldNote) {
 }
 
 const getArticls = async (slug) => {
-
   const articls = await axios.get(`https://articl.net/wp-json/articl/v1/articl_get_articls?category=${slug}`);
 
   return articls.data;
-
-}
+};
 
 const getNotes = async (slug) => {
-
   const notes = await axios.get(`https://articl.net/wp-json/articl/v1/articl_get_notes?category=${slug}`);
 
   return notes.data;
-
-}
+};
 
 const importCategories = async () => {
   const start = new Date();
@@ -262,5 +272,5 @@ const importCategories = async () => {
 module.exports = {
   importCategories,
   importArticlsByChr,
-  importNotesByChr
+  importNotesByChr,
 };

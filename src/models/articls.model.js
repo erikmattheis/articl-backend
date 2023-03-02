@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { toJSON, paginate } = require("./plugins");
+const mongoose = require('mongoose');
+const { toJSON, paginate } = require('./plugins');
 
 mongoose.set('useFindAndModify', false);
 
@@ -163,27 +163,27 @@ const articlsSchema = mongoose.Schema(
       required: false,
       trim: true,
     },
-    url: "",
     user: {
       type: mongoose.SchemaTypes.ObjectId,
       required: true,
       trim: true,
       index: true,
-      ref: "User",
+      ref: 'User',
     },
     oldUserId: {
       type: String,
       required: false,
-      trim: true
+      trim: true,
     },
     wpPost: {
       type: mongoose.Schema.Types.Mixed,
       required: false,
-    }
+    },
+
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const weights = {
@@ -204,20 +204,19 @@ const weights = {
 
 const fields = {};
 
-for (i in weights) {
-  fields[i] = "text";
-}
+Object.assign(fields, weights);
 
 articlsSchema.index(fields, {
-  name: "Search Many Fields",
-  weights: weights,
+  name: 'Search Many Fields',
+  weights,
 });
 
-articlsSchema.set("toJSON", {
+articlsSchema.set('toJSON', {
   virtuals: true,
 });
 
-articlsSchema.virtual("id").get(function () {
+articlsSchema.virtual('id').get(function doIt() {
+  // eslint-disable-next-line no-underscore-dangle
   return this._id.toHexString();
 });
 
@@ -228,6 +227,6 @@ articlsSchema.plugin(paginate);
 /**
  * @typedef Articls
  */
-const Articls = mongoose.model("Articls", articlsSchema);
+const Articls = mongoose.model('Articls', articlsSchema);
 
 module.exports = Articls;

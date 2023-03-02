@@ -63,6 +63,7 @@ const sortArticls = (a, b) => {
 
 const getArticlsBySlug = async (slug) => {
   const articls = await Articls.find({ slug: slug });
+  console.log('articls', articls.length, slug)
   return articls.sort(sortArticls);
 }
 

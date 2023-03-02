@@ -21,6 +21,7 @@ const getArticlPage = catchAsync(async (req, res) => {
     req.params.slug
   );
   const articls = await articlsService.getArticlsBySlug(req.params.slug);
+  
   const notes = await notesService.getNotesBySlug(req.params.slug); // queryNotes({slug:req.params.slug},{ populate:'author' }, { fullText: 1,  slug: 1, createdAt: 1});
   res.send({ breadcrumbs, notes, category, categories, articls });
 });
