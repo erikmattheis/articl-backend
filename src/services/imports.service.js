@@ -1,15 +1,15 @@
 const httpStatus = require('http-status');
 const axios = require('axios');
 const moment = require('moment');
-const fs = require('fs');
-const path = require('path');
+//const fs = require('fs');
+//const path = require('path');
 const axiosThrottle = require('axios-request-throttle');
 const { Categories } = require('../models');
 const categoriesService = require('./categories.service');
 const ApiError = require('../utils/ApiError');
 
 const SLUG_ERROR_FILE = '../category-errors.json';
-const CATEGORIES_JSON_FILE = '../models/categories.json';
+//const CATEGORIES_JSON_FILE = '../models/categories.json';
 
 const existingSlugs = [];
 const Articls = require('../models/articls.model');
@@ -65,11 +65,12 @@ const wpCategoryToNodeCategory = (old) => {
   }
 };
 
+/*
 /**
  * Get a category
  * @returns {Promise<Categories>}
- */
-const getCategoriesFromExportedJSON = async () => {
+ 
+const getCategories = async () => {
   try {
     const rawData = fs.readFileSync(
       path.resolve(__dirname, CATEGORIES_JSON_FILE),
@@ -80,7 +81,7 @@ const getCategoriesFromExportedJSON = async () => {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `${error} 44    sx`);
   }
 };
-
+*/
 const loopThroughOldAndCreateNew = async (categories, reallySave = false) => {
 
     for (let n = 0, i = 0; i < categories.length; i += 1) {
@@ -135,7 +136,7 @@ const loopThroughAndChangeParentSlug = async (categories) => {
 
 const importArticlsByChr = async (chr) => {
   
-  let categories = await getCategoriesFromExportedJSON();
+  let categories = await getCategories();
 
   categories = categories.filter((cat) => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
   console.log('importing articls in', categories.length, 'categories beginning with', chr);
@@ -180,7 +181,7 @@ const toAuthorsArray = (authors) => {
 };
 
 const importNotesByChr = async (chr) => {
-  let categories = await getCategoriesFromExportedJSON();
+  let categories = await getCategories();
 
   categories = categories.filter((cat) => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
 
@@ -229,6 +230,12 @@ function oldToNewNote(oldNote) {
   return newNote;
 }
 
+const getCategories = async (slug) => {
+  const articls = await axios.get(`https://articl.net/wp-json/articl/v1/articl_get_articl_heirarchy`);
+
+  return articls.data.categories;
+};
+
 const getArticls = async (slug) => {
   const articls = await axios.get(`https://articl.net/wp-json/articl/v1/articl_get_articls?category=${slug}`);
 
@@ -244,7 +251,7 @@ const getNotes = async (slug) => {
 const importCategories = async () => {
   const start = new Date();
 
-    let categories = await getCategoriesFromExportedJSON();
+    let categories = await getCategories();
     categories = await loopThroughOldAndCreateNew(categories, true);
     categories = await Categories.find();
     categories = await loopThroughAndChangeParentSlug(categories);

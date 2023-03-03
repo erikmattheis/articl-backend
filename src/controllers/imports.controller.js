@@ -11,12 +11,13 @@ const importCategories = catchAsync(async (req, res) => {
 const importArticlsByChr = catchAsync(async (req, res) => {
   let chr = '';
   if (req.params.chr?.length > 0) {
-
     chr = await importsService.importArticlsByChr(req.params.chr);
     console.log('next chr is', chr);
   }
-  if (chr) {
-    res.redirect(`/v1/imports/import-articls/${chr}`);
+  if (chr !== null && chr.charCodeAt(0) < 123) {
+    req.params.chr = chr;
+    importArticlsByChr(req, res);
+    //res.redirect(`/v1/imports/import-articls/${chr}`);
   }
   else {
     res.status(httpStatus.CREATED).send(`Done`);
