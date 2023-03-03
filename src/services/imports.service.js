@@ -84,26 +84,26 @@ const getCategories = async () => {
 */
 const loopThroughOldAndCreateNew = async (categories, reallySave = false) => {
 
-    for (let n = 0, i = 0; i < categories.length; i += 1) {
-      
-      const category = wpCategoryToNodeCategory(categories[i]);
+  for (let n = 0, i = 0; i < categories.length; i += 1) {
 
-      const { slug } = category;
+    const category = wpCategoryToNodeCategory(categories[i]);
 
-      const slugExists = await Categories.isCategorySlug(slug);
-      
-      if (!slugExists || slug === 0 || slug === '0') {
-        if (reallySave) {
-          await categoriesService.upsertCategory(category);
-          n += 1;
-        }
-      } else {
-        existingSlugs.push(categories[i]);
+    const { slug } = category;
+
+    const slugExists = await Categories.isCategorySlug(slug);
+
+    if (!slugExists || slug === 0 || slug === '0') {
+      if (reallySave) {
+        await categoriesService.upsertCategory(category);
+        n += 1;
       }
+    } else {
+      existingSlugs.push(categories[i]);
     }
-    const result = await Categories.find();
-    return result;
-  
+  }
+  const result = await Categories.find();
+  return result;
+
 };
 
 const oldIdToParentSlug = async (oldParentId) => {
@@ -135,7 +135,7 @@ const loopThroughAndChangeParentSlug = async (categories) => {
 };
 
 const importArticlsByChr = async (chr) => {
-  
+
   let categories = await getCategories();
 
   categories = categories.filter((cat) => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
@@ -168,7 +168,7 @@ const importArticlsByChr = async (chr) => {
   if (nextChr < 123) {
     return String.fromCharCode(nextChr);
   }
-  
+
   return null;
 };
 
@@ -194,13 +194,32 @@ const importNotesByChr = async (chr) => {
     const result = await Notes.bulkWrite(notes.map((doc) => ({
 
       updateOne: {
-        filter: { oldId: doc.ID },
+        filter: { oldId: doc.id },
         update: doc,
         upsert: true,
       },
 
     })));
   }
+  return n;
+};
+
+const importNotes = async (chr) => {
+
+  let notes = await getNotes();
+
+  n += notes.length;
+  notes = notes.map((note) => oldToNewNote(note));
+
+  const result = await Notes.bulkWrite(notes.map((doc) => ({
+    updateMany: {
+      filter: { oldId: doc.id },
+      update: doc,
+      upsert: true,
+    },
+
+  })));
+
   return n;
 };
 
@@ -221,10 +240,11 @@ function oldToNewArticl(oldArticl) {
 
 function oldToNewNote(oldNote) {
   const newNote = { ...oldNote };
+  delete Object.assign(newNote, {['oldUserId']: newNote['author'] })['author'];
   newNote.fullText = oldNote.content.rendered;
   newNote.title = oldNote.title.rendered;
   newNote.excerpt = oldNote.excerpt.rendered;
-  newNote.oldId = oldNote.ID;
+  newNote.oldId = oldNote.id;
   newNote.wpNote = oldNote;
   newNote.authorHandle = oldNote.author_name.data.user_nicename;
   return newNote;
@@ -243,7 +263,7 @@ const getArticls = async (slug) => {
 };
 
 const getNotes = async (slug) => {
-  const notes = await axios.get(`https://articl.net/wp-json/articl/v1/articl_get_notes?category=${slug}`);
+  const notes = await axios.get(`http://articl.net/wp-json/articl/v1/articl_get_public_notes?per_page=10000`);
 
   return notes.data;
 };
@@ -251,30 +271,31 @@ const getNotes = async (slug) => {
 const importCategories = async () => {
   const start = new Date();
 
-    let categories = await getCategories();
-    categories = await loopThroughOldAndCreateNew(categories, true);
-    categories = await Categories.find();
-    categories = await loopThroughAndChangeParentSlug(categories);
+  let categories = await getCategories();
+  categories = await loopThroughOldAndCreateNew(categories, true);
+  categories = await Categories.find();
+  categories = await loopThroughAndChangeParentSlug(categories);
 
-    const updateNum = categories.length;
+  const updateNum = categories.length;
 
-    const stop = new Date();
+  const stop = new Date();
 
-    const time = (stop - start) / 1000;
+  const time = (stop - start) / 1000;
 
-    if (existingSlugs.length) {
-      fs.writeFileSync(SLUG_ERROR_FILE, JSON.stringify(existingSlugs));
-    }
+  if (existingSlugs.length) {
+    fs.writeFileSync(SLUG_ERROR_FILE, JSON.stringify(existingSlugs));
+  }
 
-    return {
-      updateNum,
-      time,
-    };
-  
+  return {
+    updateNum,
+    time,
+  };
+
 };
 
 module.exports = {
   importCategories,
   importArticlsByChr,
   importNotesByChr,
+  importNotes,
 };

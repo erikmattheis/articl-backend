@@ -34,8 +34,16 @@ const importNotesByChr = catchAsync(async (req, res) => {
   }
 });
 
+const importNotes = catchAsync(async (req, res) => {
+  const n = await importsService.importNotes();
+  res.status(httpStatus.CREATED).send(`Done ${n}`);
+});
+
+
+
 module.exports = {
   importCategories,
   importArticlsByChr,
   importNotesByChr,
+  importNotes,
 };

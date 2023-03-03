@@ -105,6 +105,10 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    oldUserId: {
+      type: Number,
+      default: null,
+    },
   },
   {
     timestamps: true,

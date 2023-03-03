@@ -15,7 +15,7 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
 
 });
 
-mongoose.set("debug", true);
+mongoose.set("debug", config.env === "development");
 
 const exitHandler = () => {
 
