@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const { password, objectId } = require("./custom.validation");
 
-const createCategory = {
+const upsertCategory = {
   body: Joi.object().keys({
     title: Joi.string().required(),
     slug: Joi.string().required(),
@@ -76,7 +76,7 @@ const deleteCategory = {
 };
 
 module.exports = {
-  createCategory,
+  upsertCategory,
   getCategories,
   getCategoryPage,
   getCategorySlugs,

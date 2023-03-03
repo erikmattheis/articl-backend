@@ -10,7 +10,7 @@ router.post(
   "/",
   auth("manageUsers"),
   validate(categoriesValidation.createCategories),
-  categoriesController.createCategory
+  categoriesController.upsertCategory
 );
 router.put(
   "/:id",

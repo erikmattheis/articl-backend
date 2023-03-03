@@ -82,17 +82,18 @@ const getCategoriesFromExportedJSON = async () => {
 };
 
 const loopThroughOldAndCreateNew = async (categories, reallySave = false) => {
-  try {
+
     for (let n = 0, i = 0; i < categories.length; i += 1) {
+      
       const category = wpCategoryToNodeCategory(categories[i]);
 
       const { slug } = category;
 
       const slugExists = await Categories.isCategorySlug(slug);
-
+      
       if (!slugExists || slug === 0 || slug === '0') {
         if (reallySave) {
-          await categoriesService.createCategory(category);
+          await categoriesService.upsertCategory(category);
           n += 1;
         }
       } else {
@@ -101,9 +102,7 @@ const loopThroughOldAndCreateNew = async (categories, reallySave = false) => {
     }
     const result = await Categories.find();
     return result;
-  } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `${error}3`);
-  }
+  
 };
 
 const oldIdToParentSlug = async (oldParentId) => {
@@ -244,7 +243,7 @@ const getNotes = async (slug) => {
 
 const importCategories = async () => {
   const start = new Date();
-  try {
+
     let categories = await getCategoriesFromExportedJSON();
     categories = await loopThroughOldAndCreateNew(categories, true);
     categories = await Categories.find();
@@ -264,9 +263,7 @@ const importCategories = async () => {
       updateNum,
       time,
     };
-  } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error);
-  }
+  
 };
 
 module.exports = {

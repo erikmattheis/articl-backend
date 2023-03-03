@@ -8,14 +8,14 @@ const regexEscape = require("regex-escape");
  * @param {Object} categoriesBody
  * @returns {Promise<Categories>}
  */
-const createCategory = async (categoriesBody) => {
+const upsertCategory = async (categoriesBody) => {
   if (await Categories.isCategorySlug(categoriesBody.slug)) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
       `Slug "${categoriesBody.slug}" already exists.`
     );
   }
-  return Categories.create(categoriesBody);
+  return Categories.updateOne({slug:categoriesBody.slug}, categoriesBody, {upsert: true});
 };
 
 /**
@@ -176,7 +176,7 @@ const deleteCategoryById = async (id) => {
 };
 
 module.exports = {
-  createCategory,
+  upsertCategory,
   getCategoriesByParentSlug,
   getCategoryBySlug,
   getCategorySlugs,

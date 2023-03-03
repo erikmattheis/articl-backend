@@ -15,8 +15,8 @@ const importCategoriesByChr = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(result);
 });
 
-const createCategory = catchAsync(async (req, res) => {
-  const category = await categoriesService.createCategory(req.body);
+const upsertCategory = catchAsync(async (req, res) => {
+  const category = await categoriesService.upsertCategory(req.body);
   res.status(httpStatus.CREATED).send(category);
 });
 
@@ -79,7 +79,7 @@ const deleteCategory = catchAsync(async (req, res) => {
 
 module.exports = {
   importCategories,
-  createCategory,
+  upsertCategory,
   getCategoryPage,
   getCategorySlugs,
   getCategories,
