@@ -13,6 +13,7 @@ const upsertCategory = {
     slug: Joi.string().required(),
     parentSlug: Joi.string().required(),
     description: Joi.string(),
+    AISummary: Joi.string(),
   }),
 };
 
@@ -22,6 +23,7 @@ const getCategories = {
     slug: Joi.string(),
     parentSlug: Joi.string(),
     description: Joi.string(),
+    AISummary: Joi.string(),
   }),
 };
 
@@ -60,6 +62,7 @@ const updateCategory = {
       parentSlug: Joi.string().required(),
       oldSlug: Joi.string().optional(),
       description: Joi.string().allow(null,''),
+      AISummary: Joi.string().allow(null,''),
     })
     .min(1),
 };
