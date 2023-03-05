@@ -6,7 +6,7 @@ const catchAsync = require("../utils/catchAsync");
 const { articlsService, categoriesService, importsService, notesService, aiService } = require("../services");
 
 const getAISummary = catchAsync(async (req, res) => {
-  console.log('in controller')
+  console.log('in controller', req.query.text)
   const result = await aiService.getAISummary(req.query.text);
   res.send(result);
 });
