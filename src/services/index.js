@@ -1,3 +1,4 @@
+module.exports.aiService = require("./ai.service");
 module.exports.articlsService = require("./articls.service");
 module.exports.authService = require("./auth.service");
 module.exports.emailService = require("./email.service");

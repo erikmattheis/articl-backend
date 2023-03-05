@@ -1,6 +1,12 @@
 const Joi = require("joi");
 const { password, objectId } = require("./custom.validation");
 
+const getAISummary = {
+  body: Joi.object().keys({
+    text: Joi.string().required(),
+  }),
+};
+
 const upsertCategory = {
   body: Joi.object().keys({
     title: Joi.string().required(),
@@ -76,6 +82,7 @@ const deleteCategory = {
 };
 
 module.exports = {
+  getAISummary,
   upsertCategory,
   getCategories,
   getCategoryPage,

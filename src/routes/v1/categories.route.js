@@ -6,6 +6,13 @@ const categoriesController = require("../../controllers/categories.controller");
 
 const router = express.Router();
 
+router.get(
+  "/ai-summary",
+  //auth("manageUsers"),
+  // validate(categoriesValidation.getAISummary),
+  categoriesController.getAISummary
+);
+
 router.post(
   "/",
   auth("manageUsers"),

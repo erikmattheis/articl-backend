@@ -33,6 +33,7 @@ const envVarsSchema = Joi.object()
     EMAIL_FROM: Joi.string().description(
       "the from field in the emails sent by the app"
     ),
+    OPEN_API_KEY: Joi.string().required().description("OpenAI API Key"),  
   })
   .unknown();
 
@@ -48,6 +49,7 @@ module.exports = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   frontendUrl: envVars.FRONTEND_URL,
+  openAIKey: envVars.OPEN_API_KEY,
   mongoose: {
     url: envVars.MONGODB_URL + (envVars.NODE_ENV === "test" ? "-test" : ""),
     options: {

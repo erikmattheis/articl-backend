@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-// const validator = require('validator');
 const bcrypt = require("bcryptjs");
 const { toJSON, paginate } = require("./plugins");
 
@@ -28,6 +27,11 @@ const categoriesSchema = mongoose.Schema(
     },
     parent: {
       type: Number,
+      required: false,
+      trim: true,
+    },
+    aiDescription: {  
+      type: String,
       required: false,
       trim: true,
     },

@@ -3,6 +3,7 @@ const auth = require("../../middlewares/auth");
 const validate = require("../../middlewares/validate");
 const articlsValidation = require("../../validations/articls.validation");
 const articlsController = require("../../controllers/articls.controller");
+const aiService = require("../../services/ai.service");
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ router.post(
   "/",
   auth("manageUsers"),
   validate(articlsValidation.createArticl),
-  articlsController.createArticl
+  articlsController.createArticl 
 );
 
 router.get(

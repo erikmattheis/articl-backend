@@ -3,7 +3,13 @@ const httpStatus = require("http-status");
 const pick = require("../utils/pick");
 // const ApiError = require('../utils/ApiError');
 const catchAsync = require("../utils/catchAsync");
-const { articlsService, categoriesService, importsService, notesService } = require("../services");
+const { articlsService, categoriesService, importsService, notesService, aiService } = require("../services");
+
+const getAISummary = catchAsync(async (req, res) => {
+  console.log('in controller')
+  const result = await aiService.getAISummary(req.query.text);
+  res.send(result);
+});
 
 const importCategories = catchAsync(async (req, res) => {
   const result = await importsService.importCategories();
@@ -78,6 +84,7 @@ const deleteCategory = catchAsync(async (req, res) => {
 });
 
 module.exports = {
+  getAISummary,
   importCategories,
   upsertCategory,
   getCategoryPage,

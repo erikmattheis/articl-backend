@@ -43,7 +43,6 @@ const updateSlugs = async (slug, oldSlug) => {
 const getAnyArticlFieldValue = async (field, value) => {
   const regex = new RegExp(regexEscape(value), "i");
   const arg = { [field]: { $regex: regex } };
-
   const result = await Articls.distinct(field, arg);
   return Promise.resolve(result);
 };
@@ -63,7 +62,6 @@ const sortArticls = (a, b) => {
 
 const getArticlsBySlug = async (slug) => {
   const articls = await Articls.find({ slug: slug });
-  console.log('articls', articls.length, slug)
   return articls.sort(sortArticls);
 }
 
