@@ -164,7 +164,7 @@ const importArticlsByChr = async (chr) => {
 
 
   const nextChr = chr.charCodeAt(0) + 1;
-  console.log('chr is', chr, 'nextChr is', nextChr, 'which is', String.fromCharCode(nextChr));
+
   if (nextChr < 123) {
     return String.fromCharCode(nextChr);
   }
@@ -234,7 +234,6 @@ function oldToNewArticl(oldArticl) {
   newArticl.oldId = oldArticl.ID;
   newArticl.updatedAt = moment(oldArticl.post_date_gmt, 'DD/MM/YYYY HH:mm:ss').toISOString();
   newArticl.wpPost = oldArticl;
-
   return newArticl;
 }
 

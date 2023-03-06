@@ -38,7 +38,6 @@ const updateSlugs = async (slug,oldSlug) => {
   return Notes.updateMany({slug:oldSlug},{$set:{slug:slug}})
 }
 
-
 const getNotesBySlug = async (slug) => {
   return Notes.find({ slug }).populate('author').exec()
 

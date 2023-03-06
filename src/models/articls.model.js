@@ -20,7 +20,7 @@ const articlsSchema = mongoose.Schema(
     },
     order: {
       type: Number,
-      required: true,
+      required: false,
       trim: true,
       default: 0,
       index: true,
@@ -165,7 +165,7 @@ const articlsSchema = mongoose.Schema(
     },
     user: {
       type: mongoose.SchemaTypes.ObjectId,
-      required: true,
+      required: false,
       trim: true,
       index: true,
       ref: 'User',
