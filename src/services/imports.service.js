@@ -180,7 +180,7 @@ const toAuthorsArray = (authors) => {
   return [];
 };
 
-const importNotesByChr = async (chr) => {
+const importNotesByChr = async (chr, userId) => {
   let categories = await getCategories();
   let n = 0;
   categories = categories.filter((cat) => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
@@ -189,7 +189,7 @@ const importNotesByChr = async (chr) => {
     let notes = await getNotes(category.slug);
 
     n += notes.length;
-    notes = notes.map((note) => oldToNewNote(note));
+    notes = notes.map((note) => oldToNewNote(note, userId));
 
     const result = await Notes.bulkWrite(notes.map((doc) => ({
 
@@ -204,13 +204,15 @@ const importNotesByChr = async (chr) => {
   return n;
 };
 
-const importNotes = async () => {
+const importNotes = async (userId) => {
 
   let notes = await getNotes();
   let n = 0;
+
+  console.log('the first note', notes[0]);
   
   n += notes.length;
-  notes = notes.map((note) => oldToNewNote(note));
+  notes = notes.map((note) => oldToNewNote(note, userId));
 
   const result = await Notes.bulkWrite(notes.map((doc) => ({
     updateMany: {
@@ -238,12 +240,20 @@ function oldToNewArticl(oldArticl) {
   return newArticl;
 }
 
-function oldToNewNote(oldNote) {
+function oldToNewNote(oldNote, authorId) {
+  //console.log('oldNote', oldNote);
+  //process.exit();
   const newNote = { ...oldNote };
-  delete Object.assign(newNote, {['oldUserId']: newNote['author'] })['author'];
+
+  const hashtagRegex = /#[A-Za-z0-9_\-]+/g;
+  const match = hashtagRegex.exec(oldNote.content.rendered);
+  const hashtag = match ? match[0].substring(1) : '0';
+
+  newNote.author = authorId;
   newNote.fullText = oldNote.content.rendered;
   newNote.title = oldNote.title.rendered;
   newNote.excerpt = oldNote.excerpt.rendered;
+  newNote.slug = hashtag;
   newNote.oldId = oldNote.id;
   newNote.wpNote = oldNote;
   newNote.authorHandle = oldNote.author_name.data.user_nicename;

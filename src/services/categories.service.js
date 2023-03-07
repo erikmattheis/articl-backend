@@ -9,7 +9,6 @@ const regexEscape = require("regex-escape");
  * @returns {Promise<Categories>}
  */
 const upsertCategory = async (categoriesBody, userId) => {
-  console.log(categoriesBody.user?.id, userId)
   if (await Categories.isCategorySlug(categoriesBody.slug)) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
@@ -182,7 +181,6 @@ const updateCategoryById = async (categoryId, updateBody, userId) => {
  * @returns {Promise<Categories>}
  */
 const deleteCategoryById = async (id, userId) => {
-  console.log("deleteCategoryById", id, userId);
   const category = await getCategoryById(id);
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, `Category ${id} not found`);

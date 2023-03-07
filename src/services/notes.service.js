@@ -31,7 +31,7 @@ const queryNotes = async (filter, options, projection = {}) => {
  * @returns {Promise<Note>}
  */
 const getNoteById = async (id) => {
-  return Notes.findById(id).populate('author');
+  return Notes.findById(id).populate('author').exec();
 };
 
 const updateSlugs = async (slug,oldSlug) => {
@@ -39,7 +39,9 @@ const updateSlugs = async (slug,oldSlug) => {
 }
 
 const getNotesBySlug = async (slug) => {
-  return Notes.find({ slug }).populate('author')
+  const notes = await Notes.find({ slug }).populate('author').exec();
+  return notes;
+
   //return Notes.paginate({ slug },{populate:'author'}).project('fullText slug').exec()
 };
 

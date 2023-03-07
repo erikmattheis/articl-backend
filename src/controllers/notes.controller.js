@@ -34,7 +34,6 @@ const getNotes = catchAsync(async (req, res) => {
 
 
   const result = await notesService.queryNotes(filter, options, {});
-console.log('result', result)
   res.send(result);
 });
 

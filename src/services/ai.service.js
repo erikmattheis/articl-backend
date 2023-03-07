@@ -12,8 +12,7 @@ const getAISummary = async (prompt) => {
       prompt,
     });
 
-    console.log('completion', completion);
-    return completion.data.choices[0].text;
+    return completion;
 
 }
 

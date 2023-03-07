@@ -12,7 +12,6 @@ const importArticlsByChr = catchAsync(async (req, res) => {
   let chr = '';
   if (req.params.chr?.length > 0) {
     chr = await importsService.importArticlsByChr(req.params.chr);
-    console.log('next chr is', chr);
   }
   if (chr !== null && chr.charCodeAt(0) < 123) {
     req.params.chr = chr;
@@ -25,7 +24,7 @@ const importArticlsByChr = catchAsync(async (req, res) => {
 });
 
 const importNotesByChr = catchAsync(async (req, res) => {
-  const chr = await importsService.importNotesByChr(req.params.chr);
+  const chr = await importsService.importNotesByChr(req.params.chr, req.user?.id);
   if (chr) {
     res.redirect(`/api/v1/imports/notes/${req.params.chr}`);
   }
@@ -35,7 +34,7 @@ const importNotesByChr = catchAsync(async (req, res) => {
 });
 
 const importNotes = catchAsync(async (req, res) => {
-  const n = await importsService.importNotes();
+  const n = await importsService.importNotes(req.user?.id);
   res.status(httpStatus.CREATED).send(`Done ${n}`);
 });
 
