@@ -22,7 +22,7 @@ const importCategoriesByChr = catchAsync(async (req, res) => {
 });
 
 const upsertCategory = catchAsync(async (req, res) => {
-  const category = await categoriesService.upsertCategory(req.body);
+  const category = await categoriesService.upsertCategory(req.body, req.user.id);
   res.status(httpStatus.CREATED).send(category);
 });
 

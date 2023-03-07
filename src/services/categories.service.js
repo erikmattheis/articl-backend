@@ -15,6 +15,17 @@ const upsertCategory = async (categoriesBody) => {
       `Slug "${categoriesBody.slug}" already exists.`
     );
   }
+  if (categoriesBody.id) {
+    const category = await getCategoryById(categoriesBody.id);
+  
+    if (!category) {
+      throw new ApiError(httpStatus.NOT_FOUND, "Note not found");
+    }
+    if (category.user?.id !== userId) {
+      throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");
+    }
+
+  }
   return Categories.updateOne({slug:categoriesBody.slug}, categoriesBody, {upsert: true});
 };
 
