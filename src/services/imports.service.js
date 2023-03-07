@@ -15,7 +15,7 @@ const existingSlugs = [];
 const Articls = require('../models/articls.model');
 const Notes = require('../models/notes.model');
 
-let n = 0;
+
 
 axiosThrottle.use(axios, { requestsPerSecond: 4 });
 
@@ -140,7 +140,7 @@ const importArticlsByChr = async (chr) => {
 
   categories = categories.filter((cat) => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
   console.log('importing articls in', categories.length, 'categories beginning with', chr);
-
+  let n = 0;
   for (const category of categories) {
 
     let articls = await getArticls(category.slug);
@@ -182,7 +182,7 @@ const toAuthorsArray = (authors) => {
 
 const importNotesByChr = async (chr) => {
   let categories = await getCategories();
-
+  let n = 0;
   categories = categories.filter((cat) => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
 
   for (const category of categories) {
@@ -207,7 +207,8 @@ const importNotesByChr = async (chr) => {
 const importNotes = async () => {
 
   let notes = await getNotes();
-
+  let n = 0;
+  
   n += notes.length;
   notes = notes.map((note) => oldToNewNote(note));
 

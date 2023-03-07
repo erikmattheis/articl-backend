@@ -30,13 +30,11 @@ const getNotes = catchAsync(async (req, res) => {
   filter = makeNotesFilter(filter);
 
   let options = pick(req.query, ["sortBy", "limit", "page"]);
-  options.sortBy = options.sortBy ? options.sortBy : "createdAt:desc"
   options = makeNotesOptions(options);
-  options.populate = 'author';
-  const project = { 'nameFirst': true, 'fullText': true };
 
-  const result = await notesService.queryNotes(filter, options, project);
 
+  const result = await notesService.queryNotes(filter, options, {});
+console.log('result', result)
   res.send(result);
 });
 
@@ -44,7 +42,7 @@ function makeNotesOptions(options) {
   options.sortBy = options.sortBy ? options.sortBy : "createdAt:desc";
   options.limit = options.limit ? Number(options.limit) : 10;
   options.page = options.page ? Number(options.page) : 1;
-  options.populate = { path: 'author' };
+  options.populate = "author";
 
   return options;
 }

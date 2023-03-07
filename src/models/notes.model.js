@@ -27,8 +27,6 @@ const notesSchema = mongoose.Schema(
     },
     author: {
       type: mongoose.SchemaTypes.ObjectId,
-      required: true,
-      trim: true,
       index: true,
       ref: "User",
     },

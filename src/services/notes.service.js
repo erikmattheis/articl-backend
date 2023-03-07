@@ -39,8 +39,7 @@ const updateSlugs = async (slug,oldSlug) => {
 }
 
 const getNotesBySlug = async (slug) => {
-  return Notes.find({ slug }).populate('author').exec()
-
+  return Notes.find({ slug }).populate('author')
   //return Notes.paginate({ slug },{populate:'author'}).project('fullText slug').exec()
 };
 
