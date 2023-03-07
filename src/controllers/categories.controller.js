@@ -58,7 +58,8 @@ const updateCategoriesOrder = catchAsync(async (req, res) => {
 const updateCategory = catchAsync(async (req, res) => {
   const result = await categoriesService.updateCategoryById(
     req.params.id,
-    req.body
+    req.body,
+    req.user.id
   );
 
   if (req.body.slug !== req.body.oldSlug) {
@@ -74,12 +75,13 @@ const updateCategory = catchAsync(async (req, res) => {
       req.body.slug,
       req.body.oldSlug
     );
+    /* todo: update slugs in q and a */
   }
   res.send({ result });
 });
 
 const deleteCategory = catchAsync(async (req, res) => {
-  const result = await categoriesService.deleteCategoryById(req.body.id);
+  const result = await categoriesService.deleteCategoryById(req.body.id, req.user.id);
   res.status(httpStatus.NO_CONTENT).send(result);
 });
 

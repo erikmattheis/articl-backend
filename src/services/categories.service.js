@@ -159,13 +159,16 @@ const updateCategoriesOrder = async function (arr) {
  * @param {Object} updateBody
  * @returns {Promise<Categories>}
  */
-const updateCategoryById = async (categoryId, updateBody) => {
+const updateCategoryById = async (categoryId, updateBody, userId) => {
   const category = await getCategoryById(categoryId);
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
   }
   if (updateBody.slug && (await Categories.isCategorySlug(updateBody.slug, categoryId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Slug already taken");
+  }
+  if (category.user?.id !== userId) {
+    throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this category.");
   }
   Object.assign(category, updateBody);
   await category.save();
@@ -177,11 +180,15 @@ const updateCategoryById = async (categoryId, updateBody) => {
  * @param {ObjectId} categoryId
  * @returns {Promise<Categories>}
  */
-const deleteCategoryById = async (id) => {
+const deleteCategoryById = async (id, userId) => {
   const category = await getCategoryById(id);
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, `Category ${id} not found`);
   }
+  if (category.user?.id !== userId) {
+    throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to delete this category.");
+  }
+  /* TODO check if user owns all descendents and articls and questions and notes */
   await category.remove();
   return category;
 };
