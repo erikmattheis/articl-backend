@@ -50,10 +50,13 @@ const getNotesBySlug = async (slug) => {
  * @param {Object} updateBody
  * @returns {Promise<Note>}
  */
-const updateNoteById = async (id, updateBody) => {
+const updateNoteById = async (id, updateBody, userId) => {
   const note = await getNoteById(id);
   if (!note) {
     throw new ApiError(httpStatus.NOT_FOUND, "Note not found");
+  }
+  if (note.user?.id !== userId) {
+    throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");
   }
   Object.assign(note, updateBody);
   await note.save();
@@ -69,6 +72,9 @@ const deleteNoteById = async (id) => {
   const note = await getNoteById(id);
   if (!note) {
     throw new ApiError(httpStatus.NOT_FOUND, "Note not found");
+  }
+  if (note.user?.id !== userId) {
+    throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");
   }
   await note.remove();
   return note;

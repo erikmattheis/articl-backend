@@ -66,12 +66,12 @@ const getNoteById = catchAsync(async (req, res) => {
 });
 
 const updateNote = catchAsync(async (req, res) => {
-  const note = await notesService.updateNoteById(req.params.id, req.body);
+  const note = await notesService.updateNoteById(req.params.id, req.body, req.user.id);
   res.send(note);
 });
 
 const deleteNote = catchAsync(async (req, res) => {
-  await notesService.deleteNoteById(req.body.id);
+  await notesService.deleteNoteById(req.body.id, req.user.id);
   res.send();
 });
 

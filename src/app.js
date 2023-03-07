@@ -57,6 +57,12 @@ app.use("/v1/auth", authLimiter);
 // v1 api routes
 app.use("/v1", routes);
 
+// convert error to ApiError, if needed
+app.use(errorConverter);
+
+// handle error
+app.use(errorHandler);
+
 // send back a 404 error for any unknown api request
 
 app.use((req, res, next) => {
@@ -77,10 +83,6 @@ app.use((req, res, next) => {
 });
 
 
-// convert error to ApiError, if needed
-app.use(errorConverter);
 
-// handle error
-app.use(errorHandler);
 
 module.exports = app;

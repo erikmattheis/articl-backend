@@ -8,8 +8,8 @@ const router = express.Router();
 
 router.get(
   "/ai-summary",
-  //auth("manageUsers"),
-  // validate(categoriesValidation.getAISummary),
+  auth("manageUsers"),
+  validate(categoriesValidation.getAISummary),
   categoriesController.getAISummary
 );
 
