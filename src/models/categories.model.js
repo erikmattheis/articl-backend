@@ -62,6 +62,9 @@ const categoriesSchema = mongoose.Schema(
       trim: true,
       default: 0,
     },
+    user: {
+       type: mongoose.SchemaTypes.ObjectId,
+       required: true },
   },
   {
     timestamps: true,

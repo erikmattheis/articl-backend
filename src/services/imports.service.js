@@ -204,7 +204,7 @@ const importNotesByChr = async (chr) => {
   return n;
 };
 
-const importNotes = async (chr) => {
+const importNotes = async () => {
 
   let notes = await getNotes();
 
@@ -249,7 +249,7 @@ function oldToNewNote(oldNote) {
   return newNote;
 }
 
-const getCategories = async (slug) => {
+const getCategories = async () => {
   const articls = await axios.get(`https://articl.net/wp-json/articl/v1/articl_get_articl_heirarchy`);
 
   return articls.data.categories;
@@ -261,7 +261,7 @@ const getArticls = async (slug) => {
   return articls.data;
 };
 
-const getNotes = async (slug) => {
+const getNotes = async () => {
   const notes = await axios.get(`http://articl.net/wp-json/articl/v1/articl_get_public_notes?per_page=10000`);
 
   return notes.data;

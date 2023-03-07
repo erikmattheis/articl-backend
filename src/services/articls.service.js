@@ -160,6 +160,9 @@ const updateArticlById = async (articlId, updateBody) => {
   if (!articl) {
     throw new ApiError(httpStatus.NOT_FOUND, "Articl not found");
   }
+  if (articl.user?.id !== userId) {
+    throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to edit this articl.");
+  }
   Object.assign(articl, updateBody);
   await articl.save();
   return articl;
@@ -178,10 +181,13 @@ const updateArticlsOrder = async function (arr) {
  * @param {ObjectId} id
  * @returns {Promise<Articl>}
  */
-const deleteArticlById = async (id) => {
+const deleteArticlById = async (id, userId) => {
   const articl = await getArticlById(id);
   if (!articl) {
     throw new ApiError(httpStatus.NOT_FOUND, "Articl not found");
+  }
+  if (articl.user?.id !== userId) {
+    throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to delete this articl.");
   }
   await articl.remove();
   return articl;

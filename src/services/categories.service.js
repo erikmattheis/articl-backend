@@ -8,7 +8,8 @@ const regexEscape = require("regex-escape");
  * @param {Object} categoriesBody
  * @returns {Promise<Categories>}
  */
-const upsertCategory = async (categoriesBody) => {
+const upsertCategory = async (categoriesBody, userId) => {
+  console.log(categoriesBody.user?.id, userId)
   if (await Categories.isCategorySlug(categoriesBody.slug)) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
@@ -21,7 +22,7 @@ const upsertCategory = async (categoriesBody) => {
     if (!category) {
       throw new ApiError(httpStatus.NOT_FOUND, "Note not found");
     }
-    if (category.user?.id !== userId) {
+    if (categoriesBody.id !== userId) {
       throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");
     }
 
@@ -181,14 +182,15 @@ const updateCategoryById = async (categoryId, updateBody, userId) => {
  * @returns {Promise<Categories>}
  */
 const deleteCategoryById = async (id, userId) => {
+  console.log("deleteCategoryById", id, userId);
   const category = await getCategoryById(id);
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, `Category ${id} not found`);
   }
   if (category.user?.id !== userId) {
-    throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to delete this category.");
+    throw new ApiError(httpStatus.FORBIDDEN, `You don't have permission to delete this category. ${userId} and ${category.user?.id}`);
   }
-  /* TODO check if user owns all descendents and articls and questions and notes */
+  /* TODO check if user owns all descendents and articls and questions and */
   await category.remove();
   return category;
 };

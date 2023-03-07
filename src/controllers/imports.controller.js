@@ -39,8 +39,6 @@ const importNotes = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(`Done ${n}`);
 });
 
-
-
 module.exports = {
   importCategories,
   importArticlsByChr,

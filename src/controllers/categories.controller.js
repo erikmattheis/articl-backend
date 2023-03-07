@@ -22,6 +22,7 @@ const importCategoriesByChr = catchAsync(async (req, res) => {
 });
 
 const upsertCategory = catchAsync(async (req, res) => {
+  console.log(req.user.id, req.body.user.id)
   const category = await categoriesService.upsertCategory(req.body, req.user.id);
   res.status(httpStatus.CREATED).send(category);
 });
@@ -81,6 +82,7 @@ const updateCategory = catchAsync(async (req, res) => {
 });
 
 const deleteCategory = catchAsync(async (req, res) => {
+  console.log('controller', req.body.id, req.user.id)
   const result = await categoriesService.deleteCategoryById(req.body.id, req.user.id);
   res.status(httpStatus.NO_CONTENT).send(result);
 });

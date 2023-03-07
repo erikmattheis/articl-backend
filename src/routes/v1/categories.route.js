@@ -23,7 +23,7 @@ router.put(
   "/:id",
   auth("manageUsers"),
   validate(categoriesValidation.updateCategory),
-  categoriesController.updateCategory
+  categoriesController.upsertCategory
 );
 router.post(
   "/order",
