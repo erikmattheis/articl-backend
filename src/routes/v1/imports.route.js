@@ -15,6 +15,11 @@ router.get(
 );
 
 router.get(
+  "/import-articls",
+  importsController.importArticls
+);
+
+router.get(
   "/import-notes/:chr",
   importsController.importNotesByChr
 );

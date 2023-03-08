@@ -33,10 +33,6 @@ const defaultRoutes = [
     route: categoriesRoute,
   },
   {
-    path: "/imports",
-    route: importsRoute,
-  },
-  {
     path: "/notes",
     route: notesRoute,
   },
@@ -48,10 +44,9 @@ defaultRoutes.forEach((route) => {
 });
 
 const devRoutes = [
-  // routes available only in development mode
   {
-    path: "/docs",
-    route: docsRoute,
+    path: "/imports",
+    route: importsRoute,
   },
 ];
 

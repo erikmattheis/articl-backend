@@ -23,6 +23,14 @@ const importArticlsByChr = catchAsync(async (req, res) => {
   }
 });
 
+const importArticls = catchAsync(async (req, res) => {
+  
+  const result = await importsService.importArticls();
+  
+  res.status(httpStatus.CREATED).send(`Done`);
+  
+});
+
 const importNotesByChr = catchAsync(async (req, res) => {
   const chr = await importsService.importNotesByChr(req.params.chr, req.user?.id);
   if (chr) {
@@ -33,6 +41,7 @@ const importNotesByChr = catchAsync(async (req, res) => {
   }
 });
 
+
 const importNotes = catchAsync(async (req, res) => {
   const n = await importsService.importNotes(req.user?.id);
   res.status(httpStatus.CREATED).send(`Done ${n}`);
@@ -41,6 +50,7 @@ const importNotes = catchAsync(async (req, res) => {
 module.exports = {
   importCategories,
   importArticlsByChr,
+  importArticls,
   importNotesByChr,
   importNotes,
 };

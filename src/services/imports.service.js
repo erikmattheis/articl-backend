@@ -172,6 +172,44 @@ const importArticlsByChr = async (chr) => {
   return null;
 };
 
+const importArticls = async (chr) => {
+
+  let categories = await getCategories();
+
+  categories = categories.filter((cat) => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
+  console.log('importing articls in', categories.length, 'categories beginning with', chr);
+  let n = 0;
+  for (const category of categories) {
+
+    let articls = await getArticls(category.slug);
+
+    if (articls.length) {
+      n += articls.length;
+
+      articls = articls.map((articl) => oldToNewArticl(articl));
+
+      const result = await Articls.bulkWrite(articls.map((doc) => ({
+
+        updateOne: {
+          filter: { oldId: doc.ID },
+          update: doc,
+          upsert: true,
+        },
+
+      })));
+    }
+  }
+
+
+  const nextChr = chr.charCodeAt(0) + 1;
+
+  if (nextChr < 123) {
+    return String.fromCharCode(nextChr);
+  }
+
+  return null;
+};
+
 const toAuthorsArray = (authors) => {
   if (authors) {
     return authors.split(',').map((author) => author.trim());
