@@ -2,8 +2,9 @@ const Joi = require("joi");
 const { password, objectId } = require("./custom.validation");
 
 const getAISummary = {
-  body: Joi.object().keys({
-    text: Joi.string().required(),
+  query: Joi.object().keys({
+    category: Joi.string().required(),
+    parentCategory: Joi.string().required(),
   }),
 };
 

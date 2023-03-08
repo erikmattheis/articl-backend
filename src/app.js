@@ -1,5 +1,5 @@
 const express = require("express");
-const helmet = require("helmet");
+const helmet = require("helmet-csp");
 const xss = require("xss-clean");
 const mongoSanitize = require("express-mongo-sanitize");
 const compression = require("compression");
@@ -26,6 +26,18 @@ if (config.env !== "test") {
 // set security HTTP headers
 app.use(helmet());
 
+/*
+
+app.use(helmet.contentSecurityPolicy({
+  useDefaults: true,
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'","https://www.google-analytics.com/analytics.js"],
+  },
+  reportOnly: false,
+}));
+
+*/
 // parse json request body
 app.use(express.json());
 
