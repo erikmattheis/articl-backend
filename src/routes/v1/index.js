@@ -33,6 +33,10 @@ const defaultRoutes = [
     route: categoriesRoute,
   },
   {
+    path: "/imports",
+    route: importsRoute,
+  },
+  {
     path: "/notes",
     route: notesRoute,
   },
