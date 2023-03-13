@@ -328,9 +328,9 @@ const oldToNewNote = (oldNote, authorId) => {
 
 const getCategoriesWithoutImportedArticls = async () => {
   const categories = await getCategories();
-  const importedCategories = await Articls.distinct('slug');
+  const importedCategories = await Categories.find({wpArticlsImported:false});
 
-  return categories.filter((cat) => !importedCategories.includes(cat.slug));
+  return importedCategories;
 }
 
 const getCategories = async () => {
