@@ -10,6 +10,12 @@ router.get(
 );
 
 router.get(
+  "/import-articls/reset",
+  importsController.resetAllImportFlags
+);
+
+
+router.get(
   "/import-articls/all",
   importsController.importAllArticls
 );

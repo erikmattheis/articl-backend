@@ -16,6 +16,7 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
 });
 
 mongoose.set("debug", false);
+process.on('warning', e => console.warn(e.stack));
 
 const exitHandler = () => {
 

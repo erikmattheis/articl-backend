@@ -238,6 +238,15 @@ const importAllArticls = async () => {
   return null;
 };
 
+const resetAllImportFlags = async () => {
+  const result = await Articls.updateMany(
+      {},
+      {$set: { wpArticlsImported: false },}
+    );
+
+  return result;
+}
+
 const toAuthorsArray = (authors) => {
   if (authors) {
     return authors.split(',').map((author) => author.trim());
@@ -326,11 +335,10 @@ const oldToNewNote = (oldNote, authorId) => {
   return newNote;
 }
 
-const getCategoriesWithoutImportedArticls = async () => {
-  const categories = await getCategories();
-  const importedCategories = await Categories.find({wpArticlsImported:false});
+const getCategoriesWithoutImpxortedArticls = async () => {
+  const unfinishedCategories = await Categories.find({wpArticlsImported:false});
 
-  return importedCategories;
+  return unfinishedCategories;
 }
 
 const getCategories = async () => {
@@ -382,4 +390,5 @@ module.exports = {
   importAllArticls,
   importNotesByChr,
   importNotes,
+  resetAllImportFlags,
 };

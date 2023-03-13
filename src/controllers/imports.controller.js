@@ -3,6 +3,11 @@ const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { importsService } = require('../services');
 
+const resetAllImportFlags = catchAsync(async (req, res) => {
+  const result = await importsService.resetAllImportFlags();
+  res.status(httpStatus.SUCCESS).send(result);
+});
+
 const importCategories = catchAsync(async (req, res) => {
   const result = await importsService.importCategories();
   res.status(httpStatus.CREATED).send(result);
@@ -53,4 +58,5 @@ module.exports = {
   importAllArticls,
   importNotesByChr,
   importNotes,
+  resetAllImportFlags,
 };
