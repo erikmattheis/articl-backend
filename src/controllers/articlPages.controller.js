@@ -8,7 +8,8 @@ const { categoriesService, articlsService, notesService } = require("../services
 const getHomePage = catchAsync(async (req, res) => {
   const category = await categoriesService.getCategoryBySlug("0");
   const categories = await categoriesService.getCategoriesByParentSlug("0");
-  res.send({ category, categories });
+  const count = await articlsService.getArticlCount();
+  res.send({ category, categories, count });
 });
 
 const getArticlPage = catchAsync(async (req, res) => {
@@ -21,9 +22,10 @@ const getArticlPage = catchAsync(async (req, res) => {
     req.params.slug
   );
   const articls = await articlsService.getArticlsBySlug(req.params.slug);
+  const count = await articlsService.getArticlCount();
   
   const notes = await notesService.getNotesBySlug(req.params.slug); // queryNotes({slug:req.params.slug},{ populate:'author' }, { fullText: 1,  slug: 1, createdAt: 1});
-  res.send({ breadcrumbs, notes, category, categories, articls });
+  res.send({ breadcrumbs, notes, category, categories, articls, count });
 });
 
 module.exports = {

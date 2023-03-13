@@ -36,6 +36,10 @@ const getArticlById = async (id) => {
   return Articls.findById(id);
 };
 
+const getArticlCount = async (id) => {
+  return Articls.countDocuments();
+};
+
 const updateSlugs = async (slug, oldSlug) => {
   return Articls.updateMany({ slug: oldSlug }, { $set: { slug: slug } })
 }
@@ -196,6 +200,7 @@ const deleteArticlById = async (id, userId) => {
 module.exports = {
   createArticl,
   queryArticls,
+  getArticlCount,
   updateSlugs,
   getAnyArticlFieldValue,
   getArticlById,
