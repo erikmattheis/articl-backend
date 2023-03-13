@@ -64,7 +64,12 @@ const categoriesSchema = mongoose.Schema(
     },
     user: {
        type: mongoose.SchemaTypes.ObjectId,
-       required: true },
+       required: true
+    },
+    wpArticlsImported: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

@@ -23,9 +23,9 @@ const importArticlsByChr = catchAsync(async (req, res) => {
   }
 });
 
-const importArticls = catchAsync(async (req, res) => {
+const importAllArticls = catchAsync(async (req, res) => {
   
-  const result = await importsService.importArticls();
+  const result = await importsService.importAllArticls();
   
   res.status(httpStatus.CREATED).send(`Done`);
   
@@ -50,7 +50,7 @@ const importNotes = catchAsync(async (req, res) => {
 module.exports = {
   importCategories,
   importArticlsByChr,
-  importArticls,
+  importAllArticls,
   importNotesByChr,
   importNotes,
 };

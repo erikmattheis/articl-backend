@@ -62,6 +62,10 @@ const updateParentSlugs = async (slug, oldSlug) => {
   const result = await Categories.updateMany({ parentSlug: oldSlug }, { $set: { parentSlug: slug } })
 }
 
+const markCategoryArticlsImported = async (slug) => {
+  const result = await Categories.updateOne({ slug }, { $set: { wpArticlsImported: true } })
+}
+
 /**
  * Get category by slug
  * @param {ObjectId} slug
@@ -206,4 +210,5 @@ module.exports = {
   getCurrentCategorySlugByOldId,
   updateCategoryById,
   deleteCategoryById,
+  markCategoryArticlsImported,
 };

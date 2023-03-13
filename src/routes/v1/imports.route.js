@@ -10,13 +10,13 @@ router.get(
 );
 
 router.get(
-  "/import-articls/:chr",
-  importsController.importArticlsByChr
+  "/import-articls/all",
+  importsController.importAllArticls
 );
 
 router.get(
-  "/import-articls",
-  importsController.importArticls
+  "/import-articls/:chr",
+  importsController.importArticlsByChr
 );
 
 router.get(
