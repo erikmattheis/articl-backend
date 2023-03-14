@@ -3,9 +3,14 @@ const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { importsService } = require('../services');
 
+const getCategoriesWithDuplicatedSlugs = catchAsync(async (req, res) => {
+  const result = await importsService.getCategoriesWithDuplicatedSlugs();
+  res.send({result});
+});
+
 const resetAllImportFlags = catchAsync(async (req, res) => {
   const result = await importsService.resetAllImportFlags();
-  res.send(result);
+  res.send({result});
 });
 
 const importCategories = catchAsync(async (req, res) => {
@@ -24,7 +29,7 @@ const importArticlsByChr = catchAsync(async (req, res) => {
     //res.redirect(`/v1/imports/import-articls/${chr}`);
   }
   else {
-    res.status(httpStatus.CREATED).send(`Done`);
+    res.send(`Done`);
   }
 });
 
@@ -59,4 +64,5 @@ module.exports = {
   importNotesByChr,
   importNotes,
   resetAllImportFlags,
+  getCategoriesWithDuplicatedSlugs,
 };

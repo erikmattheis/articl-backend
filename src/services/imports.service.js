@@ -15,8 +15,6 @@ const existingSlugs = [];
 const Articls = require('../models/articls.model');
 const Notes = require('../models/notes.model');
 
-
-
 axiosThrottle.use(axios, { requestsPerSecond: 4 });
 
 const slugify = (slug) => {
@@ -337,12 +335,9 @@ const oldToNewNote = (oldNote, authorId) => {
   return newNote;
 }
 
-function getRecordsWithDuplicatedSlugANdParentSlugPair() {
-  const result = await Categories.aggregate([
-    {"$group" : { "_id": {slug:"$slug", parentSlug:"$parentSlug"}, "count": { "$sum": 1 } } },
-    {"$match": {"_id" :{ "$ne" : null } , "count" : {"$gt": 1} } }, 
-    {"$project": {"slug" : "$_id.slug", "parentSlug" : "$_id.parentSlug", "_id" : 0} }
-  ]);
+const getCategoriesWithDuplicatedSlugs = async (slug) => {
+  const result = await Categories.distinct('slug');
+  return result.length;
 }
 
 const getCategoriesWithoutImportedArticls = async () => {
@@ -401,4 +396,5 @@ module.exports = {
   importNotesByChr,
   importNotes,
   resetAllImportFlags,
+  getCategoriesWithDuplicatedSlugs,
 };

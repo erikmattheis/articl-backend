@@ -4,6 +4,13 @@ const importsController = require("../../controllers/imports.controller");
 
 const router = express.Router();
 
+
+
+router.get(
+  "/duplicate-categories",
+  importsController.getCategoriesWithDuplicatedSlugs
+);
+
 router.get(
   "/import-categories",
   importsController.importCategories
