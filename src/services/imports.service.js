@@ -230,9 +230,11 @@ const importAllArticls = async () => {
           upsert: true,
         },
       })));
-
-      await categoriesService.markCategoryArticlsImported(category.slug);
+      
     }
+
+    await categoriesService.markCategoryArticlsImported(category.slug);
+    
   }
 
   return null;
