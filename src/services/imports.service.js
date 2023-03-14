@@ -217,7 +217,7 @@ const importAllArticls = async () => {
 
   for (const category of categories) {
 
-    let articls = await getArticls(category.slug);
+    let articls = await getArticls(category.slug, category.parentSlug);
     
     if (articls.length) {
 
@@ -234,7 +234,7 @@ const importAllArticls = async () => {
     }
 
     await categoriesService.markCategoryArticlsImported(category.slug);
-    
+
   }
 
   return null;
@@ -335,6 +335,14 @@ const oldToNewNote = (oldNote, authorId) => {
   newNote.wpNote = oldNote;
   newNote.authorHandle = oldNote.author_name?.data?.user_nicename;
   return newNote;
+}
+
+function getRecordsWithDuplicatedSlugANdParentSlugPair() {
+  const result = await Categories.aggregate([
+    {"$group" : { "_id": {slug:"$slug", parentSlug:"$parentSlug"}, "count": { "$sum": 1 } } },
+    {"$match": {"_id" :{ "$ne" : null } , "count" : {"$gt": 1} } }, 
+    {"$project": {"slug" : "$_id.slug", "parentSlug" : "$_id.parentSlug", "_id" : 0} }
+  ]);
 }
 
 const getCategoriesWithoutImportedArticls = async () => {
