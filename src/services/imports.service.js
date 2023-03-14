@@ -239,7 +239,7 @@ const importAllArticls = async () => {
 };
 
 const resetAllImportFlags = async () => {
-  const result = await Articls.updateMany(
+  const result = await Categories.updateMany(
       {},
       {$set: { wpArticlsImported: false },}
     );
@@ -335,7 +335,7 @@ const oldToNewNote = (oldNote, authorId) => {
   return newNote;
 }
 
-const getCategoriesWithoutImpxortedArticls = async () => {
+const getCategoriesWithoutImportedArticls = async () => {
   const unfinishedCategories = await Categories.find({wpArticlsImported:false});
 
   return unfinishedCategories;

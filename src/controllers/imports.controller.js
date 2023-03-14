@@ -5,7 +5,7 @@ const { importsService } = require('../services');
 
 const resetAllImportFlags = catchAsync(async (req, res) => {
   const result = await importsService.resetAllImportFlags();
-  res.status(httpStatus.SUCCESS).send(result);
+  res.send(result);
 });
 
 const importCategories = catchAsync(async (req, res) => {

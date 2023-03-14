@@ -14,7 +14,6 @@ router.get(
   importsController.resetAllImportFlags
 );
 
-
 router.get(
   "/import-articls/all",
   importsController.importAllArticls
