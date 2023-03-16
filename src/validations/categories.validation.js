@@ -40,6 +40,12 @@ const getCategory = {
   }),
 };
 
+const getCategoryBySlug = {
+  params: Joi.object().keys({
+    slug: Joi.string().required(),
+  }),
+};
+
 const getCategorySlugs = {
   query: Joi.object().keys({
     q: Joi.string().required(),

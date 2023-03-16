@@ -40,6 +40,11 @@ router.get(
   validate(categoriesValidation.getCategory),
   categoriesController.getCategory
 );
+router.get(
+  "/",
+  validate(categoriesValidation.getCategoryBySlug),
+  categoriesController.getCategoryBySlug
+);
 router.delete(
   "/",
   auth("manageUsers"),

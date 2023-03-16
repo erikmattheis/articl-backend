@@ -90,8 +90,7 @@ categoriesSchema.statics.isCategorySlug = async function (val, excludeId) {
 };
 
 /**
- * Check if password matches the category's password
- * @param {val} ObjectId
+ * @param {val} String
  * @returns {Promise<boolean>}
  */
 categoriesSchema.methods.getCategoriesByParentSlug = async function (

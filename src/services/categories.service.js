@@ -24,7 +24,6 @@ const upsertCategory = async (categoriesBody, userId) => {
     if (categoriesBody.id !== userId) {
       throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");
     }
-
   }
   return Categories.updateOne({slug:categoriesBody.slug}, categoriesBody, {upsert: true});
 };
