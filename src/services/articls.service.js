@@ -159,7 +159,7 @@ const getArticlsBySlug = async (slug) => {
  * @param {Object} updateBody
  * @returns {Promise<Articl>}
  */
-const updateArticlById = async (articlId, updateBody) => {
+const updateArticlById = async (articlId, updateBody, userId) => {
   const articl = await getArticlById(articlId);
   if (!articl) {
     throw new ApiError(httpStatus.NOT_FOUND, "Articl not found");
