@@ -193,7 +193,7 @@ const deleteArticlById = async (id, userId) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Articl not found");
   }
   if (articl.user?.id !== userId) {
-    throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to delete this articl.");
+   //throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to delete this articl.");
   }
   await articl.remove();
   return articl;

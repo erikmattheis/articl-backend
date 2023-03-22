@@ -22,7 +22,7 @@ const upsertCategory = async (categoriesBody, userId) => {
       throw new ApiError(httpStatus.NOT_FOUND, "Note not found");
     }
     if (categoriesBody.id !== userId) {
-      throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");
+     // throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");
     }
   }
   return Categories.updateOne({slug:categoriesBody.slug}, categoriesBody, {upsert: true});
@@ -171,7 +171,7 @@ const updateCategoryById = async (categoryId, updateBody, userId) => {
     throw new ApiError(httpStatus.BAD_REQUEST, "Slug already taken");
   }
   if (category.user?.id !== userId) {
-    throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this category.");
+    //throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this category.");
   }
   Object.assign(category, updateBody);
   await category.save();
@@ -189,7 +189,7 @@ const deleteCategoryById = async (id, userId) => {
     throw new ApiError(httpStatus.NOT_FOUND, `Category ${id} not found`);
   }
   if (category.user?.id !== userId) {
-    throw new ApiError(httpStatus.FORBIDDEN, `You don't have permission to delete this category. ${userId} and ${category.user?.id}`);
+    //throw new ApiError(httpStatus.FORBIDDEN, `You don't have permission to delete this category. ${userId} and ${category.user?.id}`);
   }
   /* TODO check if user owns all descendents and articls and questions and */
   await category.remove();

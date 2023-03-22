@@ -127,7 +127,7 @@ const updateArticl = catchAsync(async (req, res) => {
 });
 
 const deleteArticl = catchAsync(async (req, res) => {
-  await articlsService.deleteArticlById(req.body.id, req, user.id);
+  await articlsService.deleteArticlById(req.body.id, req.user.id);
   res.send();
 });
 
