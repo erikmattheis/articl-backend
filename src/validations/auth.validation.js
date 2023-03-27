@@ -35,9 +35,9 @@ const forgotPassword = {
 
 const resetPassword = {
   body: Joi.object().keys({
-    username: Joi.string().required(),
+    password: Joi.string().required().custom(password),
     newPassword: Joi.string().required().custom(password),
-    newPassword2:Joi.string().required().equal(Joi.ref('newPassword'))
+    newPassword2: Joi.string().required().equal(Joi.ref("newPassword")),
   }),
 };
 

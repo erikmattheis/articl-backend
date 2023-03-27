@@ -27,7 +27,7 @@ const loginUserWithUsernameAndPassword = async (username, password) => {
 const logout = async (accessToken) => {
   const accessTokenDoc = await Token.findOne({
     token: accessToken,
-    type: tokenTypes.ACCESS
+    type: tokenTypes.ACCESS,
   });
 
   if (!accessTokenDoc) {
@@ -43,12 +43,8 @@ const logout = async (accessToken) => {
  * @returns {Promise<Object>}
  */
 const refreshAuth = async (refreshToken) => {
-
   try {
-    const refreshTokenDoc = await tokenService.verifyToken(
-      refreshToken,
-      tokenTypes.REFRESH
-    );
+    const refreshTokenDoc = await tokenService.verifyToken(refreshToken, tokenTypes.REFRESH);
 
     const user = await userService.getUserById(refreshTokenDoc.user);
     if (!user) {
@@ -68,14 +64,12 @@ const refreshAuth = async (refreshToken) => {
  * @param {string} newPassword
  * @returns {Promise}
  */
-const resetPassword = async (username, newPassword) => {
+const resetPassword = async (password, newPassword) => {
   try {
-
-    const user = await userService.getUserByUsername(username);
-    if (!user) {
-      throw new Error("User not found.");
+    if (!User.isPasswordMatch()) {
+      throw new Error("Incorrect password.");
     }
-    
+
     await userService.updatePasswordById(user.id, { password: newPassword });
     await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
   } catch (error) {

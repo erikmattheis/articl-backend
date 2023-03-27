@@ -41,8 +41,8 @@ const getArticlCount = async (id) => {
 };
 
 const updateSlugs = async (slug, oldSlug) => {
-  return Articls.updateMany({ slug: oldSlug }, { $set: { slug: slug } })
-}
+  return Articls.updateMany({ slug: oldSlug }, { $set: { slug: slug } });
+};
 
 const getAnyArticlFieldValue = async (field, value) => {
   const regex = new RegExp(regexEscape(value), "i");
@@ -51,7 +51,17 @@ const getAnyArticlFieldValue = async (field, value) => {
   return Promise.resolve(result);
 };
 
-const orderArray = ['Review (OA)', 'Review (PA)', 'Research (OA)', 'Research (PA)', 'Web', 'Images', 'Videos', 'Presentations', 'Podcast'];
+const orderArray = [
+  "Review (OA)",
+  "Review (PA)",
+  "Research (OA)",
+  "Research (PA)",
+  "Web",
+  "Images",
+  "Videos",
+  "Presentations",
+  "Podcast",
+];
 
 const sortArticls = (a, b) => {
   const aIndex = orderArray.indexOf(a.type);
@@ -67,7 +77,7 @@ const sortArticls = (a, b) => {
 const getArticlsBySlug = async (slug) => {
   const articls = await Articls.find({ slug: slug });
   return articls.sort(sortArticls);
-}
+};
 
 /*
 const orderArray = ['Review (OA)', 'Review (PA)', 'Research (OA)', 'Research (PA)', 'Web', 'Images', 'Videos'];
@@ -165,9 +175,8 @@ const updateArticlById = async (articlId, updateBody, userId) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Articl not found");
   }
 
-  console.log('userId', userId)
   if (articl.user?.id !== userId) {
-   // throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to edit this articl.");
+    // throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to edit this articl.");
   }
   Object.assign(articl, updateBody);
   await articl.save();
@@ -193,7 +202,7 @@ const deleteArticlById = async (id, userId) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Articl not found");
   }
   if (articl.user?.id !== userId) {
-   //throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to delete this articl.");
+    //throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to delete this articl.");
   }
   await articl.remove();
   return articl;
