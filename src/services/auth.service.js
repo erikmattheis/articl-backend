@@ -64,9 +64,11 @@ const refreshAuth = async (refreshToken) => {
  * @param {string} newPassword
  * @returns {Promise}
  */
-const resetPassword = async (password, newPassword) => {
+const resetPassword = async (user, password, newPassword) => {
   try {
-    if (!User.isPasswordMatch()) {
+    console.log(user);
+    const passwordMatch = await user.isPasswordMatch(password);
+    if (!passwordMatch) {
       throw new Error("Incorrect password.");
     }
 

@@ -107,6 +107,12 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+const isPasswordMatch = async (password) => { 
+  const match = await User.methods.isPasswordMatch(password);
+  return match;
+};
+
+
 module.exports = {
   createUser,
   queryUsers,
@@ -116,4 +122,5 @@ module.exports = {
   updateUserById,
   updatePasswordById,
   deleteUserById,
+  isPasswordMatch,
 };

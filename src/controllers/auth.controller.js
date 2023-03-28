@@ -33,7 +33,7 @@ const forgotPassword = catchAsync(async (req, res) => {
 });
 
 const resetPassword = catchAsync(async (req, res) => {
-  await authService.resetPassword(req.body.password, req.body.newPassword);
+  await authService.resetPassword(req.user, req.body.password, req.body.newPassword);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
