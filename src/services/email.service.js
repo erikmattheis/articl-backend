@@ -44,6 +44,26 @@ If you did not request any password resets, then ignore this email.`;
   Promise.resolve(to);
 };
 
+const sendForgotUsernameEmail = async (to, usernames) => {
+  const subject = 'Articl username';
+  // replace this url with the link to the reset password page of your front-end app
+
+  if (usernames.length > 0) {
+
+    const theUsernames = usernames.map(function (user) { return user.username; }).toString();
+    const text = `Dear user,
+
+We received a request for the username(s) associated with this email:
+
+${theUsernames}
+
+You may log in to https://articl.net`;
+
+  await sendEmail(to, subject, text);
+  }
+  Promise.resolve(to);
+};
+
 /**
  * Send verification email
  * @param {string} to
@@ -65,5 +85,6 @@ module.exports = {
   transport,
   sendEmail,
   sendResetPasswordEmail,
+  sendForgotUsernameEmail,
   sendVerificationEmail,
 };

@@ -24,6 +24,12 @@ router.post(
   validate(authValidation.forgotPassword),
   authController.forgotPassword
 );
+
+router.post(
+  "/forgot-username",
+  validate(authValidation.forgotUsername),
+  authController.forgotUsername
+);
 /*
 router.get("/change-password-get-email", validate(authValidation.getEmailFromResetPassword), authController.login);
 */

@@ -32,6 +32,12 @@ const forgotPassword = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const forgotUsername = catchAsync(async (req, res) => {
+  const result = await authService.getUsernamesFromEmail(req.body.email);
+  emailService.sendForgotUsernameEmail(req.body.email, result);
+  res.send(result);
+});
+
 const resetPassword = catchAsync(async (req, res) => {
   await authService.resetPassword(req.user, req.body.password, req.body.newPassword);
   res.status(httpStatus.NO_CONTENT).send();
@@ -59,6 +65,7 @@ module.exports = {
   logout,
   refreshTokens,
   forgotPassword,
+  forgotUsername,
   resetPassword,
   getEmailFromResetPassword,
   sendVerificationEmail,

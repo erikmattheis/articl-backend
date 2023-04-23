@@ -95,6 +95,15 @@ const getEmailFromResetPassword = async (resetPasswordToken) => {
   }
 };
 
+const getUsernamesFromEmail = async (email) => {
+  try {
+    const usernames = await userService.getUsersByEmail(email);
+    return usernames;
+  } catch (error) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, error);
+  }
+};
+
 /**
  * Verify email
  * @param {string} verifyEmailToken
@@ -123,5 +132,6 @@ module.exports = {
   refreshAuth,
   resetPassword,
   getEmailFromResetPassword,
+  getUsernamesFromEmail,
   verifyEmail,
 };

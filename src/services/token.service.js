@@ -119,14 +119,15 @@ const generateAuthTokens = async (user) => {
   };
 };
 
+/* TODO allow for multiple users per email 
 /**
  * Generate reset password token
  * @param {string} email
  * @returns {Promise<string>}
  */
 const generateResetPasswordToken = async (email) => {
-  const user = await userService.getUserByEmail(email);
-  if (!user) {
+  const users = await userService.getUsersByEmail(email);
+  if (!users.length) {
     throw new ApiError(httpStatus.NOT_FOUND, "No users found with this email");
   }
   const expires = moment().add(
@@ -134,7 +135,7 @@ const generateResetPasswordToken = async (email) => {
     "minutes"
   );
   const resetPasswordToken = generateToken(
-    user.id,
+    users[0].id,
     expires,
     tokenTypes.RESET_PASSWORD
   );
