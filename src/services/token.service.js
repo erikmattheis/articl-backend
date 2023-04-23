@@ -141,7 +141,7 @@ const generateResetPasswordToken = async (email) => {
   );
   await saveToken(
     resetPasswordToken,
-    user.id,
+    users[0].id,
     expires,
     tokenTypes.RESET_PASSWORD
   );
