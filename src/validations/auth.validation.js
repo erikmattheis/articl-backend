@@ -42,13 +42,6 @@ const forgotUsername = {
 const resetPassword = {
   body: Joi.object().keys({
     password: Joi.string().required().custom(password),
-    newPassword: Joi.string().required().custom(password),
-    newPassword2: Joi.string().required().equal(Joi.ref("newPassword")),
-  }),
-};
-
-const getEmailFromResetPassword = {
-  query: Joi.object().keys({
     token: Joi.string().required(),
   }),
 };
@@ -67,6 +60,5 @@ module.exports = {
   forgotPassword,
   forgotUsername,
   resetPassword,
-  getEmailFromResetPassword,
   verifyEmail,
 };

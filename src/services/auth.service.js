@@ -64,16 +64,19 @@ const refreshAuth = async (refreshToken) => {
  * @param {string} newPassword
  * @returns {Promise}
  */
-const resetPassword = async (user, password, newPassword) => {
+const resetPassword = async (token, password) => {
+  console.log('token: ', token)
   try {
-    console.log(user);
-    const passwordMatch = await user.isPasswordMatch(password);
-    if (!passwordMatch) {
-      throw new Error("Incorrect password.");
-    }
+    const resetPasswordTokenDoc = await tokenService.verifyToken(
+      token,
+      tokenTypes.RESET_PASSWORD
+    );
+    console.log('resetPasswordTokenDoc.user._id' , resetPasswordTokenDoc.user._id);
 
-    await userService.updatePasswordById(user.id, { password: newPassword });
-    await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
+    const user = await userService.getUserById(resetPasswordTokenDoc.user._id);
+    const userId = user._id;
+    await userService.updatePasswordById(userId, { password });
+    await Token.deleteMany({ user: userId, type: tokenTypes.RESET_PASSWORD });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, error);
   }

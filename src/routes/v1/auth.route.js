@@ -30,15 +30,15 @@ router.post(
   validate(authValidation.forgotUsername),
   authController.forgotUsername
 );
-/*
-router.get("/change-password-get-email", validate(authValidation.getEmailFromResetPassword), authController.login);
-*/
+
 router.post(
   "/change-password",
   validate(authValidation.resetPassword),
   authController.resetPassword
 );
+
 router.post("/send-verification-email", authController.sendVerificationEmail);
+
 router.get(
   "/verify-email",
   validate(authValidation.verifyEmail),
