@@ -11,35 +11,28 @@ router.get("/", articlsController.getArticls);
 
 router.post(
   "/",
-  auth("manageUsers"),
+  auth(),
   validate(articlsValidation.createArticl),
   articlsController.createArticl 
 );
 
-router.get(
-  "/:id",
-  auth("manageUsers"),
-  validate(articlsValidation.getArticlById),
-  articlsController.updateArticl
-);
-
 router.post(
   "/order",
-  auth("manageUsers"),
+  auth(),
   validate(articlsValidation.updateArticlsOrder),
   articlsController.updateArticlsOrder
 );
 
 router.put(
   "/:id",
-  auth("manageUsers"),
+  auth(),
   validate(articlsValidation.updateArticl),
   articlsController.updateArticl
 );
 
 router.delete(
   "/",
-  auth("manageUsers"),
+  auth(),
   validate(articlsValidation.deleteArticl),
   articlsController.deleteArticl
 );

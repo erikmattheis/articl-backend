@@ -76,10 +76,25 @@ const sendVerificationEmail = async (to, token) => {
   // replace this url with the link to the email verification page of your front-end app
   const verificationEmailUrl = `${config.frontendUrl}/verify-email?token=${token}`;
   const text = `Dear user,
+
 To verify your email, click on this link: ${verificationEmailUrl}
+
 If you did not create an account, then ignore this email.`;
   await sendEmail(to, subject, text);
   Promise.resolve(to);
+};
+
+const sendWelcomeEmail = async (user) => {
+  const subject = 'Welcome to Articl.net';
+
+  const text = `Dear ${user.nameFirst},
+
+Your username is ${user.username}
+
+http://articl.net
+.`;
+  await sendEmail(user.email, subject, text);
+  Promise.resolve(user.email);
 };
 
 module.exports = {
@@ -88,4 +103,5 @@ module.exports = {
   sendResetPasswordEmail,
   sendForgotUsernameEmail,
   sendVerificationEmail,
+  sendWelcomeEmail,
 };

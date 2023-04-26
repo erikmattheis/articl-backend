@@ -65,7 +65,6 @@ const refreshAuth = async (refreshToken) => {
  * @returns {Promise}
  */
 const resetPassword = async (token, password) => {
-  console.log('token: ', token)
   try {
     const resetPasswordTokenDoc = await tokenService.verifyToken(
       token,
@@ -124,8 +123,9 @@ const verifyEmail = async (verifyEmailToken) => {
     }
     await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
     await userService.updateUserById(user.id, { isEmailVerified: true });
+    return user;
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Email verification failed");
+    throw new ApiError(httpStatus.UNAUTHORIZED, error);
   }
 };
 

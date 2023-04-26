@@ -12,13 +12,17 @@ router.post(
   validate(userValidation.register),
   authController.register
 );
+
 router.post("/login", validate(authValidation.login), authController.login);
+
 router.post("/logout", validate(authValidation.logout), authController.logout);
+
 router.post(
   "/refresh-tokens",
   validate(authValidation.refreshTokens),
   authController.refreshTokens
 );
+
 router.post(
   "/forgot-password",
   validate(authValidation.forgotPassword),
@@ -37,7 +41,7 @@ router.post(
   authController.resetPassword
 );
 
-router.post("/send-verification-email", authController.sendVerificationEmail);
+router.post("/send-verification-email", validate(authValidation.sendVerificationEmail), authController.sendVerificationEmail);
 
 router.get(
   "/verify-email",

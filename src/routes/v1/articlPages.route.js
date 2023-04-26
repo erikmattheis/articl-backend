@@ -6,6 +6,7 @@ const articlPagesController = require("../../controllers/articlPages.controller"
 const router = express.Router();
 
 router.get("/", articlPagesController.getHomePage);
+
 router.get(
   "/:slug",
   validate(articlPagesValidation.getArticlPage),
