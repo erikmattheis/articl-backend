@@ -18,7 +18,7 @@ router.post(
 
 router.post(
   "/order",
-  auth(),
+  auth("manageContent"),
   validate(articlsValidation.updateArticlsOrder),
   articlsController.updateArticlsOrder
 );
