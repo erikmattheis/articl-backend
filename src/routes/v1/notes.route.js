@@ -11,7 +11,7 @@ router.get("/", notesController.getNotes);
 
 router.post(
   "/",
-  auth("manageUsers"),
+  auth(),
   validate(notesValidation.createNote),
   notesController.createNote
 );
@@ -25,14 +25,14 @@ router.get(
 
 router.patch(
   "/:id",
-  auth("manageUsers"),
+  auth(),
   validate(notesValidation.updateNote),
   notesController.updateNote
 );
 
 router.delete(
   "/",
-  auth("manageUsers"),
+  auth(),
   validate(notesValidation.deleteNote),
   notesController.deleteNote
 );

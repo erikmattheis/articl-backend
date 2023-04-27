@@ -12,7 +12,7 @@ router.get("/me", auth(), userController.getMe);
 
 router.get(
   "/:userId",
-  auth("manageUsers"),
+  auth(),
   validate(userValidation.getUser),
   userController.getUser
 );
@@ -31,7 +31,7 @@ router.post(
 
 router.patch(
   "/me",
-  auth("manageUsers"),
+  auth(),
   validate(userValidation.updateMe),
   userController.updateMe
 );
@@ -39,12 +39,14 @@ router.patch(
 
 router.patch(
   "/:userId",
+  auth(),
   validate(userValidation.updateUser),
   userController.updateUser
 );
 
 router.delete(
   "/:userId",
+  auth(),
   validate(userValidation.deleteUser),
   userController.deleteUser
 );
