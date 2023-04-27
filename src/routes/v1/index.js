@@ -4,7 +4,7 @@ const articlsRoute = require("./articls.route");
 const userRoute = require("./user.route");
 const categoriesRoute = require("./categories.route");
 const importsRoute = require("./imports.route");
-const articlPages = require("./articlPages.route");
+const resources = require("./resources.route");
 const docsRoute = require("./docs.route");
 const notesRoute = require("./notes.route");
 const config = require("../../config/config");
@@ -26,7 +26,7 @@ const defaultRoutes = [
   },
   {
     path: "/resource",
-    route: articlPages,
+    route: resources,
   },
   {
     path: "/categories",
