@@ -112,7 +112,7 @@ function makeArticlsFilter(filter) {
 }
 
 const getArticlById = catchAsync(async (req, res) => {
-  const articl = await articlsService.getArticlById(id);
+  const articl = await articlsService.getArticlById(req.params.id);
   res.send(articl);
 });
 

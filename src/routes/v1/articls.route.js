@@ -9,6 +9,12 @@ const router = express.Router();
 
 router.get("/", articlsController.getArticls);
 
+router.get(
+  "/:id",
+  validate(articlsValidation.getArticlById),
+  articlsController.getArticlById
+);
+
 router.post(
   "/",
   auth(),
