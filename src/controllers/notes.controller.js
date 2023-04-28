@@ -58,7 +58,7 @@ function makeNotesFilter(filter) {
 }
 
 const getNoteById = catchAsync(async (req, res) => {
-  const note = await notesService.getNoteById(req.params.id);
+  const note = await notesService.getNoteById(req.params.id, req, );
   res.send(note);
 });
 
