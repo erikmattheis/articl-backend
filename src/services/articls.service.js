@@ -176,7 +176,7 @@ const updateArticlById = async (articlId, updateBody, userId) => {
   }
 
   if (articl.user?.id !== userId) {
-    // throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to edit this articl.");
+    throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to edit this articl.");
   }
   Object.assign(articl, updateBody);
   await articl.save();

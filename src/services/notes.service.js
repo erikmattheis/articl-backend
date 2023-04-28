@@ -75,7 +75,7 @@ const deleteNoteById = async (id) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Note not found");
   }
   if (note.user?.id !== userId) {
-   // throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");
+   throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");
   }
   await note.remove();
   return note;
