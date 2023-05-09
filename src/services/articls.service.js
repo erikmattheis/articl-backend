@@ -52,11 +52,10 @@ const getAnyArticlFieldValue = async (field, value) => {
 };
 
 const searchByWeight = async (searchText) => {
-  console.log('searching', searchText);
   try {
     const articls = await Articls.find(
       { $text: { $search: searchText } },
-      { score: { $meta: 'textScore' }, title: 2, journal: 1 }
+      { score: {  $ceil: { $meta: 'textScore' } }, title: 2, journal: 1 }
     )
       .sort({ score: { $meta: 'textScore' } });
     return articls;
