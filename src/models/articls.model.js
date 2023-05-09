@@ -206,7 +206,7 @@ const fields = {};
 
 Object.assign(fields, weights);
 
-articlsSchema.index(fields, {
+articlsSchema.index({ '$**': 'text' }, {
   name: 'Search Many Fields',
   weights,
 });

@@ -7,13 +7,15 @@ const aiService = require("../../services/ai.service");
 
 const router = express.Router();
 
-router.get("/", articlsController.getArticls);
+router.get("/search", validate(articlsValidation.searchByWeight), articlsController.searchByWeight);  
 
 router.get(
   "/:id",
   validate(articlsValidation.getArticlById),
   articlsController.getArticlById
 );
+
+router.get("/", articlsController.getArticls);
 
 router.post(
   "/",
@@ -44,5 +46,7 @@ router.delete(
 );
 
 router.get("/values/:field", articlsController.getAnyArticlFieldValue);
+
+
 
 module.exports = router;

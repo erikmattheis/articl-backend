@@ -51,6 +51,21 @@ const getAnyArticlFieldValue = async (field, value) => {
   return Promise.resolve(result);
 };
 
+const searchByWeight = async (searchText) => {
+  console.log('searching', searchText);
+  try {
+    const articls = await Articls.find(
+      { $text: { $search: searchText } },
+      { score: { $meta: 'textScore' }, title: 2, journal: 1 }
+    )
+      .sort({ score: { $meta: 'textScore' } });
+    return articls;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 const orderArray = [
   "Review (OA)",
   "Review (PA)",
@@ -211,6 +226,7 @@ const deleteArticlById = async (id, userId) => {
 module.exports = {
   createArticl,
   queryArticls,
+  searchByWeight,
   getArticlCount,
   updateSlugs,
   getAnyArticlFieldValue,
