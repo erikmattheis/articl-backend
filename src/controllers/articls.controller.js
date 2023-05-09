@@ -29,7 +29,6 @@ const getAnyArticlFieldValue = catchAsync(async (req, res) => {
 });
 
 const searchByWeight = catchAsync(async (req, res) => {
-  console.log('req.query.q', req.query.q);
   const result = await articlsService.searchByWeight(req.query.q);
   res.send(result);
 });
