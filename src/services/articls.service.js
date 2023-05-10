@@ -51,14 +51,33 @@ const getAnyArticlFieldValue = async (field, value) => {
   return Promise.resolve(result);
 };
 
+const weights = {
+  author: 2,
+  slug: 9,
+  title: 5,
+  htmlTitle: 10,
+  abstract: 7,
+  authors: 5,
+  description: 9,
+  fullText: 6,
+  url: 1,
+  imageCaption: 10,
+  institution: 5,
+  journal: 5,
+  shortTitle: 1,
+  source: 2,
+};
+
 const searchByWeight = async (searchText) => {
+
   try {
     const articls = await Articls.find(
       { $text: { $search: searchText } },
-      { score: {  $ceil: { $meta: 'textScore' } }, title: 2, journal: 1 }
+      Object.assign({ score: { $ceil: { $meta: 'textScore' } } }, weights)
     )
       .sort({ score: { $meta: 'textScore' } });
-    return articls;
+    
+      return articls;
   } catch (err) {
     console.error(err);
     throw err;
