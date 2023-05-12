@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
-mongoose.set('useFindAndModify', false);
-
 const articlsSchema = mongoose.Schema(
   {
 
@@ -10,20 +8,18 @@ const articlsSchema = mongoose.Schema(
       type: String,
       required: false,
       trim: true,
-      index: true,
+
     },
     slug: {
       type: String,
       required: true,
       trim: true,
-      index: true,
     },
     order: {
       type: Number,
       required: false,
       trim: true,
       default: 0,
-      index: true,
     },
     oldId: {
       type: String,
@@ -34,7 +30,6 @@ const articlsSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      index: true,
     },
     authors: {
       type: Array,
@@ -43,7 +38,6 @@ const articlsSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      index: true,
     },
     abstract: {
       type: String,
@@ -64,7 +58,6 @@ const articlsSchema = mongoose.Schema(
       type: Number,
       required: false,
       trim: true,
-      index: true,
     },
     thumbnailImage: {
       type: String,
@@ -105,13 +98,11 @@ const articlsSchema = mongoose.Schema(
       type: String,
       required: false,
       trim: true,
-      index: true,
     },
     journal: {
       type: String,
       required: false,
       trim: true,
-      index: true,
     },
     month: {
       type: String,
@@ -167,7 +158,6 @@ const articlsSchema = mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       required: false,
       trim: true,
-      index: true,
       ref: 'User',
     },
     oldUserId: {
@@ -187,7 +177,6 @@ const articlsSchema = mongoose.Schema(
 );
 
 const weights = {
-  author: 2,
   slug: 9,
   title: 10,
   abstract: 7,
@@ -206,11 +195,6 @@ const fields = {};
 
 Object.assign(fields, weights);
 
-articlsSchema.index({ '$**': 'text' }, {
-  name: 'Search Many Fields',
-  weights,
-});
-
 articlsSchema.set('toJSON', {
   virtuals: true,
 });
@@ -220,13 +204,82 @@ articlsSchema.virtual('id').get(function doIt() {
   return this._id.toHexString();
 });
 
+articlsSchema.index({  
+  category: 1,
+  slug: 1,
+  title: 1,
+  authors: 1,
+  type: 1,
+  abstract: 1,
+  description: 1,
+  year: 1,
+  imageCaption: 1,
+  institution: 1,
+  journal: 1,
+  shortTitle: 1,
+});
+
+
 // add plugin that converts mongoose to json
 articlsSchema.plugin(toJSON);
 articlsSchema.plugin(paginate);
 
-/**
- * @typedef Articls
- */
+async function drop() {
+  const Articls = mongoose.model('Articls', articlsSchema);
+
+  const articlesCollection = Articls.collection;
+  
+  // Get a list of all indexes
+  const indexes = await articlesCollection.indexes();
+  
+  // Loop through the indexes and delete them
+  for (const index of indexes) {
+    if (index.name === '_id_') continue;
+    await articlesCollection.dropIndex(index.name);
+  }
+
+  Articls.collection.createIndex({
+    title: "text",
+    htmlTitle: "text",
+    journal: "text",
+    institution: "text",
+    abstract: "text"
+  });
+  
+
+}
+
+//drop()
+
 const Articls = mongoose.model('Articls', articlsSchema);
 
-module.exports = Articls;
+
+
+Articls.on('index', function (err) {  
+  if (err) {
+    console.error('Indexes error', err);
+  } 
+  else {
+    console.log('Indexes no error', err);  
+  }
+
+
+});   
+
+const init = async () => { 
+
+  await Articls.createIndexes();
+
+
+  const indexes = await Articls.collection.indexes();
+
+  console.log('indexes finally are', indexes.length);
+
+}
+
+init();
+
+
+  module.exports = Articls;
+
+ 

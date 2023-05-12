@@ -47,6 +47,4 @@ router.delete(
 
 router.get("/values/:field", articlsController.getAnyArticlFieldValue);
 
-
-
 module.exports = router;

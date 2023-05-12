@@ -284,7 +284,6 @@ const importNotes = async (userId) => {
   let notes = await getNotes();
   let n = 0;
 
-  console.log('the first note', notes[0]);
   
   n += notes.length;
   notes = notes.map((note) => oldToNewNote(note, userId));
@@ -316,8 +315,6 @@ const oldToNewArticl = (oldArticl) => {
 }
 
 const oldToNewNote = (oldNote, authorId) => {
-  //console.log('oldNote', oldNote);
-  //process.exit();
   const newNote = { ...oldNote };
 
   const hashtagRegex = /#[A-Za-z0-9_\-]+/g;

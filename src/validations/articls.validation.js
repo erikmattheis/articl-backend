@@ -85,6 +85,12 @@ const deleteArticl = {
   }),
 };
 
+const searchByWeight = {
+  query: Joi.object().keys({
+    q: Joi.string().required(),
+    searchFields: Joi.string().allow(null, ''),
+  }),
+}
 module.exports = {
   createArticl,
   getArticls,
@@ -92,4 +98,5 @@ module.exports = {
   updateArticl,
   updateArticlsOrder,
   deleteArticl,
+  searchByWeight,
 };

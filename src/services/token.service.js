@@ -52,7 +52,6 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
  * @returns {Promise<Token>}
  */
 const verifyToken = async (token, type) => {
-  console.log("verifyToken", type, token, type)
   const payload = jwt.verify(token, config.jwt.secret);
 
   const tokenDoc = await Token.findOne({

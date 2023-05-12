@@ -3,6 +3,7 @@ const app = require("./app");
 const config = require("./config/config");
 const logger = require("./config/logger");
 
+
 let server;
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
 
@@ -15,7 +16,7 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
 
 });
 
-mongoose.set("debug", false);
+mongoose.set("debug", true);
 process.on('warning', e => console.warn(e.stack));
 
 const exitHandler = () => {

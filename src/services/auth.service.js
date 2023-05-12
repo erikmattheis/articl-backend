@@ -70,8 +70,6 @@ const resetPassword = async (token, password) => {
       token,
       tokenTypes.RESET_PASSWORD
     );
-    console.log('resetPasswordTokenDoc.user._id' , resetPasswordTokenDoc.user._id);
-
     const user = await userService.getUserById(resetPasswordTokenDoc.user._id);
     const userId = user._id;
     await userService.updatePasswordById(userId, { password });
