@@ -62,6 +62,7 @@ const defaultProjection = {
   imageCaption: 10,
   institution: 5,
   journal: 5,
+  resourceType: 1,
 }
 
 const searchByWeight = async (searchText, searchFields, projection = defaultProjection) => {
@@ -82,7 +83,8 @@ const searchByWeight = async (searchText, searchFields, projection = defaultProj
         projection,
         { sort: { score: { $meta: 'textScore' } } }
       );
-
+console.log('articls', articls);
+console.log('articls.length', articls.length);
     return articls;
 
   } catch (err) {
