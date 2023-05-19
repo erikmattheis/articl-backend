@@ -120,103 +120,19 @@ const getArticlsBySlug = async (slug) => {
   return articls.sort(sortArticls);
 };
 
-/*
-const orderArray = ['Review (OA)', 'Review (PA)', 'Research (OA)', 'Research (PA)', 'Web', 'Images', 'Videos'];
-
-const sortArticls = (a, b) => {
-  const aIndex = orderArray.indexOf(a.type);
-  const bIndex = orderArray.indexOf(b.type);
-
-  if (aIndex !== bIndex) {
-    return aIndex - bIndex;
-  }
-
-  return a.order - b.order;
-}
-
-without the ording:
-
-articls = [{
-  order:2,
-  title: 'Images title 2',
-  type:'Images',
-},
-{
-  order:1,
-  title: 'Images title 1',
-  type:'Images',
-},
-{
-  order:2,
-  title: 'Web title 2',
-  type:'Web',
-},
-{
-  order:1,
-  title: 'Web title 1',
-  type:'Web',
-}]
-
-Ordered:
-
-[{
-order:1,
-title: 'Web title 1',
-type:'Web',
-},
-{
-  order:2,
-  title: 'Web title 2',
-  type:'Web',
-},
-{
-  order:1,
-  title: 'Images title 1',
-  type:'Images',
-},
-{
-  order:2,
-  title: 'Images title 2',
-  type:'Images',
-}]
-
-const getArticlsBySlug = async (slug) => {
-  return Articls.find({ slug: slug }).sort(sortArticls);
-};
-
-
-  I have an array of articles. Each article is this object:
-  article: {
-    order,
-    title
-    type,
-  }
-
-  The type is one of the orderArray - ['Review (OA)', 'Review (PA)', 'Research (OA)', 'Research (PA)', 'Web', 'Images', 'Videos']
-
-  I wish to order the results first by their "type" in the order the appear in orderArray and then by their "order" property.
-
-  I am using Mongoose. I can use lodash if needed.
-
-  How can I accompliush this? So far, I have:
-
-  return Articls.find({ slug: slug }).sort([['order', 1]]);
-
-  */
-
 /**
  * Update articl by id
  * @param {ObjectId} articlId
  * @param {Object} updateBody
  * @returns {Promise<Articl>}
  */
-const updateArticlById = async (articlId, updateBody, userId) => {
+const updateArticlById = async (articlId, updateBody, sessionUser) => {
   const articl = await getArticlById(articlId);
   if (!articl) {
     throw new ApiError(httpStatus.NOT_FOUND, "Articl not found");
   }
 
-  if (articl.user?.id !== userId) {
+  if (articl.user?.id !== sessionUser.id && sessionUser.role !== "superadmin") {
     throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to edit this articl.");
   }
   Object.assign(articl, updateBody);
@@ -237,13 +153,13 @@ const updateArticlsOrder = async function (arr) {
  * @param {ObjectId} id
  * @returns {Promise<Articl>}
  */
-const deleteArticlById = async (id, userId) => {
+const deleteArticlById = async (id, user) => {
   const articl = await getArticlById(id);
   if (!articl) {
     throw new ApiError(httpStatus.NOT_FOUND, "Articl not found");
   }
-  if (articl.user?.id !== userId) {
-    //throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to delete this articl.");
+  if (articl.user?.id !== user.id && sessionUser.role !== "superadmin") {
+    throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to delete this articl.");
   }
   await articl.remove();
   return articl;

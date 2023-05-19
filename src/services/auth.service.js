@@ -79,6 +79,21 @@ const resetPassword = async (token, password) => {
   }
 };
 
+const getUserRights = async (token, password) => {
+  try {
+    const resetPasswordTokenDoc = await tokenService.verifyToken(
+      token,
+      tokenTypes.RESET_PASSWORD
+    );
+    const user = await userService.getUserById(resetPasswordTokenDoc.user._id);
+    const userId = user._id;
+    await userService.updatePasswordById(userId, { password });
+    await Token.deleteMany({ user: userId, type: tokenTypes.RESET_PASSWORD });
+  } catch (error) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, error);
+  }
+};
+
 const getEmailFromResetPassword = async (resetPasswordToken) => {
   try {
     const resetPasswordTokenDoc = await tokenService.verifyToken(

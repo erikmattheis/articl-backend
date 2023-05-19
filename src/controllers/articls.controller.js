@@ -128,12 +128,12 @@ const updateArticlsOrder = catchAsync(async (req, res) => {
 });
 
 const updateArticl = catchAsync(async (req, res) => {
-  const articl = await articlsService.updateArticlById(req.params.id, req.body, req.user.id);
+  const articl = await articlsService.updateArticlById(req.params.id, req.body, req.user);
   res.send(articl);
 });
 
 const deleteArticl = catchAsync(async (req, res) => {
-  await articlsService.deleteArticlById(req.body.id, req.user.id);
+  await articlsService.deleteArticlById(req.body.id, req.user);
   res.send();
 });
 
