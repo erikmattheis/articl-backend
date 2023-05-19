@@ -50,47 +50,46 @@ const getAnyArticlFieldValue = async (field, value) => {
   return Promise.resolve(result);
 };
 
-const defaultProjection = {
-  author: 2,
-  slug: 9,
-  title: 5,
-  htmlTitle: 10,
-  abstract: 7,
-  authors: 5,
-  description: 9,
-  url: 1,
-  imageCaption: 10,
-  institution: 5,
-  journal: 5,
-  resourceType: 1,
-}
+const defaultProjection = [
+  'author',
+  'slug',
+  'title',
+  'htmlTitle',
+  'abstract',
+  'authors',
+  'url',
+  'institution',
+  'journal',
+  'type',
+];
 
 const searchByWeight = async (searchText, searchFields, projection = defaultProjection) => {
-
-  const searchFieldsArray = searchFields.split(',');
-
   try {
     const searchQuery = {
-      $text:
-      {
+      $text: {
         $search: searchText
       }
     };
 
+    if (Array.isArray(searchFields) && searchFields.length > 0) {
+      const fieldQuery = searchFields.map(field => ({ [field]: { $exists: true } }));
+      searchQuery.$and = fieldQuery;
+    }
+
+    const projectionObject = projection || {};
 
     const articls = await Articls.find(
       searchQuery,
-        projection,
-        { sort: { score: { $meta: 'textScore' } } }
-      );
-console.log('articls', articls);
-console.log('articls.length', articls.length);
+      projectionObject,
+      { sort: { score: { $meta: 'textScore' } } }
+    );
     return articls;
 
   } catch (err) {
     console.error('err', err);
     throw err;
   }
+
 };
 
 const orderArray = [
