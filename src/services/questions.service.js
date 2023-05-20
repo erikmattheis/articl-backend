@@ -61,8 +61,6 @@ const updateQuestionById = async (questionId, updateBody, req) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized to update this user");
   }
 
-
-
   Object.assign(question, updateBody);
   await question.save();
   return question;
@@ -78,7 +76,7 @@ const deleteQuestionById = async (questionId) => {
   if (!question) {
     throw new ApiError(httpStatus.NOT_FOUND, "Question not found");
   }
-  await question.remove();
+  await question.deleteOne({id:questionId}});
   return question;
 };
 

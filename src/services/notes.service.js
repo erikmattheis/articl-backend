@@ -77,7 +77,7 @@ const deleteNoteById = async (id) => {
   if (note.user?.id !== userId) {
    throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");
   }
-  await note.remove();
+  await note.deleteOne({ id });
   return note;
 };
 

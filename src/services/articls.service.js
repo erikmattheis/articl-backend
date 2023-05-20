@@ -161,7 +161,7 @@ const deleteArticlById = async (id, user) => {
   if (articl.user?.id !== user.id && sessionUser.role !== "superadmin") {
     throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to delete this articl.");
   }
-  await articl.remove();
+  await articl.deleteOne({ id });
   return articl;
 };
 

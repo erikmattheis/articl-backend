@@ -192,7 +192,7 @@ const deleteCategoryById = async (id, user) => {
     throw new ApiError(httpStatus.FORBIDDEN, `You don't have permission to delete this category. ${userId} and ${category.user?.id}`);
   }
   /* TODO check if user owns all descendents and articls and questions and */
-  await category.remove();
+  await category.deleteOne({ id: id });
   return category;
 };
 

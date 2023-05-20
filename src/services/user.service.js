@@ -105,11 +105,7 @@ const deleteUserById = async (userId, user) => {
   if (userId !== user._id && user.role !== "superadmin") {
     throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized to delete this user");
   }
-  const user = await getUserById(userId);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
-  }
-  await user.remove();
+  await user.deleteOne({ id: userId });
   return user;
 };
 
