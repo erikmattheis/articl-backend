@@ -52,17 +52,16 @@ const getQuestionByEmail = async (email) => {
  * @param {Object} updateBody
  * @returns {Promise<Question>}
  */
-const updateQuestionById = async (questionId, updateBody) => {
+const updateQuestionById = async (questionId, updateBody, req) => {
   const question = await getQuestionById(questionId);
   if (!question) {
     throw new ApiError(httpStatus.NOT_FOUND, "Question not found");
   }
-  if (
-    updateBody.email &&
-    (await Question.isEmailTaken(updateBody.email, questionId))
-  ) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
+  if (updateBody !== req.user._id && req.user.role !== "superadmin") {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized to update this user");
   }
+
+
 
   Object.assign(question, updateBody);
   await question.save();

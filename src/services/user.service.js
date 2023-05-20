@@ -59,10 +59,13 @@ const getUsersByEmail = async (email) => {
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
-const updateUserById = async (userId, updateBody) => {
+const updateUserById = async (userId, updateBody, req) => {
   let user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+  if (userId !== req.user._id && req.user.role !== "superadmin") {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized to update this user");
   }
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
@@ -98,7 +101,10 @@ const updatePasswordById = async (userId, updateBody) => {
  * @param {ObjectId} userId
  * @returns {Promise<User>}
  */
-const deleteUserById = async (userId) => {
+const deleteUserById = async (userId, user) => {
+  if (userId !== user._id && user.role !== "superadmin") {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized to delete this user");
+  }
   const user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
