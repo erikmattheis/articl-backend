@@ -86,7 +86,7 @@ const searchByWeight = async (searchText, searchFields, projection = defaultProj
     return articls;
 
   } catch (err) {
-    console.error('err', err);
+
     throw err;
   }
 

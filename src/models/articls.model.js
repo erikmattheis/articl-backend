@@ -253,33 +253,15 @@ async function drop() {
 
 const Articls = mongoose.model('Articls', articlsSchema);
 
-
-
-Articls.on('index', function (err) {  
-  if (err) {
-    console.error('Indexes error', err);
-  } 
-  else {
-    console.log('Indexes no error', err);  
-  }
-
-
-});   
-
 const init = async () => { 
 
   await Articls.createIndexes();
-
-
-  const indexes = await Articls.collection.indexes();
-
-  console.log('indexes finally are', indexes.length);
 
 }
 
 init();
 
 
-  module.exports = Articls;
+module.exports = Articls;
 
  

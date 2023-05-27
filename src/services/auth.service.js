@@ -35,17 +35,12 @@ const logout = async (accessToken) => {
   if (!accessTokenDoc) {
     throw new ApiError(httpStatus.NOT_FOUND, "User Not found");
   }
-  
-  console.log("accessTokenDoc before remove:", accessTokenDoc);
-  console.log("accessTokenDoc instanceof Token:", accessTokenDoc instanceof Token);
 
   if (!(accessTokenDoc instanceof Token)) {
     throw new Error("Invalid access token document");
   }
 
   const removedAccessToken = await accessTokenDoc.deleteOne({token: accessToken,type: tokenTypes.ACCESS});
-
-  console.log("removedAccessToken:", removedAccessToken);
 
   return removedAccessToken;
 };

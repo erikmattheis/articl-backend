@@ -6,7 +6,7 @@ const catchAsync = require("../utils/catchAsync");
 const { articlsService, categoriesService, importsService, notesService, aiService } = require("../services");
 
 const getAISummary = catchAsync(async (req, res) => {
-  const result = await aiService.getAISummary(req.query.category, req.query.parentCategory);
+  const result = await aiService.getAISummary(req.body.category, req.body.parentCategory);
   res.send(result);
 });
 
