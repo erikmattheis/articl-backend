@@ -9,40 +9,30 @@ const API_KEY = "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";
 
 const model = "gpt-3.5-turbo";
 const temp = 0.5;
-const tokens = 1024;
+const tokens = 400;
 const getAISummary = async (category, parentCategory) => {
   try {
-
-
-
-
-      
       const completion = await openai.createChatCompletion({
         model: model,
         messages: [
         { role: "system", content: "You are web copywriter" },
-        { role: "assistant", content: "medical library" },
-        { role: "user", content: "definition of bones" },
+        { role: "user", content: `definition of ${category}` },
         ],
         temperature: temp,
         max_tokens: tokens,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
-        n: 1,
+        n: 2,
         stop: "",
       });
-      const response = completion.data.choices[0].message.content;
+      const response = completion.data.choices;
       
       // Show the response
       console.log("==++==++==++==++==++====++==++==++==++==++==");
       console.log(response);
       console.log("==++==++==++==++==++====++==++==++==++==++==");
       
-      return {
-        status: 200,
-        message:response,
-      }
       /*
       prompt: [{
         role: "system",
@@ -57,7 +47,7 @@ const getAISummary = async (category, parentCategory) => {
 
    
 
-    const result = JSON.stringify(response.data);
+const result = JSON.stringify(response);
 
 console.log('result:', result);
 
