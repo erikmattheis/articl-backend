@@ -43,36 +43,28 @@ const getAISummary = async (category, parentCategory) => {
         content: `Above-the-fold text for medical pros and meta description for topic ${category})`,
       }]
       */
-    
-
-   
-
-const result = JSON.stringify(response);
-
-console.log('result:', result);
 
     return {
       status: 200,
-      message: result
+      message: response
     }
 
   }
   catch (err) {
     console.log('err:', err);
     return {
-
       status: err.response?.status,
       message: 'The AI service returned an error code of ' + err.response?.status + ' and the message ' + err ,
     }
   }
 }
 
-
+/*
 setTimeout(async function() {
   const f = await getAISummary('covid-19', 'infectuous disease');
   //console.log('f:', f);
 }, 1000);
-
+*/
 
 module.exports = {
   getAISummary,
