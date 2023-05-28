@@ -240,7 +240,7 @@ async function drop() {
 
   Articls.collection.createIndex({
     title: "text",
-    htmlTitle: "text",
+    shortTitle: "text",
     journal: "text",
     institution: "text",
     abstract: "text"

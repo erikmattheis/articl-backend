@@ -54,7 +54,7 @@ const defaultProjection = [
   'author',
   'slug',
   'title',
-  'htmlTitle',
+  'titleHtml',
   'abstract',
   'authors',
   'url',
