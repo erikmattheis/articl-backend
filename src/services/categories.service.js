@@ -104,7 +104,7 @@ const getSlugAncestry = async (slug, breadcrumbs) => {
   if (!slug) {
     return Promise.reject(new Error(`Slug category ${slug} not found.`))
   }
-  const item = await Categories.find({ slug }, { title: 1, titleHtml, slug: 1, parentSlug: 1 }).exec();
+  const item = await Categories.find({ slug }, { title: 1, titleHtml: 1, slug: 1, parentSlug: 1 }).exec();
 
   if (!item[0] || item[0]?.parentSlug + "" === "0") {
     breadcrumbs.push(item[0]);
