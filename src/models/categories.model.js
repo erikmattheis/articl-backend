@@ -16,7 +16,7 @@ const categoriesSchema = mongoose.Schema(
     },
     titleHtml: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
     },
     slug: {

@@ -21,6 +21,7 @@ const upsertCategory = {
 const getCategories = {
   query: Joi.object().keys({
     title: Joi.string(),
+    titleHtml: Joi.string(),
     slug: Joi.string(),
     parentSlug: Joi.string(),
     description: Joi.string(),
@@ -65,6 +66,7 @@ const updateCategory = {
   body: Joi.object()
     .keys({
       title: Joi.string().required(),
+      titleHtml: Joi.string().required(),
       slug: Joi.string().required(),
       parentSlug: Joi.string().required(),
       oldSlug: Joi.string().optional(),
