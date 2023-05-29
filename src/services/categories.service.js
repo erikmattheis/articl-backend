@@ -50,11 +50,22 @@ function makeCategoriesOptions(options) {
   return options;
 }
 
-const getCategoriesByParentSlug = async (parentSlug) => {
+const getCategoriesByParentSlug = async (parentSlug, user) => {
   const filter = { parentSlug };
-  const options = makeCategoriesOptions({})
+  const options = makeCategoriesOptions({});
+  // TODO: remove this line
+  await deleteCatsWithoutHTMLTitle();
   const categories = await queryCategories(filter, options, {});
   return categories;
+};
+
+const deleteCatsWithoutHTMLTitle = async () => {
+  const cats = await Categories.find(
+    { titleHtml: { $exists: false}}
+  ).exec();
+  for (const cat of cats) {
+    await Categories.deleteOne({ _id: cat.id });
+  };
 };
 
 const updateParentSlugs = async (slug, oldSlug) => {
@@ -113,7 +124,6 @@ const getSlugAncestry = async (slug, breadcrumbs) => {
   else {
     breadcrumbs.push(item[0]);
     return getSlugAncestry(item[0].parentSlug, breadcrumbs);
-
   }
 }
 
@@ -121,7 +131,6 @@ const getBreadcrumbs = async (slug) => {
   const result = await getSlugAncestry(slug, [])
   return result;
 }
-
 
 /**
  * Get category by id
@@ -190,7 +199,7 @@ const deleteCategoryById = async (id, user) => {
     throw new ApiError(httpStatus.FORBIDDEN, `You don't have permission to delete this category. ${userId} and ${category.user?.id}`);
   }
   /* TODO check if user owns all descendents and articls and questions and */
-  await category.deleteOne({ id: id });
+  await category.deleteOne({ id });
   return category;
 };
 
