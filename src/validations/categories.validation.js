@@ -8,6 +8,7 @@ const getAISummary = {
   }),
 };
 
+
 const upsertCategory = {
   body: Joi.object().keys({
     title: Joi.string().required(),
