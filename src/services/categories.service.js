@@ -54,7 +54,7 @@ const getCategoriesByParentSlug = async (parentSlug, user) => {
   const filter = { parentSlug };
   const options = makeCategoriesOptions({});
   // TODO: remove this line
-  await deleteCatsWithoutHTMLTitle();
+  // await deleteCatsWithoutHTMLTitle();
   const categories = await queryCategories(filter, options, {});
   return categories;
 };
