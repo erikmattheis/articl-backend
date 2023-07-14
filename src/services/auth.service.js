@@ -25,7 +25,6 @@ const loginUserWithUsernameAndPassword = async (username, password) => {
  * @returns {Promise}
  */
 
-
 const logout = async (accessToken) => {
   const accessTokenDoc = await Token.findOne({
     token: accessToken,
