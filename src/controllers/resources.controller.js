@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 const httpStatus = require('http-status');
+const groupBy = require("lodash/groupBy");
 // const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require("../utils/catchAsync");
@@ -23,10 +24,16 @@ const getArticlPage = catchAsync(async (req, res) => {
     slug
   );
   const articls = await articlsService.getArticlsBySlug(slug);
+  
+  const groupedArticls = groupBy(articls, (articl) => articl?.type);
+
+  const groupedArticlsArray = Object.entries(groupedArticls).map(([key, value]) => ({ [key]: value }));
+
+  
   const count = await articlsService.getArticlCount();
   
   const notes = await notesService.getNotesBySlug(slug); // queryNotes({slug:req.params.slug},{ populate:'author' }, { fullText: 1,  slug: 1, createdAt: 1});
-  res.send({ breadcrumbs, notes, category, categories, articls, count });
+  res.send({ breadcrumbs, notes, category, categories, articls: groupedArticlsArray, count });
 });
 
 module.exports = {

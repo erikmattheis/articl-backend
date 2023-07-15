@@ -1,6 +1,5 @@
 const httpStatus = require("http-status");
 const regexEscape = require("regex-escape");
-const groupBy = require("lodash/groupBy");
 const Articls = require('../models/articls.model');
 const ApiError = require("../utils/ApiError");
 
@@ -117,15 +116,8 @@ const sortArticls = (a, b) => {
 };
 
 const getArticlsBySlug = async (slug) => {
-  const articls = await Articls.find({ slug });
-
-  console.log(articls[0]?.id);
-  articls.sort(sortArticls);
-  console.log(articls[0]?.id);
-  console.log('')
-  grouped = groupBy(articls, (articl) => articl?.type)
-  return Object.entries(grouped);
-;
+  const articls = await Articls.find({ slug }, '-wpPost');
+  return articls;
 };
 
 /**
