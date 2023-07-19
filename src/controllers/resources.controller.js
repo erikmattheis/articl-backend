@@ -27,13 +27,12 @@ const getArticlPage = catchAsync(async (req, res) => {
   
   const groupedArticls = groupBy(articls, (articl) => articl?.type);
 
-  const groupedArticlsArray = Object.entries(groupedArticls).map(([key, value]) => ({ [key]: value }));
+  const groupedArticlsArray = Object.entries(groupedArticls);
 
-  
   const count = await articlsService.getArticlCount();
   
   const notes = await notesService.getNotesBySlug(slug); // queryNotes({slug:req.params.slug},{ populate:'author' }, { fullText: 1,  slug: 1, createdAt: 1});
-  res.send({ breadcrumbs, notes, category, categories, articls: groupedArticlsArray, count });
+  res.send({ breadcrumbs, notes, category, categories, articls, count });
 });
 
 module.exports = {
