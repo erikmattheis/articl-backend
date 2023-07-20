@@ -262,7 +262,23 @@ const init = async () => {
 }
 
 init();
+/*
+async function updateFieldName() {
+try {
+  // Use the updateMany method with the $rename operator to change the field name
+  const updateResult = await Articls.updateMany(
+    {},
+    { $rename: { "type": "articlType" } }
+  );
 
+  console.log(`${updateResult.n} documents updated.`);
+} catch (error) {
+  console.error("Error occurred:", error);
+}
+}
+
+updateFieldName();
+*/
 
 module.exports = Articls;
 
