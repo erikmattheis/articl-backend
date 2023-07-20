@@ -60,7 +60,7 @@ const defaultProjection = [
   'url',
   'institution',
   'journal',
-  'type',
+  'articlType',
 ];
 
 const searchByWeight = async (searchText, searchFields, projection = defaultProjection) => {
@@ -105,8 +105,8 @@ const orderArray = [
 ];
 
 const sortArticls = (a, b) => {
-  const aIndex = orderArray.indexOf(a.type);
-  const bIndex = orderArray.indexOf(b.type);
+  const aIndex = orderArray.indexOf(a.articlType);
+  const bIndex = orderArray.indexOf(b.articlType);
 
   if (aIndex !== bIndex) {
     return aIndex - bIndex;

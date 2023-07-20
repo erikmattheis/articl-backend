@@ -42,7 +42,7 @@ const getArticls = catchAsync(async (req, res) => {
     "authors",
     "yearComparison",
     "year",
-    "types",
+    "articlType",
   ]);
 
   let originalFilterValues = Object.assign({ ...filter });
@@ -62,7 +62,7 @@ const getArticls = catchAsync(async (req, res) => {
   projection.id = 1;
   projection.order = 1;
   projection.title = 1;
-  projection.type = 1;
+  projection.articlType = 1;
 
   const result = await articlsService.queryArticls(filter, options, projection);
 
@@ -110,9 +110,9 @@ function makeArticlsFilter(filter) {
   if (filter.journal) {
     filter.journal = regexFilter(filter.journal);
   }
-  if (filter.types) {
-    filter.type = stringToArrayFilter(filter.types, ",");
-    delete filter.types;
+  if (filter.articlType) {
+    filter.articlType = stringToArrayFilter(filter.articlType, ",");
+    delete filter.articlType;
   }
   return filter;
 }

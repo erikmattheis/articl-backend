@@ -34,7 +34,7 @@ const articlsSchema = mongoose.Schema(
     authors: {
       type: Array,
     },
-    type: {
+    articlType: {
       type: String,
       required: true,
       trim: true,
@@ -189,6 +189,7 @@ const weights = {
   journal: 5,
   shortTitle: 1,
   source: 2,
+  articlType: 10,
 };
 
 const fields = {};
@@ -209,7 +210,7 @@ articlsSchema.index({
   slug: 1,
   title: 1,
   authors: 1,
-  type: 1,
+  articlType: 1,
   abstract: 1,
   description: 1,
   year: 1,
@@ -243,7 +244,8 @@ async function drop() {
     shortTitle: "text",
     journal: "text",
     institution: "text",
-    abstract: "text"
+    abstract: "text",
+    articlType: "text",
   });
   
 

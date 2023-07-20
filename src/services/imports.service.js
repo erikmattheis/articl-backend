@@ -307,7 +307,7 @@ const oldToNewArticl = (oldArticl) => {
   newArticl.order = oldArticl.term_order;
   newArticl.title = oldArticl.post_title;
   newArticl.slug = oldArticl.directory_link_category?.length ? oldArticl.directory_link_category[0].slug : 0;
-  newArticl.type = oldArticl?.directory_link_resource_type?.length ? oldArticl.directory_link_resource_type[0].name : 0;
+  newArticl.articlType = oldArticl?.directory_link_resource_type?.length ? oldArticl.directory_link_resource_type[0].name : 0;
   newArticl.oldId = oldArticl.ID;
   newArticl.updatedAt = moment(oldArticl.post_date_gmt, 'DD/MM/YYYY HH:mm:ss').toISOString();
   newArticl.wpPost = oldArticl;

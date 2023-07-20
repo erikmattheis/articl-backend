@@ -25,7 +25,7 @@ const getArticlPage = catchAsync(async (req, res) => {
   );
   const articls = await articlsService.getArticlsBySlug(slug);
   
-  const groupedArticls = groupBy(articls, (articl) => articl?.type);
+  const groupedArticls = groupBy(articls, (articl) => articl?.articlType);
 
   const groupedArticlsArray = Object.entries(groupedArticls);
 
