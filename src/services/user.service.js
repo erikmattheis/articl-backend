@@ -64,7 +64,7 @@ const updateUserById = async (userId, updateBody, req) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
-  if (userId !== req.user._id && req.user.role !== "superadmin") {
+  if (userId !== req.user?._id.toString() && req.user.role !== "superadmin") {
     throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized to update this user");
   }
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {

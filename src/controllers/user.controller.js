@@ -40,7 +40,9 @@ const updateMe = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  const user = await userService.updateUserById(req.params.userId, req.body, req.user);
+  console.log(req.params.userId) // eslint-disable-line no-console 
+  console.log(req.user._id) // eslint-disable-line no-console
+  const user = await userService.updateUserById(req.params.userId, req.body, req);
   res.send(user);
 });
 
