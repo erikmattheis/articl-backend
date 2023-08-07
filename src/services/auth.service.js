@@ -32,7 +32,7 @@ const logout = async (accessToken) => {
   });
 
   if (!accessTokenDoc) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User Not found");
+    throw new Error(httpStatus.NOT_FOUND, "Token Not found");
   }
 
   if (!(accessTokenDoc instanceof Token)) {
