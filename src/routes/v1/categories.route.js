@@ -46,7 +46,7 @@ router.get(
   categoriesController.getCategoryBySlug
 );
 router.delete(
-  "/",
+  "/:id",
   auth("manageContent"),
   validate(categoriesValidation.deleteCategory),
   categoriesController.deleteCategory

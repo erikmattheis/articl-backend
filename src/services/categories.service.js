@@ -192,11 +192,12 @@ const updateCategoryById = async (categoryId, updateBody, userId) => {
  */
 const deleteCategoryById = async (id, user) => {
   const category = await getCategoryById(id);
+
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, `Category ${id} not found`);
   }
-  if (category.user?.id !== userId && user.role !== "superadmin") {
-    throw new ApiError(httpStatus.FORBIDDEN, `You don't have permission to delete this category. ${userId} and ${category.user?.id}`);
+  if (user.role !== "superadmin") {
+    throw new ApiError(httpStatus.FORBIDDEN, `You don't have permission to delete this category. ${user.role} and ${category.user?.id}`);
   }
   /* TODO check if user owns all descendents and articls and questions and */
   await category.deleteOne({ id });
