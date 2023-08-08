@@ -50,7 +50,7 @@ const getArticls = catchAsync(async (req, res) => {
   filter = makeArticlsFilter(filter);
 
   let options = pick(req.query, ["sortBy", "limit", "page"]);
-  options.sortBy = options.sortBy ? options.sortBy : '{order'
+  options.sortBy = options.sortBy ? options.sortBy : 'order'
   options = makeArticlsOptions(options);
 
   const projection = Object.assign({}, filter);
