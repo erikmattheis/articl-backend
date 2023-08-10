@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
 const app = require("./app");
+const httpStatus = require("http-status");
 const config = require("./config/config");
 const logger = require("./config/logger");
 
 
 let server;
+try {
+
+mongoose.set("debug", false);
+
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
 
   logger.info("Connected to MongoDB");
@@ -15,8 +20,10 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
 });
 
 });
+} catch (error) {
+  throw new ApiError(httpStatus['500'], "Connect error: " + error + "");
+}
 
-mongoose.set("debug", false);
 //process.on('warning', e => console.warn(e.stack));
 
 const exitHandler = () => {
