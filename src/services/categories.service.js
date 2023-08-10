@@ -8,18 +8,22 @@ const regexEscape = require("regex-escape");
  * @param {Object} categoriesBody
  * @returns {Promise<Categories>}
  */
-const upsertCategory = async (categoriesBody, userId) => {
-  if (await Categories.isCategorySlug(categoriesBody.slug)) {
+const upsertCategory = async (req, userId) => {
+  const categoriesBody = req.body;
+  
+  // Check if slug already exists if it is a new category and therefore the request method is POST
+  if (req.method === 'POST' && await Categories.isCategorySlug(categoriesBody.slug)) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
       `Slug "${categoriesBody.slug}" already exists.`
     );
   }
+  
   if (categoriesBody.id) {
     const category = await getCategoryById(categoriesBody.id);
   
     if (!category) {
-      throw new ApiError(httpStatus.NOT_FOUND, "Note not found");
+      throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
     }
     if (categoriesBody.id !== userId) {
      // throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");

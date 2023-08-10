@@ -21,7 +21,7 @@ const importCategoriesByChr = catchAsync(async (req, res) => {
 });
 
 const upsertCategory = catchAsync(async (req, res) => {
-  const category = await categoriesService.upsertCategory(req.body, req.user.id);
+  const category = await categoriesService.upsertCategory(req, req.user.id);
   res.status(httpStatus.CREATED).send(category);
 });
 
