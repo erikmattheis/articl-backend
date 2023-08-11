@@ -207,8 +207,9 @@ articlsSchema.virtual('id').get(function doIt() {
 
 articlsSchema.index({  
   category: 1,
-  slug: 1,
   title: 1,
+  /*
+  slug: 1,
   authors: 1,
   articlType: 1,
   abstract: 1,
@@ -218,6 +219,7 @@ articlsSchema.index({
   institution: 1,
   journal: 1,
   shortTitle: 1,
+  */
 });
 
 
@@ -239,6 +241,7 @@ async function drop() {
     await articlesCollection.dropIndex(index.name);
   }
 
+  /*
   Articls.collection.createIndex({
     title: "text",
     journal: "text",
@@ -246,11 +249,11 @@ async function drop() {
     abstract: "text",
     articlType: "text",
   });
-  
+  */
 
 }
 
-//drop()
+drop()
 
 const Articls = mongoose.model('Articls', articlsSchema);
 

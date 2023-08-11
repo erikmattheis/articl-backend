@@ -7,7 +7,6 @@ const notesSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      index: true,
     },
     oldCategory: {
       type: String,
@@ -23,11 +22,9 @@ const notesSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      index: true,
     },
     author: {
       type: mongoose.SchemaTypes.ObjectId,
-      index: true,
       ref: "User",
     },
     authorHandle: {
