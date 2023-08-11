@@ -9,19 +9,19 @@ const router = express.Router();
 router.get("/:id", questionsController.getQuestion);
 router.post(
   "/",
-  auth("manageContent"),
+  auth(),
   validate(questionsValidation.createQuestion),
   questionsController.createQuestion
 );
 router.patch(
   "/:id",
-  auth("manageContent"),
+  auth(),
   validate(questionsValidation.updateQuestion),
   questionsController.updateQuestion
 );
 router.delete(
   "/:id",
-  auth("manageContent"),
+  auth(),
   validate(questionsValidation.deleteQuestion),
   questionsController.deleteQuestion
 );

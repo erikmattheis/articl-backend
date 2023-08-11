@@ -6,43 +6,43 @@ const router = express.Router();
 
 router.get(
   "/duplicate-categories",
-  auth("manageContent"),
+  auth(),
   importsController.getCategoriesWithDuplicatedSlugs
 );
 
 router.get(
   "/import-categories",
-  auth("manageContent"),
+  auth(),
   importsController.importCategories
 );
 
 router.get(
   "/import-articls/reset",
-  auth("manageContent"),
+  auth(),
   importsController.resetAllImportFlags
 );
 
 router.get(
   "/import-articls/all",
-  auth("manageContent"),
+  auth(),
   importsController.importAllArticls
 );
 
 router.get(
   "/import-articls/:chr",
-  auth("manageContent"),
+  auth(),
   importsController.importArticlsByChr
 );
 
 router.get(
   "/import-notes/:chr",
-  auth("manageContent"),
+  auth(),
   importsController.importNotesByChr
 );
 
 router.get(
   "/import-notes",
-  auth("manageContent"),
+  auth(),
   importsController.importNotes
 );
 

@@ -8,25 +8,25 @@ const router = express.Router();
 
 router.post(
   "/ai-summary",
-  auth("manageContent"),
+  auth(),
   validate(categoriesValidation.getAISummary),
   categoriesController.getAISummary
 );
 router.post(
   "/",
-  auth("manageContent"),
+  auth(),
   validate(categoriesValidation.createCategories),
   categoriesController.upsertCategory
 );
 router.put(
   "/:id",
-  auth("manageContent"),
+  auth(),
   validate(categoriesValidation.updateCategory),
   categoriesController.upsertCategory
 );
 router.post(
   "/order",
-  auth("manageContent"),
+  auth(),
   validate(categoriesValidation.updateCategoriesOrder),
   categoriesController.updateCategoriesOrder
 );
@@ -47,7 +47,7 @@ router.get(
 );
 router.delete(
   "/:id",
-  auth("manageContent"),
+  auth(),
   validate(categoriesValidation.deleteCategory),
   categoriesController.deleteCategory
 );
