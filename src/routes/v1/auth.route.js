@@ -24,21 +24,28 @@ router.post(
 );
 
 router.post(
-  "/forgot-password",
-  validate(authValidation.forgotPassword),
-  authController.forgotPassword
-);
-
-router.post(
   "/forgot-username",
   validate(authValidation.forgotUsername),
   authController.forgotUsername
 );
 
 router.post(
-  "/send-change-password-email",
-  validate(authValidation.sendCangePasswordEmail),
+  "/send-change-pass-email",
+  validate(authValidation.sendChangePasswordEmail),
   authController.sendChangePasswordEmail
+);
+
+router.post(
+  "/senchange-pass-email",
+  validate(authValidation.sendChangePasswordEmail),
+  authController.sendChangePasswordEmail
+);
+
+router.post(
+  "/change-pass-logged-in",
+  auth(),
+  validate(authValidation.changePassLoggedIn),
+  authController.changePassLoggedIn
 );
 
 router.post("/send-verification-email", validate(authValidation.sendVerificationEmail), authController.sendVerificationEmail);
@@ -237,7 +244,7 @@ module.exports = router;
  *     responses:
  *       "204":
  *         description: No content
- *       "404":
+ *      
  *         $ref: '#/components/responses/NotFound'
  */
 

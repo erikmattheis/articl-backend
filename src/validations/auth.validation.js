@@ -45,6 +45,12 @@ const sendChangePasswordEmail = {
   }),
 };
 
+const changePassLoggedIn= {
+  body: Joi.object().keys({
+    email: Joi.string().required().email()
+  }),
+};
+
 const sendVerificationEmail = {
   body: Joi.object().keys({
     email: Joi.string().required(),
