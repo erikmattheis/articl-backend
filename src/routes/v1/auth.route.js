@@ -36,9 +36,9 @@ router.post(
 );
 
 router.post(
-  "/change-password",
-  validate(authValidation.resetPassword),
-  authController.resetPassword
+  "/send-change-password-email",
+  validate(authValidation.sendCangePasswordEmail),
+  authController.sendChangePasswordEmail
 );
 
 router.post("/send-verification-email", validate(authValidation.sendVerificationEmail), authController.sendVerificationEmail);

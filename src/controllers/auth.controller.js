@@ -26,9 +26,9 @@ const refreshTokens = catchAsync(async (req, res) => {
   res.send({ ...tokens });
 });
 
-const forgotPassword = catchAsync(async (req, res) => {
+const sendChangePasswordEmail = catchAsync(async (req, res) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
+  await emailService.sendChangePasswordEmail(req.body.email, resetPasswordToken);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
@@ -65,7 +65,7 @@ module.exports = {
   login,
   logout,
   refreshTokens,
-  forgotPassword,
+  sendChangePasswordEmail,
   forgotUsername,
   resetPassword,
   getEmailFromResetPassword,
