@@ -36,16 +36,10 @@ router.post(
 );
 
 router.post(
-  "/senchange-pass-email",
-  validate(authValidation.sendChangePasswordEmail),
-  authController.sendChangePasswordEmail
-);
-
-router.post(
   "/change-pass-logged-in",
   auth(),
-  validate(authValidation.changePassLoggedIn),
-  authController.changePassLoggedIn
+  validate(authValidation.changePasswordLoggedIn),
+  authController.changePasswordLoggedIn
 );
 
 router.post("/send-verification-email", validate(authValidation.sendVerificationEmail), authController.sendVerificationEmail);

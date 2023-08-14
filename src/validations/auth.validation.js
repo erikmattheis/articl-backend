@@ -45,21 +45,20 @@ const sendChangePasswordEmail = {
   }),
 };
 
-const changePassLoggedIn= {
+const changePasswordLoggedIn = {
   body: Joi.object().keys({
-    email: Joi.string().required().email()
-  }),
-};
-
-const sendVerificationEmail = {
-  body: Joi.object().keys({
-    email: Joi.string().required(),
+    token: Joi.string().required(),
+    oldPassword: Joi.string().required(),
+    password: Joi.string().required(),
+    password2: Joi.string().valid(Joi.ref("password")).required()
   }),
 };
 
 const changePasswordEmail = {
   body: Joi.object().keys({
-    email: Joi.string().required().email()
+    token: Joi.string().required(),
+    password: Joi.string().required(),
+    password2: Joi.string().equal(Joi.ref("password")).required(),
   }),
 };
 

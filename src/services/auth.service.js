@@ -13,7 +13,7 @@ const { tokenTypes } = require("../config/tokens");
  */
 const loginUserWithUsernameAndPassword = async (username, password) => {
   const user = await userService.getUserByUsername(username);
-  if (!user || !(await user.isPasswordMatch(password))) {
+  if (!user || !(await userService.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect username or password");
   }
   return user;
@@ -71,16 +71,24 @@ const refreshAuth = async (refreshToken) => {
  * @param {string} newPassword
  * @returns {Promise}
  */
-const resetPassword = async (token, password) => {
+const changePassword = async (token, oldPassword, password) => {
   try {
     const resetPasswordTokenDoc = await tokenService.verifyToken(
       token,
-      tokenTypes.RESET_PASSWORD
+      tokenTypes.ACCESS
     );
     const user = await userService.getUserById(resetPasswordTokenDoc.user._id);
     const userId = user._id;
+    const match = await user.isPasswordMatch(oldPassword);
+    if (!match) {
+      throw new ApiError(400, "The current password you entered is incorrect.");
+    }
+    const match1 = await user.isPasswordMatch(password);
+    if (match1) {
+
+      throw new ApiError(400, "The new password must be different than the current password.");
+    }
     await userService.updatePasswordById(userId, { password });
-    await Token.deleteMany({ user: userId, type: tokenTypes.RESET_PASSWORD });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, error);
   }
@@ -153,7 +161,7 @@ module.exports = {
   loginUserWithUsernameAndPassword,
   logout,
   refreshAuth,
-  resetPassword,
+  changePassword,
   getEmailFromResetPassword,
   getUsernamesFromEmail,
   verifyEmail,
