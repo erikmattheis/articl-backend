@@ -35,7 +35,7 @@ const sendEmail = async (to, subject, text) => {
  */
 const sendChangePasswordEmail = async (to, token) => {
   const subject = 'Reset password';
-  const resetPasswordUrl = `${config.frontendUrl}/change-password?token=${token}`;
+  const resetPasswordUrl = `${config.frontendUrl}/change-password-email?token=${token}`;
   const text = `Dear user,
 To change your password, click on this link: ${resetPasswordUrl}
 If you did not request this change, then ignore this email.`;

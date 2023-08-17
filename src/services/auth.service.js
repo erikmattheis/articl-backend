@@ -12,11 +12,18 @@ const { tokenTypes } = require("../config/tokens");
  * @returns {Promise<User>}
  */
 const loginUserWithUsernameAndPassword = async (username, password) => {
-  const user = await userService.getUserByUsername(username);
-  if (!user || !(await userService.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect username or password");
+  try {
+    const user = await userService.getUserByUsername(username);
+    const valid = await user.isPasswordMatch(password);
+    console.log('valid', valid);
+    if (!user || !valid) {
+      return null;
+    }
+    return user;
   }
-  return user;
+  catch (error) {
+    return null;
+  }
 };
 
 /**
@@ -71,7 +78,7 @@ const refreshAuth = async (refreshToken) => {
  * @param {string} newPassword
  * @returns {Promise}
  */
-const changePassword = async (token, oldPassword, password) => {
+const changePasswordLoggedIn = async (token, oldPassword, password, password2) => {
   try {
     const resetPasswordTokenDoc = await tokenService.verifyToken(
       token,
@@ -85,8 +92,28 @@ const changePassword = async (token, oldPassword, password) => {
     }
     const match1 = await user.isPasswordMatch(password);
     if (match1) {
-
       throw new ApiError(400, "The new password must be different than the current password.");
+    }
+    if (password !== password2) {
+      throw new ApiError(400, "The password confirmation field does not match.");
+    }
+    await userService.updatePasswordById(userId, { password });
+  } catch (error) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, error);
+  }
+};
+
+const changePasswordEmail = async (token, password, password2) => {
+  try {
+    const resetPasswordTokenDoc = await tokenService.verifyToken(
+      token,
+      tokenTypes.RESET_PASSWORD
+    );
+    const user = await userService.getUserById(resetPasswordTokenDoc.user._id);
+    const userId = user._id;
+
+    if (password !== password2) {
+      throw new ApiError(400, "The password confirmation field does not match.");
     }
     await userService.updatePasswordById(userId, { password });
   } catch (error) {
@@ -161,7 +188,8 @@ module.exports = {
   loginUserWithUsernameAndPassword,
   logout,
   refreshAuth,
-  changePassword,
+  changePasswordLoggedIn,
+  changePasswordEmail,
   getEmailFromResetPassword,
   getUsernamesFromEmail,
   verifyEmail,

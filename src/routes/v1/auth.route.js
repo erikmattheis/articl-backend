@@ -30,13 +30,19 @@ router.post(
 );
 
 router.post(
-  "/send-change-pass-email",
+  "/send-change-password-email",
   validate(authValidation.sendChangePasswordEmail),
   authController.sendChangePasswordEmail
 );
 
 router.post(
-  "/change-pass-logged-in",
+  "/change-password-email",
+  validate(authValidation.changePasswordEmail),
+  authController.changePasswordEmail
+);
+
+router.post(
+  "/change-password-logged-in",
   auth(),
   validate(authValidation.changePasswordLoggedIn),
   authController.changePasswordLoggedIn

@@ -11,7 +11,14 @@ const register = catchAsync(async (req, res) => {
 
 const login = catchAsync(async (req, res) => {
   const { username, password } = req.body;
+  console.log(`username: ${username}, password: ${password}`)
   const user = await authService.loginUserWithUsernameAndPassword(username, password);
+  console.log('user', user);
+  if (!user) {
+    console.log("sending error")
+    res.send({ error: "Invalid username or password" });
+    return; 
+  }
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });
 });
@@ -26,31 +33,25 @@ const refreshTokens = catchAsync(async (req, res) => {
   res.send({ ...tokens });
 });
 
-const sendChangePasswordEmail = catchAsync(async (req, res) => {
-  const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-  await emailService.sendChangePasswordEmail(req.body.email, resetPasswordToken);
-  res.status(httpStatus.NO_CONTENT).send();
-});
-
-const changePassLoggedIn = catchAsync(async (req, res) => {
-  const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.user.email);
-  await emailService.sendChangePasswordEmail(req.body.email, resetPasswordToken);
-  res.status(httpStatus.NO_CONTENT).send();
-});
-
 const forgotUsername = catchAsync(async (req, res) => {
   const result = await authService.getUsernamesFromEmail(req.body.email);
   emailService.sendForgotUsernameEmail(req.body.email, result);
   res.send(result);
 });
 
-const changePasswordLoggedIn = catchAsync(async (req, res) => {
-  await authService.changePassword(req.body.token, req.body.oldPassword, req.body.password);
+const sendChangePasswordEmail = catchAsync(async (req, res) => {
+  const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
+  await emailService.sendChangePasswordEmail(req.body.email, resetPasswordToken);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
 const changePasswordEmail = catchAsync(async (req, res) => {
-  await authService.resetPassword(req.body.token, req.body.password);
+  await authService.changePasswordEmail(req.body.token, req.body.password, req.body.password2);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
+const changePasswordLoggedIn = catchAsync(async (req, res) => {
+  await authService.changePasswordLoggedIn(req.body.token, req.body.oldPassword, req.body.password, req.body.password2);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
@@ -76,11 +77,10 @@ module.exports = {
   login,
   logout,
   refreshTokens,
-  changePassLoggedIn,
-  sendChangePasswordEmail,
-  forgotUsername,
   changePasswordLoggedIn,
+  sendChangePasswordEmail,
   changePasswordEmail,
+  forgotUsername,
   getEmailFromResetPassword,
   sendVerificationEmail,
   verifyEmail,

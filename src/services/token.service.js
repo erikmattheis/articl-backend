@@ -62,7 +62,7 @@ const verifyToken = async (token, type) => {
   });
 
   if (!tokenDoc) {
-    throw new Error("Token not found", tokenDoc);
+    throw new Error("Token not found, you do not appear to be logged in.", tokenDoc);
   }
 
   return tokenDoc;
