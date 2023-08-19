@@ -253,7 +253,7 @@ async function drop() {
 
 }
 
-drop()
+//drop()
 
 const Articls = mongoose.model('Articls', articlsSchema);
 
