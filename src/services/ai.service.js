@@ -30,7 +30,7 @@ const getAISummary = async (category, parentCategory) => {
       
       // Show the response
       console.log("==++==++==++==++==++====++==++==++==++==++==");
-      console.log(response);
+      console.log(response.data);
       console.log("==++==++==++==++==++====++==++==++==++==++==");
       
       /*
