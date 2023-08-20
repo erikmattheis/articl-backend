@@ -115,25 +115,26 @@ const getCategorySlugs = async (q) => {
   return Promise.resolve(result);
 };
 
-const getSlugAncestry = async (slug, breadcrumbs) => {
+const getSlugAncestry = async (slug, breadcrumbs = []) => {
   if (!slug) {
     return Promise.reject(new Error(`Slug category ${slug} not found.`))
   }
   const item = await Categories.find({ slug }, { title: 1, titleHtml: 1, slug: 1, parentSlug: 1 }).exec();
 
-  if (!item[0] || item[0]?.parentSlug + "" === "0") {
-    breadcrumbs.push(item[0]);
+  if (!item[0]) {
     return Promise.resolve(breadcrumbs.reverse());
-  }
-  else {
+  } else {
     breadcrumbs.push(item[0]);
     return getSlugAncestry(item[0].parentSlug, breadcrumbs);
   }
 }
 
 const getBreadcrumbs = async (slug) => {
-  const result = await getSlugAncestry(slug, [])
-  return result;
+  const result = await getSlugAncestry(slug, []);
+  console.log('result == false: ', result == false)
+  console.log('result', result)
+  console.log(typeof result)
+  return result || [];
 }
 
 /**
