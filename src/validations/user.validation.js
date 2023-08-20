@@ -59,6 +59,14 @@ const updateUser = {
     .min(1),
 };
 
+const updatePrefs = {
+  body: Joi.object()
+    .keys({
+      theme: Joi.string().allow(null, ""),
+    })
+    .min(1),
+};
+
 const updateMe = {
   body: Joi.object()
     .keys({

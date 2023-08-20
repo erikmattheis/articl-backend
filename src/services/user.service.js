@@ -60,11 +60,12 @@ const getUsersByEmail = async (email) => {
  * @returns {Promise<User>}
  */
 const updateUserById = async (userId, updateBody, req) => {
+  console.log('req.user', req);
   let user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
-  if (userId !== req.user?._id.toString() && req.user.role !== "superadmin") {
+  if (userId !== req.user?._id.toString() && req.user?.role !== "superadmin") {
     throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized to update this user");
   }
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
@@ -77,7 +78,6 @@ const updateUserById = async (userId, updateBody, req) => {
   user = await User.findByIdAndUpdate(userId, updateBody);
   return user;
 };
-
 
 /**
  * Update user by id

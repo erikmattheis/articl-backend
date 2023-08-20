@@ -30,6 +30,13 @@ router.post(
 );
 
 router.patch(
+  "/me/prefs",
+  auth(),
+  validate(userValidation.updatePrefs),
+  userController.updatePrefs
+);
+
+router.patch(
   "/me",
   auth(),
   validate(userValidation.updateMe),
