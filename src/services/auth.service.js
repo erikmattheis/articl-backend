@@ -59,7 +59,7 @@ const logout = async (accessToken) => {
 const refreshAuth = async (refreshToken) => {
   try {
     const refreshTokenDoc = await tokenService.verifyToken(refreshToken, tokenTypes.REFRESH);
-
+    console.log('refreshTokenDoc', refreshTokenDoc);
     if (!refreshTokenDoc) {
       return null;
     }

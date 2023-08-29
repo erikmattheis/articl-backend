@@ -176,7 +176,7 @@ const deleteArticlById = async (id, user) => {
 const PER_PAGE = 100;
 
 const getBatchOfPosts = async (page, per_page = PER_PAGE) => {
-  const posts = await axios.get(`https://articl.net/wp-json/wp/v2/posts?per_page=${per_page}&page=${page}`);
+  const posts = await axios.get(`https://articl.net/wp-json/wp/v2/directory_link?per_page=${per_page}&page=${page}`);
   console.log('posts', posts.data.length);
   return posts.data;
 }
@@ -224,6 +224,8 @@ const recordCurrentPage = async (page) => {
   fs.writeFileSync('current_page.txt', page + "");
 }
 
+recordCurrentPage(2);
+
 const mostRecentPage = async () => {
   try {
     const page = fs.readFileSync('current_page.txt');
@@ -233,16 +235,19 @@ const mostRecentPage = async () => {
   }
 }
 
-const recursivelyImportPosts = async (page) => {
+const recursivelyImportPosts = async (p) => {
+  const page = parseInt(p);
   const posts = await getBatchOfPosts(page, PER_PAGE);
-  console.log('posts', posts.length)
+  console.log('posts', posts[0])
   if (posts.length) {
-    const articls = posts.filter(post => post.type !== 'post')
-    const mongoDocs = articls.map(wpPostToMongoDoc2);
+
+    const mongoDocs = posts.map(wpPostToMongoDoc2);
     await Articls.insertMany(mongoDocs);
-    console.log()
-    console.log('inserted nany', page);
     await recordCurrentPage(page);
+
+    if (page + 0 > 2) {
+      //process.exit(0);
+    }
     await recursivelyImportPosts(page + 1);
   }
 }
