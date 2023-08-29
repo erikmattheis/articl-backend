@@ -46,7 +46,7 @@ const logout = async (accessToken) => {
     throw new Error("Invalid access token document");
   }
 
-  const removedAccessToken = await accessTokenDoc.deleteOne({token: accessToken,type: tokenTypes.ACCESS});
+  const removedAccessToken = await accessTokenDoc.deleteOne({ token: accessToken, type: tokenTypes.ACCESS });
 
   return removedAccessToken;
 };
@@ -59,6 +59,10 @@ const logout = async (accessToken) => {
 const refreshAuth = async (refreshToken) => {
   try {
     const refreshTokenDoc = await tokenService.verifyToken(refreshToken, tokenTypes.REFRESH);
+
+    if (!refreshTokenDoc) {
+      return null;
+    }
 
     const user = await userService.getUserById(refreshTokenDoc.user);
     if (!user) {

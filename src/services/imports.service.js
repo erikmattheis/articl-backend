@@ -216,7 +216,7 @@ const importAllArticls = async () => {
   for (const category of categories) {
 
     let articls = await getArticls(category.slug, category.parentSlug);
-    
+
     if (articls.length) {
 
       articls = articls.map((articl) => oldToNewArticl(articl));
@@ -228,7 +228,7 @@ const importAllArticls = async () => {
           upsert: true,
         },
       })));
-      
+
     }
 
     await categoriesService.markCategoryArticlsImported(category.slug);
@@ -240,9 +240,9 @@ const importAllArticls = async () => {
 
 const resetAllImportFlags = async () => {
   const result = await Categories.updateMany(
-      {},
-      {$set: { wpArticlsImported: false },}
-    );
+    {},
+    { $set: { wpArticlsImported: false }, }
+  );
 
   return result;
 }
@@ -284,7 +284,7 @@ const importNotes = async (userId) => {
   let notes = await getNotes();
   let n = 0;
 
-  
+
   n += notes.length;
   notes = notes.map((note) => oldToNewNote(note, userId));
 
@@ -338,7 +338,7 @@ const getCategoriesWithDuplicatedSlugs = async (slug) => {
 }
 
 const getCategoriesWithoutImportedArticls = async () => {
-  const unfinishedCategories = await Categories.find({wpArticlsImported:false});
+  const unfinishedCategories = await Categories.find({ wpArticlsImported: false });
 
   return unfinishedCategories;
 }

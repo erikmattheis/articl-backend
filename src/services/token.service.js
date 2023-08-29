@@ -61,10 +61,6 @@ const verifyToken = async (token, type) => {
     blacklisted: false,
   });
 
-  if (!tokenDoc) {
-    throw new Error("Token not found, you do not appear to be logged in.", tokenDoc);
-  }
-
   return tokenDoc;
 };
 
@@ -121,7 +117,7 @@ const generateAuthTokens = async (user) => {
   };
 };
 
-/* TODO allow for multiple users per email 
+/* TODO allow for multiple users per email
 /**
  * Generate reset password token
  * @param {string} email

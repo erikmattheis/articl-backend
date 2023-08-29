@@ -1,16 +1,16 @@
 /* eslint-disable no-restricted-syntax */
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { importsService } = require('../services');
+const { importsService, articlsService } = require('../services');
 
 const getCategoriesWithDuplicatedSlugs = catchAsync(async (req, res) => {
   const result = await importsService.getCategoriesWithDuplicatedSlugs();
-  res.send({result});
+  res.send({ result });
 });
 
 const resetAllImportFlags = catchAsync(async (req, res) => {
   const result = await importsService.resetAllImportFlags();
-  res.send({result});
+  res.send({ result });
 });
 
 const importCategories = catchAsync(async (req, res) => {
@@ -33,12 +33,20 @@ const importArticlsByChr = catchAsync(async (req, res) => {
   }
 });
 
-const importAllArticls = catchAsync(async (req, res) => {
-  
-  const result = await importsService.importAllArticls();
-  
+const importArticlsByBatch = catchAsync(async (req, res) => {
+
+  const result = await articlsService.initBatchImport();
+
   res.status(httpStatus.CREATED).send(`Done`);
-  
+
+});
+
+const importAllArticls = catchAsync(async (req, res) => {
+
+  const result = await importsService.importAllArticls();
+
+  res.status(httpStatus.CREATED).send(`Done`);
+
 });
 
 const importNotesByChr = catchAsync(async (req, res) => {
@@ -60,6 +68,7 @@ const importNotes = catchAsync(async (req, res) => {
 module.exports = {
   importCategories,
   importArticlsByChr,
+  importArticlsByBatch,
   importAllArticls,
   importNotesByChr,
   importNotes,

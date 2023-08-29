@@ -11,15 +11,21 @@ router.get(
 );
 
 router.get(
-  "/import-categories",
-  auth(),
-  importsController.importCategories
-);
-
-router.get(
   "/import-articls/reset",
   auth(),
   importsController.resetAllImportFlags
+);
+
+router.get(
+  "/import-articls/batch",
+  auth(),
+  importsController.importArticlsByBatch
+);
+
+router.get(
+  "/import-categories",
+  auth(),
+  importsController.importCategories
 );
 
 router.get(

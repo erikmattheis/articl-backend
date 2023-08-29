@@ -23,6 +23,7 @@ const getArticlPage = catchAsync(async (req, res) => {
   const categories = await categoriesService.getCategoriesByParentSlug(
     slug
   );
+
   const articls = await articlsService.getArticlsBySlug(slug);
   
   const groupedArticls = groupBy(articls, (articl) => articl?.articlType);

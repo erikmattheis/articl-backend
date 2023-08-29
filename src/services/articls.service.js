@@ -1,4 +1,7 @@
+const fs = require("fs");
 const httpStatus = require("http-status");
+const moment = require("moment");
+const axios = require("axios");
 const regexEscape = require("regex-escape");
 const Articls = require('../models/articls.model');
 const ApiError = require("../utils/ApiError");
@@ -11,6 +14,11 @@ const ApiError = require("../utils/ApiError");
 const createArticl = async (articlBody, user) => {
   articlBody.user = user.id;
   return Articls.create(articlBody);
+};
+
+const createArticls = async (articlBodies, user) => {
+  articlBodies.user = user.id;
+  return Articls.insertMany(articlBody);
 };
 
 /**
@@ -165,8 +173,88 @@ const deleteArticlById = async (id, user) => {
   return articl;
 };
 
+const PER_PAGE = 100;
+
+const getBatchOfPosts = async (page, per_page = PER_PAGE) => {
+  const posts = await axios.get(`https://articl.net/wp-json/wp/v2/posts?per_page=${per_page}&page=${page}`);
+  console.log('posts', posts.data.length);
+  return posts.data;
+}
+
+const toAuthorsArray = (authors) => {
+  if (authors) {
+    return authors.split(',').map((author) => author.trim());
+  }
+  return [];
+};
+
+const wpPostToMongoDoc = (wpPost) => {
+
+  const mongoDoc = {};
+
+  mongoDoc.authors = toAuthorsArray(wpPost.authors);
+  mongoDoc.authorsOrig = wpPost.authors;
+  mongoDoc.order = wpPost.term_order;
+  mongoDoc.title = wpPost.post_title;
+  mongoDoc.slug = wpPost.directory_link_category?.length ? wpPost.directory_link_category[0].slug : 0;
+  mongoDoc.articlType = wpPost?.directory_link_resource_type?.length ? wpPost.directory_link_resource_type[0].name : 0;
+  //mongoDoc.oldId = wpPost.ID;
+  mongoDoc.updatedAt = moment(wpPost.post_date_gmt, 'DD/MM/YYYY HH:mm:ss').toISOString();
+  mongoDoc.wpPost = wpPost;
+  return mongoDoc;
+}
+
+const wpPostToMongoDoc2 = (wpPost) => {
+
+  const mongoDoc = {};
+
+  mongoDoc.authors = toAuthorsArray(wpPost.authors);
+  mongoDoc.authorsOrig = wpPost.authors;
+  mongoDoc.order = wpPost.term_order;
+  mongoDoc.title = wpPost.title.rendered;
+  mongoDoc.slug = wpPost.directory_link_category?.length ? wpPost.directory_link_category[0].slug : 0;
+  mongoDoc.articlType = wpPost?.directory_link_resource_type?.length ? wpPost.directory_link_resource_type[0].name : 0;
+  //mongoDoc.oldId = wpPost.ID;
+  mongoDoc.updatedAt = moment(wpPost.post_date_gmt, 'DD/MM/YYYY HH:mm:ss').toISOString();
+  mongoDoc.wpPost = wpPost;
+  return mongoDoc;
+}
+const recordCurrentPage = async (page) => {
+  console.log('importing page', page);
+  fs.writeFileSync('current_page.txt', page + "");
+}
+
+const mostRecentPage = async () => {
+  try {
+    const page = fs.readFileSync('current_page.txt');
+    return page.toString();
+  } catch (err) {
+    return 1;
+  }
+}
+
+const recursivelyImportPosts = async (page) => {
+  const posts = await getBatchOfPosts(page, PER_PAGE);
+  console.log('posts', posts.length)
+  if (posts.length) {
+    const articls = posts.filter(post => post.type !== 'post')
+    const mongoDocs = articls.map(wpPostToMongoDoc2);
+    await Articls.insertMany(mongoDocs);
+    console.log()
+    console.log('inserted nany', page);
+    await recordCurrentPage(page);
+    await recursivelyImportPosts(page + 1);
+  }
+}
+
+const initBatchImport = async () => {
+  const page = await mostRecentPage();
+  await recursivelyImportPosts(page);
+}
+
 module.exports = {
   createArticl,
+  createArticls,
   queryArticls,
   searchByWeight,
   getArticlCount,
@@ -177,4 +265,5 @@ module.exports = {
   updateArticlById,
   updateArticlsOrder,
   deleteArticlById,
+  initBatchImport,
 };
