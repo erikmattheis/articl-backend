@@ -224,7 +224,7 @@ const recordCurrentPage = async (page) => {
   fs.writeFileSync('current_page.txt', page + "");
 }
 
-recordCurrentPage(2);
+// recordCurrentPage(2);
 
 const mostRecentPage = async () => {
   try {

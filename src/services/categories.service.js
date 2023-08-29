@@ -10,7 +10,7 @@ const regexEscape = require("regex-escape");
  */
 const upsertCategory = async (req, userId) => {
   const categoriesBody = req.body;
-  
+
   // Check if slug already exists if it is a new category and therefore the request method is POST
   if (req.method === 'POST' && await Categories.isCategorySlug(categoriesBody.slug)) {
     throw new ApiError(
@@ -18,18 +18,18 @@ const upsertCategory = async (req, userId) => {
       `Slug "${categoriesBody.slug}" already exists.`
     );
   }
-  
+
   if (categoriesBody.id) {
     const category = await getCategoryById(categoriesBody.id);
-  
+
     if (!category) {
       throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
     }
     if (categoriesBody.id !== userId) {
-     // throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");
+      // throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to update this note.");
     }
   }
-  return Categories.updateOne({slug:categoriesBody.slug}, categoriesBody, {upsert: true});
+  return Categories.updateOne({ slug: categoriesBody.slug }, categoriesBody, { upsert: true });
 };
 
 /**
@@ -65,7 +65,7 @@ const getCategoriesByParentSlug = async (parentSlug, user) => {
 
 const deleteCatsWithoutHTMLTitle = async () => {
   const cats = await Categories.find(
-    { titleHtml: { $exists: false}}
+    { titleHtml: { $exists: false } }
   ).exec();
   for (const cat of cats) {
     await Categories.deleteOne({ _id: cat.id });
@@ -90,6 +90,7 @@ const getCategoryBySlug = async (slug) => {
     return [
       {
         title: "Articl.net - Radiology Database",
+        titleHtml: "Articl.net - Radiology Database",
         description:
           "Diagnostic Radiology, Interventional Radiology, Endovascular Surgical Neuroradiology, Nuclear medicine, Ultrasound articles, conferences, journals, societies, books, websites and much more.",
       },
