@@ -19,7 +19,7 @@ router.get(
 router.get(
   "/import-articls/batch",
   auth(),
-  importsController.importArticlsByBatch
+  importsController.importArticlsFromLocalWP
 );
 
 router.get(

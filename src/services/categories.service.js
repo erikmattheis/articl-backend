@@ -132,9 +132,6 @@ const getSlugAncestry = async (slug, breadcrumbs = []) => {
 
 const getBreadcrumbs = async (slug) => {
   const result = await getSlugAncestry(slug, []);
-  console.log('result == false: ', result == false)
-  console.log('result', result)
-  console.log(typeof result)
   return result || [];
 }
 

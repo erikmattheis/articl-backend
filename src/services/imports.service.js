@@ -13,6 +13,7 @@ const SLUG_ERROR_FILE = '../category-errors.json';
 
 const existingSlugs = [];
 const Articls = require('../models/articls.model');
+const ArticlsWP = require('../models/articls.wpPost.model');
 const Notes = require('../models/notes.model');
 
 axiosThrottle.use(axios, { requestsPerSecond: 4 });
@@ -67,7 +68,7 @@ const wpCategoryToNodeCategory = (old) => {
 /**
  * Get a category
  * @returns {Promise<Categories>}
- 
+
 const getCategories = async () => {
   try {
     const rawData = fs.readFileSync(
@@ -171,7 +172,7 @@ const importArticlsByChr = async (chr) => {
 };
 
 const importArticls = async (chr) => {
-
+  console.log("i';m here")
   let categories = await getCategories();
 
   categories = categories.filter((cat) => cat.html_title.charAt(0).toLowerCase() === chr.toLowerCase());
@@ -386,6 +387,36 @@ const importCategories = async () => {
 
 };
 
+async function fetchArticlsFromLocalWP(page, perPage) {
+  try {
+    const response = await axios.get(`http://localhost/wp-json/wp/v2/directory_link?page=${page}&per_page=${perPage}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return [];
+  }
+}
+
+
+async function importArticlsFromLocalWP() {
+  let page = 1;
+  const perPage = 10; // Adjust perPage as needed
+
+  while (true && page < 2) {
+    const data = await fetchArticlsFromLocalWP(page, perPage);
+
+    if (data.length === 0) {
+      console.log('No more data to import.');
+      break;
+    }
+    const result = await ArticlsWP.insertMany(data);
+
+    // console.log(`Imported ${result}`);
+    page++;
+  }
+  console.log('done');
+}
+
 module.exports = {
   importCategories,
   importArticlsByChr,
@@ -394,4 +425,5 @@ module.exports = {
   importNotes,
   resetAllImportFlags,
   getCategoriesWithDuplicatedSlugs,
+  importArticlsFromLocalWP,
 };

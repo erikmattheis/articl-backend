@@ -15,7 +15,6 @@ const loginUserWithUsernameAndPassword = async (username, password) => {
   try {
     const user = await userService.getUserByUsername(username);
     const valid = await user.isPasswordMatch(password);
-    console.log('valid', valid);
     if (!user || !valid) {
       return null;
     }
@@ -59,7 +58,7 @@ const logout = async (accessToken) => {
 const refreshAuth = async (refreshToken) => {
   try {
     const refreshTokenDoc = await tokenService.verifyToken(refreshToken, tokenTypes.REFRESH);
-    console.log('refreshTokenDoc', refreshTokenDoc);
+
     if (!refreshTokenDoc) {
       return null;
     }

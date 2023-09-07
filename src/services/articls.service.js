@@ -4,6 +4,7 @@ const moment = require("moment");
 const axios = require("axios");
 const regexEscape = require("regex-escape");
 const Articls = require('../models/articls.model');
+const ArticlsWPImported = require('../models/articls.wpPost.model');
 const ApiError = require("../utils/ApiError");
 
 /**

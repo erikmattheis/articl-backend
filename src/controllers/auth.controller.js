@@ -13,11 +13,11 @@ const login = catchAsync(async (req, res) => {
   const { username, password } = req.body;
   console.log(`username: ${username}, password: ${password}`)
   const user = await authService.loginUserWithUsernameAndPassword(username, password);
-  console.log('user', user);
+
   if (!user) {
     console.log("sending error")
     res.send({ error: "Invalid username or password" });
-    return; 
+    return;
   }
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });

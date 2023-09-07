@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { importsService, articlsService } = require('../services');
+const { importsService, articlsService, wpImportsService } = require('../services');
 
 const getCategoriesWithDuplicatedSlugs = catchAsync(async (req, res) => {
   const result = await importsService.getCategoriesWithDuplicatedSlugs();
@@ -49,6 +49,14 @@ const importAllArticls = catchAsync(async (req, res) => {
 
 });
 
+const importArticlsFromLocalWP = catchAsync(async (req, res) => {
+
+  const result = await wpImportsService.importArticlsFromLocalWP();
+
+  res.status(httpStatus.CREATED).send(`Import complete: ${result}`);
+
+});
+
 const importNotesByChr = catchAsync(async (req, res) => {
   const chr = await importsService.importNotesByChr(req.params.chr, req.user?.id);
   if (chr) {
@@ -74,4 +82,5 @@ module.exports = {
   importNotes,
   resetAllImportFlags,
   getCategoriesWithDuplicatedSlugs,
+  importArticlsFromLocalWP,
 };

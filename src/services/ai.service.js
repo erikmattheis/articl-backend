@@ -12,37 +12,37 @@ const temp = 0.5;
 const tokens = 400;
 const getAISummary = async (category, parentCategory) => {
   try {
-      const completion = await openai.createChatCompletion({
-        model: model,
-        messages: [
+    const completion = await openai.createChatCompletion({
+      model: model,
+      messages: [
         { role: "system", content: "You are web copywriter" },
         { role: "user", content: `definition of ${category}` },
-        ],
-        temperature: temp,
-        max_tokens: tokens,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-        n: 2,
-        stop: "",
-      });
-      const response = completion.data.choices;
-      
-      // Show the response
-      console.log("==++==++==++==++==++====++==++==++==++==++==");
-      console.log(response.data);
-      console.log("==++==++==++==++==++====++==++==++==++==++==");
-      
-      /*
-      prompt: [{
-        role: "system",
-        content: "Web copywriter",
-      },
-      {
-        role: "user",
-        content: `Above-the-fold text for medical pros and meta description for topic ${category})`,
-      }]
-      */
+      ],
+      temperature: temp,
+      max_tokens: tokens,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      n: 2,
+      stop: "",
+    });
+    const response = completion.data.choices;
+
+    // Show the response
+    console.log("==++==++==++==++==++====++==++==++==++==++==");
+    console.log(response.data);
+    console.log("==++==++==++==++==++====++==++==++==++==++==");
+
+    /*
+    prompt: [{
+      role: "system",
+      content: "Web copywriter",
+    },
+    {
+      role: "user",
+      content: `Above-the-fold text for medical pros and meta description for topic ${category})`,
+    }]
+    */
 
     return {
       status: 200,
@@ -51,10 +51,10 @@ const getAISummary = async (category, parentCategory) => {
 
   }
   catch (err) {
-    console.log('err:', err);
+    //console.log('err:', err);
     return {
       status: err.response?.status,
-      message: 'The AI service returned an error code of ' + err.response?.status + ' and the message ' + err ,
+      message: 'The AI service returned an error code of ' + err.response?.status + ' and the message ' + err,
     }
   }
 }
