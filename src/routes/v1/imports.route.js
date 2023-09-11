@@ -6,49 +6,49 @@ const router = express.Router();
 
 router.get(
   "/duplicate-categories",
-  auth(),
+  auth('nobody'),
   importsController.getCategoriesWithDuplicatedSlugs
 );
 
 router.get(
   "/import-articls/reset",
-  auth(),
+  auth('nobody'),
   importsController.resetAllImportFlags
 );
 
 router.get(
   "/import-articls/batch",
-  auth(),
+  auth('nobody'),
   importsController.importArticlsFromLocalWP
 );
 
 router.get(
   "/import-categories",
-  auth(),
+  auth('nobody'),
   importsController.importCategories
 );
 
 router.get(
   "/import-articls/all",
-  auth(),
+  auth('nobody'),
   importsController.importAllArticls
 );
 
 router.get(
   "/import-articls/:chr",
-  auth(),
+  auth('nobody'),
   importsController.importArticlsByChr
 );
 
 router.get(
   "/import-notes/:chr",
-  auth(),
+  auth('nobody'),
   importsController.importNotesByChr
 );
 
 router.get(
   "/import-notes",
-  auth(),
+  auth('nobody'),
   importsController.importNotes
 );
 

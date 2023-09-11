@@ -8,11 +8,12 @@ const articlsWPSchema = mongoose.Schema(
       required: true,
     },
     oldId: {
-      type: String,
+      type: Number,
       required: false,
       trim: true,
     }
   },
+
   {
     timestamps: true,
   },
@@ -27,9 +28,6 @@ articlsWPSchema.virtual('id').get(function doIt() {
   return this._id.toHexString();
 });
 
-articlsWPSchema.index({
-  oldId: 1,
-});
 
 
 // add plugin that converts mongoose to json

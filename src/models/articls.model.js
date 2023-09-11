@@ -28,7 +28,6 @@ const articlsSchema = mongoose.Schema(
     },
     title: {
       type: String,
-      required: true,
       trim: true,
     },
     authors: {
@@ -205,7 +204,7 @@ articlsSchema.virtual('id').get(function doIt() {
   return this._id.toHexString();
 });
 
-articlsSchema.index({  
+articlsSchema.index({
   category: 1,
   title: 1,
   /*
@@ -231,10 +230,10 @@ async function drop() {
   const Articls = mongoose.model('Articls', articlsSchema);
 
   const articlesCollection = Articls.collection;
-  
+
   // Get a list of all indexes
   const indexes = await articlesCollection.indexes();
-  
+
   // Loop through the indexes and delete them
   for (const index of indexes) {
     if (index.name === '_id_') continue;
@@ -257,7 +256,7 @@ async function drop() {
 
 const Articls = mongoose.model('Articls', articlsSchema);
 
-const init = async () => { 
+const init = async () => {
 
   await Articls.createIndexes();
 
@@ -284,4 +283,3 @@ updateFieldName();
 
 module.exports = Articls;
 
- 

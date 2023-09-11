@@ -8,3 +8,4 @@ module.exports.categoriesService = require("./categories.service");
 module.exports.importsService = require("./imports.service");
 module.exports.wpImportsService = require("./imports.wp-articls.service");
 module.exports.notesService = require("./notes.service");
+module.exports.transformationService = require("./transformation.service");

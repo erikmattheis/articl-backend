@@ -82,7 +82,7 @@ const getCategories = async () => {
 };
 */
 const loopThroughOldAndCreateNew = async (categories, reallySave = false) => {
-
+  const erik = '6449aa417b4b7d70f6464c4a'
   for (let n = 0, i = 0; i < categories.length; i += 1) {
 
     const category = wpCategoryToNodeCategory(categories[i]);
@@ -93,7 +93,7 @@ const loopThroughOldAndCreateNew = async (categories, reallySave = false) => {
 
     if (!slugExists || slug === 0 || slug === '0') {
       if (reallySave) {
-        await categoriesService.upsertCategory(category);
+        await categoriesService.upsertCategory({ body: category }, erik);
         n += 1;
       }
     } else {
@@ -345,7 +345,7 @@ const getCategoriesWithoutImportedArticls = async () => {
 }
 
 const getCategories = async () => {
-  const result = await axios.get(`https://articl.net/wp-json/articl/v1/articl_get_articl_heirarchy`);
+  const result = await axios.get(`http://127.0.0.1/wp-json/articl/v1/articl_get_articl_heirarchy`);
 
   return result.data.categories;
 };
@@ -387,6 +387,8 @@ const importCategories = async () => {
 
 };
 
+// importCategories();
+
 async function fetchArticlsFromLocalWP(page, perPage) {
   try {
     const response = await axios.get(`http://localhost/wp-json/wp/v2/directory_link?page=${page}&per_page=${perPage}`);
@@ -418,6 +420,7 @@ async function importArticlsFromLocalWP() {
 }
 
 module.exports = {
+  slugify,
   importCategories,
   importArticlsByChr,
   importAllArticls,
