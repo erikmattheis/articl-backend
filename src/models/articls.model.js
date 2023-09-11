@@ -254,8 +254,7 @@ async function drop() {
 
 //drop()
 
-const Articls = mongoose.model('Articls', articlsSchema);
-/*
+const Articls = mongoose.model('Articls', articlsSchema)
 const init = async () => {
 
   await Articls.createIndexes();

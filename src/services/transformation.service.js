@@ -76,7 +76,9 @@ const wpToMongo = (oldDocument) => {
     journal: oldDocument.wpPost.acf.journal,
     month: oldDocument.wpPost.acf.month,
     year: oldDocument.wpPost.acf.year,
-    resourceType: resourceTypeMap[oldDocument.wpPost.acf.directory_link_resource_type?.[0]],
+
+    resourceType: oldDocument.wpPost.acf.directory_link_resource_type?.[0],
+
     reviewSource: oldDocument.wpPost.acf['review-source'],
     reviewUrl: oldDocument.wpPost.acf['review-url'],
     shortTitle: oldDocument.wpPost.acf['short-title'],
