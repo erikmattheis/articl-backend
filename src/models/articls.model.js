@@ -255,7 +255,7 @@ async function drop() {
 //drop()
 
 const Articls = mongoose.model('Articls', articlsSchema);
-
+/*
 const init = async () => {
 
   await Articls.createIndexes();
@@ -263,7 +263,7 @@ const init = async () => {
 }
 
 init();
-/*
+
 async function updateFieldName() {
 try {
   // Use the updateMany method with the $rename operator to change the field name

@@ -8,8 +8,8 @@ const logger = require("./config/logger");
 let server;
 try {
 
-mongoose.set("debug", false);
-
+mongoose.set("debug", true);
+console.log("Connecting to MongoDB");
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
 
   logger.info("Connected to MongoDB");
@@ -21,6 +21,7 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
 
 });
 } catch (error) {
+  console.log("Connect error: " + error + "")
   throw new ApiError(httpStatus['500'], "Connect error: " + error + "");
 }
 
