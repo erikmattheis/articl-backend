@@ -1,10 +1,10 @@
-const { Configuration, OpenAIApi } = require("openai");
+const { OpenAI } = require("openai");
 const config = require("../config/config");
 
-const configuration = new Configuration({
+const configuration = {
   apiKey: process.env.OPENAI_API_KEY || config.openAIKey,
-});
-const openai = new OpenAIApi(configuration);
+};
+const openai = new OpenAI(configuration);
 const API_KEY = "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";
 
 const model = "gpt-3.5-turbo";
@@ -12,11 +12,12 @@ const temp = 0.5;
 const tokens = 400;
 const getAISummary = async (category, parentCategory) => {
   try {
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
       model: model,
       messages: [
         { role: "system", content: "You are web copywriter" },
         { role: "user", content: `definition of ${category}` },
+        { model: 'gpt-3.5-turbo'},
       ],
       temperature: temp,
       max_tokens: tokens,
