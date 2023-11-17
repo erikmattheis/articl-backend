@@ -9,14 +9,14 @@ const objectId = (value, helpers) => {
 
 function password(value, helpers) {
 
-  if (scoreChars(value) < 3) {
+  if (scoreChars(value) < 2) {
 
     helpers.message("Please choose a more complex password. Use a combination upper and lowercase letters, numbers and special characters.");
 
 
-  } else if (value && value.length < 8) {
+  } else if (value && value.length < 12) {
 
-    helpers.message("Please choose a password. with at least eight characters");
+    helpers.message("Please choose a password. with at least twelve characters");
 
     passed = false;
 

@@ -64,11 +64,17 @@ const refreshAuth = async (refreshToken) => {
     }
 
     const user = await userService.getUserById(refreshTokenDoc.user);
+
     if (!user) {
       throw new Error("Token did not match user.");
     }
+
+    console.log("refreshing auth tokens", JSON.stringify(user));
+
     await refreshTokenDoc.remove();
+
     const result = await tokenService.generateAuthTokens(user);
+
     return result;
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, error);
@@ -171,10 +177,12 @@ const getUsernamesFromEmail = async (email) => {
  */
 const verifyEmail = async (verifyEmailToken) => {
   try {
+    console.log("verifyEmailToken", verifyEmailToken.length)
     const verifyEmailTokenDoc = await tokenService.verifyToken(
       verifyEmailToken,
       tokenTypes.VERIFY_EMAIL
     );
+    console.log("verifyEmailTokenDoc", Object.keys(verifyEmailTokenDoc))
     const user = await userService.getUserById(verifyEmailTokenDoc.user);
     if (!user) {
       throw new Error("no user");

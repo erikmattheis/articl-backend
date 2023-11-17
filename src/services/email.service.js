@@ -7,8 +7,8 @@ const transport = nodemailer.createTransport(config.email.smtp);
 if (config.env !== 'test') {
   transport
     .verify()
-    .then(() => logger.info('Connected to email server'))
-    .catch(() => logger.warn(
+    .then(() => console.log('Connected to email server'))
+    .catch(() => console.log(
       'Unable to connect to email server. Make sure you have configured the SMTP options in .env',
     ));
 }
@@ -24,10 +24,12 @@ const sendEmail = async (to, subject, text) => {
   const msg = {
     from: config.email.from, to, subject, text,
   };
-  await transport.sendMail(msg);
+  console.log('emailing ' + to)
+  const result = await transport.sendMail(msg)
+  console.log('result ' + result)
 };
 
-/**
+/**const result 
  * Send reset password email
  * @param {string} to
  * @param {string} token
@@ -58,7 +60,7 @@ ${theUsernames}
 
 You may log in to https://articl.net`;
 
-  await sendEmail(to, subject, text);
+    await sendEmail(to, subject, text);
   }
   Promise.resolve(to);
 };
