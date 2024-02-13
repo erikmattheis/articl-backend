@@ -278,7 +278,6 @@ try {
 }
 
 updateFieldName();
-*/
 
 module.exports = Articls;
 
