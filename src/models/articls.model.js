@@ -277,7 +277,7 @@ try {
 }
 }
 
-updateFieldName();
+//updateFieldName();
 
 module.exports = Articls;
 
