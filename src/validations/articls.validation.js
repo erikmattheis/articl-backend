@@ -7,11 +7,8 @@ const createArticl = {
     abstract: Joi.string(),
     url: Joi.string(),
     authorsOrig: Joi.string(),
-    authors: Joi.array().items(Joi.object({
-      nameFirst: Joi.string(),
-      nameLast: Joi.string(),
-      affilliations: Joi.array().items(Joi.string()).allow(null),
-    })),
+    authors: Joi.array().items(Joi.string()),
+    institutiojn: Joi.string(),
     category: Joi.string(),
     doi: Joi.string(),
     slug: Joi.string().required(),
