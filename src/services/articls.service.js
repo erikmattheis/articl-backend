@@ -140,7 +140,7 @@ const updateArticlById = async (articlId, updateBody, sessionUser) => {
   if (!articl) {
     throw new ApiError(httpStatus.NOT_FOUND, "Articl not found");
   }
-
+console.log('sessionUser', sessionUser, articl.user?.id, sessionUser.id, sessionUser.role)
   if (articl.user?.id !== sessionUser.id && sessionUser.role !== "superadmin") {
     throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to edit this articl.");
   }

@@ -8,7 +8,7 @@ const createArticl = {
     url: Joi.string(),
     authorsOrig: Joi.string(),
     authors: Joi.array().items(Joi.string()),
-    institutiojn: Joi.string(),
+    institution: Joi.string(),
     category: Joi.string(),
     doi: Joi.string(),
     slug: Joi.string().required(),
