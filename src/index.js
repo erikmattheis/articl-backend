@@ -4,53 +4,39 @@ const httpStatus = require("http-status");
 const config = require("./config/config");
 const logger = require("./config/logger");
 
-
 let server;
 try {
+  mongoose.set("autoIndex", false);
 
-mongoose.set("debug", true);
-console.log("Connecting to MongoDB");
-mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
+  console.log("Connecting to MongoDB");
 
-  logger.info("Connected to MongoDB");
-  server = app.listen(config.port, () => {
-
-  logger.info(`Listening to port ${config.port}`);
-  
-});
-
-});
+  mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
+    logger.info("Connected to MongoDB");
+    server = app.listen(config.port, () => {
+      logger.info(`Listening to port ${config.port}`);
+    });
+  });
 } catch (error) {
-  console.log("Connect error: " + error + "")
-  throw new ApiError(httpStatus['500'], "Connect error: " + error + "");
+  console.log("Connect error: " + error + "");
+  throw new ApiError(httpStatus["500"], "Connect error: " + error + "");
 }
 
 //process.on('warning', e => console.warn(e.stack));
 
 const exitHandler = () => {
-
   if (server) {
-
     server.close(() => {
-
       logger.info("Server closed");
       process.exit(1);
-    
-});
-  
-} else {
-
+    });
+  } else {
     process.exit(1);
-  
-}
-
+  }
 };
 
 const unexpectedErrorHandler = (error) => {
-
   logger.error(error);
   exitHandler();
-
 };
 
 process.on("uncaughtException", unexpectedErrorHandler);

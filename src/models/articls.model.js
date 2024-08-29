@@ -1,14 +1,12 @@
-const mongoose = require('mongoose');
-const { toJSON, paginate } = require('./plugins');
+const mongoose = require("mongoose");
+const { toJSON, paginate } = require("./plugins");
 
 const articlsSchema = mongoose.Schema(
   {
-
     category: {
       type: String,
       required: false,
       trim: true,
-
     },
     slug: {
       type: String,
@@ -157,7 +155,7 @@ const articlsSchema = mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       required: false,
       trim: true,
-      ref: 'User',
+      ref: "User",
     },
     oldUserId: {
       type: String,
@@ -168,7 +166,6 @@ const articlsSchema = mongoose.Schema(
       type: mongoose.Schema.Types.Mixed,
       required: false,
     },
-
   },
   {
     timestamps: true,
@@ -195,11 +192,11 @@ const fields = {};
 
 Object.assign(fields, weights);
 
-articlsSchema.set('toJSON', {
+articlsSchema.set("toJSON", {
   virtuals: true,
 });
 
-articlsSchema.virtual('id').get(function doIt() {
+articlsSchema.virtual("id").get(function doIt() {
   // eslint-disable-next-line no-underscore-dangle
   return this._id.toHexString();
 });
@@ -221,13 +218,12 @@ articlsSchema.index({
   */
 });
 
-
 // add plugin that converts mongoose to json
 articlsSchema.plugin(toJSON);
 articlsSchema.plugin(paginate);
 
 async function drop() {
-  const Articls = mongoose.model('Articls', articlsSchema);
+  const Articls = mongoose.model("Articls", articlsSchema);
 
   const articlesCollection = Articls.collection;
 
@@ -236,7 +232,7 @@ async function drop() {
 
   // Loop through the indexes and delete them
   for (const index of indexes) {
-    if (index.name === '_id_') continue;
+    if (index.name === "_id_") continue;
     await articlesCollection.dropIndex(index.name);
   }
 
@@ -249,35 +245,28 @@ async function drop() {
     articlType: "text",
   });
   */
-
 }
 
 //drop()
 
-const Articls = mongoose.model('Articls', articlsSchema)
+const Articls = mongoose.model("Articls", articlsSchema);
 const init = async () => {
-
-  await Articls.createIndexes();
-
-}
+  //await Articls.createIndexes();
+};
 
 init();
 
 async function updateFieldName() {
-try {
-  // Use the updateMany method with the $rename operator to change the field name
-  const updateResult = await Articls.updateMany(
-    {},
-    { $rename: { "type": "articlType" } }
-  );
+  try {
+    // Use the updateMany method with the $rename operator to change the field name
+    const updateResult = await Articls.updateMany({}, { $rename: { type: "articlType" } });
 
-  console.log(`${updateResult.n} documents updated.`);
-} catch (error) {
-  console.error("Error occurred:", error);
-}
+    console.log(`${updateResult.n} documents updated.`);
+  } catch (error) {
+    console.error("Error occurred:", error);
+  }
 }
 
 //updateFieldName();
 
 module.exports = Articls;
-

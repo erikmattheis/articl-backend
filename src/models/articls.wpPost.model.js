@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { toJSON, paginate } = require('./plugins');
+const mongoose = require("mongoose");
+const { toJSON, paginate } = require("./plugins");
 
 const articlsWPSchema = mongoose.Schema(
   {
@@ -11,7 +11,7 @@ const articlsWPSchema = mongoose.Schema(
       type: Number,
       required: false,
       trim: true,
-    }
+    },
   },
 
   {
@@ -19,22 +19,20 @@ const articlsWPSchema = mongoose.Schema(
   },
 );
 
-articlsWPSchema.set('toJSON', {
+articlsWPSchema.set("toJSON", {
   virtuals: true,
 });
 
-articlsWPSchema.virtual('id').get(function doIt() {
+articlsWPSchema.virtual("id").get(function doIt() {
   // eslint-disable-next-line no-underscore-dangle
   return this._id.toHexString();
 });
-
-
 
 // add plugin that converts mongoose to json
 articlsWPSchema.plugin(toJSON);
 
 async function drop() {
-  const ArticlsWP = mongoose.model('ArticlsWP', articlsWPSchema);
+  const ArticlsWP = mongoose.model("ArticlsWP", articlsWPSchema);
 
   const articlesWPCollection = ArticlsWP.collection;
 
@@ -43,23 +41,19 @@ async function drop() {
 
   // Loop through the indexes and delete them
   for (const index of indexes) {
-    if (index.name === '_id_') continue;
+    if (index.name === "_id_") continue;
     await articlesWPCollection.dropIndex(index.name);
   }
-
 }
 
 //drop()
 
-const ArticlsWP = mongoose.model('ArticlsWP', articlsWPSchema);
+const ArticlsWP = mongoose.model("ArticlsWP", articlsWPSchema);
 
 const init = async () => {
-
-  await ArticlsWP.createIndexes();
-
-}
+  //await ArticlsWP.createIndexes();
+};
 
 init();
 
 module.exports = ArticlsWP;
-
