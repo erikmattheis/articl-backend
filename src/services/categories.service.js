@@ -12,11 +12,8 @@ const upsertCategory = async (req, userId) => {
   const categoriesBody = req.body;
 
   // Check if slug already exists if it is a new category and therefore the request method is POST
-  if (req.method === 'POST' && await Categories.isCategorySlug(categoriesBody.slug)) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      `Slug "${categoriesBody.slug}" already exists.`
-    );
+  if (req.method === "POST" && (await Categories.isCategorySlug(categoriesBody.slug))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, `Slug "${categoriesBody.slug}" already exists.`);
   }
 
   if (categoriesBody.id) {
@@ -42,7 +39,7 @@ const upsertCategory = async (req, userId) => {
  * @returns {Promise<QueryResult>}
  */
 const queryCategories = async (filter) => {
-  const categories = await Categories.find(filter).sort([['order', 1]]);
+  const categories = await Categories.find(filter).sort([["order", 1]]);
   return categories;
 };
 
@@ -64,21 +61,22 @@ const getCategoriesByParentSlug = async (parentSlug, user) => {
 };
 
 const deleteCatsWithoutHTMLTitle = async () => {
-  const cats = await Categories.find(
-    { titleHtml: { $exists: false } }
-  ).exec();
+  const cats = await Categories.find({ titleHtml: { $exists: false } }).exec();
   for (const cat of cats) {
     await Categories.deleteOne({ _id: cat.id });
-  };
+  }
 };
 
 const updateParentSlugs = async (slug, oldSlug) => {
-  const result = await Categories.updateMany({ parentSlug: oldSlug }, { $set: { parentSlug: slug } })
-}
+  const result = await Categories.updateMany(
+    { parentSlug: oldSlug },
+    { $set: { parentSlug: slug } },
+  );
+};
 
 const markCategoryArticlsImported = async (slug) => {
-  const result = await Categories.updateOne({ slug }, { $set: { wpArticlsImported: true } })
-}
+  const result = await Categories.updateOne({ slug }, { $set: { wpArticlsImported: true } });
+};
 
 /**
  * Get category by slug
@@ -106,7 +104,6 @@ const prepareForTypeahead = async (categories) => {
 };
 
 const getCategorySlugs = async (q) => {
-
   const regex = new RegExp(regexEscape(`${q}`), "i");
 
   const slugs = await Categories.find({ slug: { $regex: regex } }, { slug: 1 });
@@ -118,9 +115,12 @@ const getCategorySlugs = async (q) => {
 
 const getSlugAncestry = async (slug, breadcrumbs = []) => {
   if (!slug) {
-    return Promise.reject(new Error(`Slug category ${slug} not found.`))
+    return Promise.reject(new Error(`Slug category ${slug} not found.`));
   }
-  const item = await Categories.find({ slug }, { title: 1, titleHtml: 1, slug: 1, parentSlug: 1 }).exec();
+  const item = await Categories.find(
+    { slug },
+    { title: 1, titleHtml: 1, slug: 1, parentSlug: 1 },
+  ).exec();
 
   if (!item[0]) {
     return Promise.resolve(breadcrumbs.reverse());
@@ -128,12 +128,12 @@ const getSlugAncestry = async (slug, breadcrumbs = []) => {
     breadcrumbs.push(item[0]);
     return getSlugAncestry(item[0].parentSlug, breadcrumbs);
   }
-}
+};
 
 const getBreadcrumbs = async (slug) => {
   const result = await getSlugAncestry(slug, []);
   return result || [];
-}
+};
 
 /**
  * Get category by id
@@ -200,7 +200,10 @@ const deleteCategoryById = async (id, user) => {
     throw new ApiError(httpStatus.NOT_FOUND, `Category ${id} not found`);
   }
   if (user.role !== "superadmin") {
-    throw new ApiError(httpStatus.FORBIDDEN, `You don't have permission to delete this category. ${user.role} and ${category.user?.id}`);
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      `You don't have permission to delete this category. ${user.role} and ${category.user?.id}`,
+    );
   }
   /* TODO check if user owns all descendents and articls and questions and */
   await category.deleteOne({ id });

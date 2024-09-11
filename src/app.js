@@ -17,10 +17,8 @@ const ApiError = require("./utils/ApiError");
 const app = express();
 
 if (config.env !== "test") {
-
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
-
 }
 
 // set security HTTP headers
@@ -58,6 +56,7 @@ if (whitelist.indexOf(",") !== -1) {
 } else {
   whitelist = [whitelist];
 }
+
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {

@@ -5,7 +5,6 @@ const configuration = {
   apiKey: process.env.OPENAI_API_KEY || config.openAIKey,
 };
 const openai = new OpenAI(configuration);
-const API_KEY = "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";
 
 const model = "gpt-3.5-turbo";
 const temp = 0.5;
@@ -17,7 +16,7 @@ const getAISummary = async (category, parentCategory) => {
       messages: [
         { role: "system", content: "You are web copywriter" },
         { role: "user", content: `definition of ${category}` },
-        { model: 'gpt-3.5-turbo'},
+        { model: "gpt-3.5-turbo" },
       ],
       temperature: temp,
       max_tokens: tokens,
@@ -47,18 +46,20 @@ const getAISummary = async (category, parentCategory) => {
 
     return {
       status: 200,
-      message: response
-    }
-
-  }
-  catch (err) {
+      message: response,
+    };
+  } catch (err) {
     //console.log('err:', err);
     return {
       status: err.response?.status,
-      message: 'The AI service returned an error code of ' + err.response?.status + ' and the message ' + err,
-    }
+      message:
+        "The AI service returned an error code of " +
+        err.response?.status +
+        " and the message " +
+        err,
+    };
   }
-}
+};
 
 /*
 setTimeout(async function() {
@@ -69,4 +70,4 @@ setTimeout(async function() {
 
 module.exports = {
   getAISummary,
-}
+};
