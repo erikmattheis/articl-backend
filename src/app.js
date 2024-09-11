@@ -53,12 +53,11 @@ app.use(compression());
 
 var whitelist = process.env.FRONTEND_URL;
 
-if (whitelist.indexOf(",") > -1) {
+if (whitelist.indexOf(",") !== -1) {
   whitelist = whitelist.split(",");
 } else {
   whitelist = [whitelist];
 }
-
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
